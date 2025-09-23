@@ -3,44 +3,26 @@ package base;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.io.FileHandler;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 import utils.ConfigReader;
 import utils.ExtentManager;
 import utils.ScreenshotUtils;
-import utils.WaitUtils;
 
-import java.io.File;
 import java.time.Duration;
 
 public class BaseTest {
-    protected static ExtentReports extent;
-    protected static ExtentTest test;
     protected WebDriver driver;
+    protected ExtentTest test;
 
     @BeforeSuite
-    public void setupReport() {
-        ExtentSparkReporter spark = new ExtentSparkReporter("target/ExtentReport.html");
-        extent = new ExtentReports();
-        extent.attachReporter(spark);
+    public void setupSuite() {
+        ExtentManager.initReports();
     }
 
     @AfterSuite
-    public void tearDownReport() {
-        if (extent != null) {
-            extent.flush();
-        }
-        if (driver != null) {
-            driver.quit();
-        }
+    public void tearDownSuite() {
+        ExtentManager.flush();
     }
 
     @BeforeMethod
