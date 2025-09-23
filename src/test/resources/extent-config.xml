@@ -1,0 +1,9 @@
+<extentreports>
+    <configuration>
+        <encoding>UTF-8</encoding>
+        <reportName>Automation Test</reportName>
+        <documentTitle>Báo cáo Test</documentTitle>
+        <theme>standard</theme>
+        <timelineEnabled>true</timelineEnabled>
+    </configuration>
+</extentreports>
