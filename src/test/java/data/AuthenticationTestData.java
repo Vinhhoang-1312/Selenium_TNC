@@ -1,4 +1,4 @@
-package modules.authentication;
+package data;
 
 public class AuthenticationTestData {
 

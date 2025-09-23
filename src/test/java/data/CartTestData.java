@@ -1,4 +1,4 @@
-package modules.cart;
+package data;
 
 public class CartTestData {
 

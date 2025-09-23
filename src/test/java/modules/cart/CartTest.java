@@ -6,6 +6,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.ExtentManager;
+import data.ExcelReader;
+import data.CartTestData;
 
 public class CartTest extends BaseTest {
     private CartPage cartPage;
@@ -22,10 +24,16 @@ public class CartTest extends BaseTest {
         try {
             logInfo("Starting test: Add product to cart");
 
+            // Get test data from Excel or fallback
+            String productUrl = ExcelReader.getCartData("TC001", "productUrl");
+            if (productUrl.isEmpty()) {
+                productUrl = CartTestData.PRODUCT_URLS[0];
+            }
+
             // Step 1: Navigate to any product page
-            String productUrl = driver.getCurrentUrl() + CartTestData.PRODUCT_URLS[0];
-            driver.get(productUrl);
-            logInfo("Navigated to product page: " + productUrl);
+            String fullProductUrl = driver.getCurrentUrl() + productUrl;
+            driver.get(fullProductUrl);
+            logInfo("Navigated to product page: " + fullProductUrl);
 
             // Get initial cart count
             String initialCartCount = cartPage.getCartCounter();
@@ -65,6 +73,10 @@ public class CartTest extends BaseTest {
         try {
             logInfo("Starting test: Update product quantity in cart");
 
+            // Get test data from Excel or fallback
+            String newQuantityStr = ExcelReader.getCartData("TC002", "quantity");
+            int newQuantity = newQuantityStr.isEmpty() ? CartTestData.UPDATED_QUANTITY : Integer.parseInt(newQuantityStr);
+
             // Prerequisite: Add product to cart first
             testAddProductToCart();
 
@@ -80,19 +92,19 @@ public class CartTest extends BaseTest {
             String initialTotal = cartPage.getTotalPrice();
             logInfo("Initial quantity: " + initialQuantity + ", Initial total: " + initialTotal);
 
-            // Step 2: Change product quantity (e.g., from 1 to 2)
-            cartPage.updateProductQuantity(0, CartTestData.UPDATED_QUANTITY);
-            logInfo("Updated quantity to: " + CartTestData.UPDATED_QUANTITY);
+            // Step 2: Change product quantity
+            cartPage.updateProductQuantity(0, newQuantity);
+            logInfo("Updated quantity to: " + newQuantity);
 
             // Wait for update
             cartPage.waitForCartUpdate();
 
             // Step 3: Verify quantity is updated and total price reflects the change
-            int newQuantity = cartPage.getProductQuantity(0);
+            int updatedQuantity = cartPage.getProductQuantity(0);
             String newTotal = cartPage.getTotalPrice();
 
-            Assert.assertEquals(newQuantity, CartTestData.UPDATED_QUANTITY,
-                "Quantity should be updated to " + CartTestData.UPDATED_QUANTITY);
+            Assert.assertEquals(updatedQuantity, newQuantity,
+                "Quantity should be updated to " + newQuantity);
             Assert.assertNotEquals(initialTotal, newTotal, "Total price should change when quantity changes");
 
             logPass("Product quantity successfully updated and total price reflected the change");

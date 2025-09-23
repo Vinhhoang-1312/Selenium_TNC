@@ -21,29 +21,25 @@
         </classes>
     </test>
 
-    <!-- User Profile Module Tests - To be implemented -->
-    <!--
-    <test name="User Profile Tests">
-        <classes>
-            <class name="modules.userprofile.UserProfileTest"/>
-        </classes>
-    </test>
-    -->
-
-    <!-- Search Module Tests - To be implemented -->
-    <!--
+    <!-- Search Module Tests -->
     <test name="Search Tests">
         <classes>
             <class name="modules.search.SearchTest"/>
         </classes>
     </test>
-    -->
 
-    <!-- Product Detail Module Tests - To be implemented -->
-    <!--
+    <!-- Product Detail Module Tests -->
     <test name="Product Detail Tests">
         <classes>
             <class name="modules.productdetail.ProductDetailTest"/>
+        </classes>
+    </test>
+
+    <!-- User Profile Module Tests - To be implemented -->
+    <!--
+    <test name="User Profile Tests">
+        <classes>
+            <class name="modules.userprofile.UserProfileTest"/>
         </classes>
     </test>
     -->

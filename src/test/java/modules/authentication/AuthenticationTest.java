@@ -6,6 +6,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.ExtentManager;
+import data.ExcelReader;
+import data.AuthenticationTestData;
 
 public class AuthenticationTest extends BaseTest {
     private AuthenticationPage authPage;
@@ -22,17 +24,23 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SU-01: Register with valid data");
 
         try {
+            // Get test data from Excel or fallback to hardcoded
+            String name = ExcelReader.getAuthData("AUTH-SU-01", "name");
+            String email = ExcelReader.getAuthData("AUTH-SU-01", "email");
+            String password = ExcelReader.getAuthData("AUTH-SU-01", "password");
+
+            // Fallback if Excel data not available
+            if (name.isEmpty()) name = AuthenticationTestData.VALID_NAME;
+            if (email.isEmpty()) email = AuthenticationTestData.VALID_EMAIL;
+            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
+
             // Navigate to register page
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Perform registration with valid data
-            authPage.performRegistration(
-                AuthenticationTestData.VALID_NAME,
-                AuthenticationTestData.VALID_EMAIL,
-                AuthenticationTestData.VALID_PASSWORD
-            );
-            test.log(Status.INFO, "Filled registration form with valid data");
+            // Perform registration with test data
+            authPage.performRegistration(name, email, password);
+            test.log(Status.INFO, "Filled registration form with: " + name + ", " + email);
 
             // Verify registration is successful
             Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in after successful registration");
@@ -50,17 +58,21 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SU-02: Register with existing email");
 
         try {
-            // Navigate to register page
+            // Get test data from Excel or fallback
+            String name = ExcelReader.getAuthData("AUTH-SU-02", "name");
+            String email = ExcelReader.getAuthData("AUTH-SU-02", "email");
+            String password = ExcelReader.getAuthData("AUTH-SU-02", "password");
+
+            // Fallback if Excel data not available
+            if (name.isEmpty()) name = AuthenticationTestData.VALID_NAME;
+            if (email.isEmpty()) email = AuthenticationTestData.EXISTING_EMAIL;
+            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
+
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Perform registration with existing email
-            authPage.performRegistration(
-                AuthenticationTestData.VALID_NAME,
-                AuthenticationTestData.EXISTING_EMAIL,
-                AuthenticationTestData.VALID_PASSWORD
-            );
-            test.log(Status.INFO, "Filled registration form with existing email");
+            authPage.performRegistration(name, email, password);
+            test.log(Status.INFO, "Filled registration form with existing email: " + email);
 
             // Verify error message is displayed
             Assert.assertTrue(authPage.isEmailExistsErrorDisplayed(), "Email exists error should be displayed");
@@ -166,18 +178,19 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SI-01: Login with valid credentials");
 
         try {
-            // Navigate to login page
+            // Get test data from Excel or fallback
+            String email = ExcelReader.getAuthData("AUTH-SI-01", "email");
+            String password = ExcelReader.getAuthData("AUTH-SI-01", "password");
+
+            if (email.isEmpty()) email = AuthenticationTestData.VALID_EMAIL;
+            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
+
             authPage.goToLoginPage();
             test.log(Status.INFO, "Navigated to login page");
 
-            // Perform login with valid credentials
-            authPage.performLogin(
-                AuthenticationTestData.VALID_EMAIL,
-                AuthenticationTestData.VALID_PASSWORD
-            );
-            test.log(Status.INFO, "Entered valid login credentials");
+            authPage.performLogin(email, password);
+            test.log(Status.INFO, "Entered login credentials: " + email);
 
-            // Verify login is successful
             Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in successfully");
             test.log(Status.PASS, "Login successful");
 
