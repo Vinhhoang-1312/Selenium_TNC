@@ -11,6 +11,8 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import utils.ConfigReader;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DriverFactory {
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
@@ -25,8 +27,12 @@ public class DriverFactory {
                 chromeOptions.addArguments("--disable-notifications");
                 chromeOptions.addArguments("--disable-popup-blocking");
                 chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-                chromeOptions.addExperimentalOption("useAutomationExtension", false);
-                chromeOptions.addExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+
+                // Fix experimental options
+                Map<String, Object> prefs = new HashMap<String, Object>();
+                prefs.put("useAutomationExtension", false);
+                chromeOptions.setExperimentalOption("prefs", prefs);
+                chromeOptions.addArguments("--disable-extensions");
 
                 // Headless mode option
                 if (Boolean.parseBoolean(ConfigReader.getProperty("headless.mode", "false"))) {

@@ -1,6 +1,7 @@
 package modules.productdetail;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,7 +18,7 @@ public class ProductDetailPage {
         PageFactory.initElements(driver, this);
     }
 
-    // Product Detail Elements - Cần cập nhật với locators thực tế từ TNC Store
+    // Product elements
     @FindBy(xpath = "//div[contains(@class,'product-item') or contains(@class,'product-card')]")
     private List<WebElement> productItems;
 
@@ -26,9 +27,6 @@ public class ProductDetailPage {
 
     @FindBy(xpath = "//div[contains(@class,'success-notification') or contains(@class,'cart-notification')]")
     private WebElement successNotification;
-
-    @FindBy(xpath = "//div[contains(@class,'product-images') or contains(@class,'image-gallery')]")
-    private WebElement productMainImage;
 
     @FindBy(xpath = "//div[contains(@class,'image-list') or contains(@class,'thumbnail-list')]//img")
     private List<WebElement> productThumbnailImages;
@@ -54,18 +52,13 @@ public class ProductDetailPage {
     @FindBy(xpath = "//div[contains(@class,'product-price')]")
     private WebElement productPrice;
 
-    // Methods for Product Detail Test Cases
-
-    // DTL-001: Access to detail product
+    // Navigation methods
     public void scrollDownAndClickProduct() {
-        // Scroll down to see products
-        driver.executeScript("window.scrollTo(0, document.body.scrollHeight/2);");
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight/2);");
         WaitUtils.waitForPageLoad(driver);
 
-        // Wait for products to be visible
         WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'product-item')]"));
 
-        // Click on any available product
         if (!productItems.isEmpty()) {
             WaitUtils.waitForElementClickable(driver, productItems.get(0));
             productItems.get(0).click();
@@ -77,13 +70,12 @@ public class ProductDetailPage {
         try {
             return productTitle.isDisplayed() && productPrice.isDisplayed();
         } catch (Exception e) {
-            // Alternative check using URL
             return driver.getCurrentUrl().contains("san-pham") ||
                    driver.getCurrentUrl().contains("product");
         }
     }
 
-    // DTL-002: Verify add to cart button
+    // Add to cart methods
     public void clickAddToCartButton() {
         WaitUtils.waitForElementClickable(driver, addToCartButton);
         addToCartButton.click();
@@ -91,7 +83,7 @@ public class ProductDetailPage {
 
     public boolean isSuccessNotificationDisplayed() {
         try {
-            WaitUtils.waitForElementVisible(driver, successNotification);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'success-notification')]"));
             return successNotification.isDisplayed() &&
                    (successNotification.getText().contains("thành công") ||
                     successNotification.getText().contains("success") ||
@@ -109,7 +101,7 @@ public class ProductDetailPage {
         }
     }
 
-    // DTL-003: Verify image and list image can click
+    // Image gallery methods
     public void clickThumbnailImage(int index) {
         if (index < productThumbnailImages.size()) {
             WaitUtils.waitForElementClickable(driver, productThumbnailImages.get(index));
@@ -123,7 +115,7 @@ public class ProductDetailPage {
 
     public boolean isImagePopupDisplayed() {
         try {
-            WaitUtils.waitForElementVisible(driver, imagePopup);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'image-popup')]"));
             return imagePopup.isDisplayed();
         } catch (Exception e) {
             return false;
@@ -139,7 +131,7 @@ public class ProductDetailPage {
         }
     }
 
-    // DTL-004: Verify "mua ngay" button works properly
+    // Buy now methods
     public void clickBuyNowButton() {
         WaitUtils.waitForElementClickable(driver, buyNowButton);
         buyNowButton.click();
@@ -161,19 +153,16 @@ public class ProductDetailPage {
     }
 
     public boolean isProductInCart() {
-        // This would need to be verified on the cart page
-        // For now, we'll check if we're on cart page
         return isRedirectedToCartPage();
     }
 
-    // DTL-005: Verify "xem thêm" button in Technical specifications
+    // Technical specs methods
     public void scrollToTechnicalSpecs() {
         try {
-            driver.executeScript("arguments[0].scrollIntoView(true);", technicalSpecsSection);
-            WaitUtils.waitForElementVisible(driver, technicalSpecsSection);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", technicalSpecsSection);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'technical-specs')]"));
         } catch (Exception e) {
-            // If specs section not found, scroll down to find it
-            driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+            ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
         }
     }
 
@@ -194,7 +183,7 @@ public class ProductDetailPage {
 
     public boolean isTechnicalSpecsPopupDisplayed() {
         try {
-            WaitUtils.waitForElementVisible(driver, technicalSpecsPopup);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'specs-popup')]"));
             return technicalSpecsPopup.isDisplayed();
         } catch (Exception e) {
             return false;
@@ -216,7 +205,7 @@ public class ProductDetailPage {
 
     public String getProductTitle() {
         try {
-            WaitUtils.waitForElementVisible(driver, productTitle);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//h1[contains(@class,'product-title')]"));
             return productTitle.getText();
         } catch (Exception e) {
             return "";
@@ -225,7 +214,7 @@ public class ProductDetailPage {
 
     public String getProductPrice() {
         try {
-            WaitUtils.waitForElementVisible(driver, productPrice);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'product-price')]"));
             return productPrice.getText();
         } catch (Exception e) {
             return "";

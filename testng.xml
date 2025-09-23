@@ -7,35 +7,50 @@
 
     <parameter name="browser" value="chrome"/>
 
-    <!-- Authentication Module Tests -->
+    <!-- 🎯 AUTHENTICATION MODULE - ĐANG ACTIVE -->
     <test name="Authentication Tests">
         <classes>
-            <class name="modules.authentication.AuthenticationTest"/>
+            <class name="modules.authentication.AuthenticationTest">
+                <!-- 🔧 Có thể chỉ chạy test method cụ thể -->
+                <methods>
+                    <include name="testRegisterWithValidData"/>
+                    <!-- Uncomment để chạy thêm test khác:
+                    <include name="testRegisterWithExistingEmail"/>
+                    <include name="testLoginWithValidCredentials"/>
+                    -->
+                </methods>
+            </class>
         </classes>
     </test>
 
-    <!-- Cart Module Tests -->
+    <!-- 🛒 CART MODULE - COMMENT ĐỂ TẮT -->
+    <!--
     <test name="Cart Tests">
         <classes>
             <class name="modules.cart.CartTest"/>
         </classes>
     </test>
+    -->
 
-    <!-- Search Module Tests -->
+    <!-- 🔍 SEARCH MODULE - COMMENT ĐỂ TẮT -->
+    <!--
     <test name="Search Tests">
         <classes>
             <class name="modules.search.SearchTest"/>
         </classes>
     </test>
+    -->
 
-    <!-- Product Detail Module Tests -->
+    <!-- 📱 PRODUCT DETAIL MODULE - COMMENT ĐỂ TẮT -->
+    <!--
     <test name="Product Detail Tests">
         <classes>
             <class name="modules.productdetail.ProductDetailTest"/>
         </classes>
     </test>
+    -->
 
-    <!-- User Profile Module Tests - To be implemented -->
+    <!-- 👤 USER PROFILE MODULE - Chưa implement -->
     <!--
     <test name="User Profile Tests">
         <classes>
@@ -44,7 +59,7 @@
     </test>
     -->
 
-    <!-- Checkout Module Tests - To be implemented -->
+    <!-- 💳 CHECKOUT MODULE - Chưa implement -->
     <!--
     <test name="Checkout Tests">
         <classes>

@@ -17,7 +17,7 @@ public class CartPage {
         PageFactory.initElements(driver, this);
     }
 
-    // Cart Elements - Cần cập nhật với locators thực tế từ TNC Store
+    // Cart elements
     @FindBy(xpath = "//button[contains(@class,'add-to-cart') or contains(text(),'Thêm vào giỏ hàng')]")
     private WebElement addToCartButton;
 
@@ -33,7 +33,7 @@ public class CartPage {
     @FindBy(xpath = "//button[contains(@class,'update') or contains(text(),'Cập nhật')]")
     private WebElement updateCartButton;
 
-    @FindBy(xpath = "//button[contains(@class,'remove') or contains(@title,'Xóa') or contains(text(),'Xóa')]")
+    @FindBy(xpath = "//button[contains(@class,'remove') or contains(@title,'Xóa')]")
     private List<WebElement> removeButtons;
 
     @FindBy(xpath = "//div[contains(@class,'cart-total') or contains(@class,'total-price')]")
@@ -42,7 +42,7 @@ public class CartPage {
     @FindBy(xpath = "//div[contains(@class,'cart-item') or contains(@class,'product-item')]")
     private List<WebElement> cartItems;
 
-    @FindBy(xpath = "//button[contains(@class,'checkout') or contains(text(),'Thanh toán') or contains(text(),'Checkout')]")
+    @FindBy(xpath = "//button[contains(@class,'checkout') or contains(text(),'Thanh toán')]")
     private WebElement checkoutButton;
 
     @FindBy(xpath = "//div[contains(@class,'empty-cart') or contains(text(),'Giỏ hàng trống')]")
@@ -51,15 +51,7 @@ public class CartPage {
     @FindBy(xpath = "//span[contains(@class,'item-price') or contains(@class,'product-price')]")
     private List<WebElement> itemPrices;
 
-    @FindBy(xpath = "//input[contains(@name,'quantity')]/..//button[contains(@class,'increase') or text()='+']")
-    private List<WebElement> increaseQuantityButtons;
-
-    @FindBy(xpath = "//input[contains(@name,'quantity')]/..//button[contains(@class,'decrease') or text()='-']")
-    private List<WebElement> decreaseQuantityButtons;
-
-    // Methods for Cart Actions
-
-    // TC001: Add product to cart
+    // Cart action methods
     public void addProductToCart() {
         WaitUtils.waitForElementClickable(driver, addToCartButton);
         addToCartButton.click();
@@ -80,15 +72,14 @@ public class CartPage {
         }
     }
 
-    // TC002: Update product quantity
+    // Quantity management methods
     public void updateProductQuantity(int itemIndex, int newQuantity) {
         if (itemIndex < quantityInputs.size()) {
             WebElement quantityInput = quantityInputs.get(itemIndex);
-            WaitUtils.waitForElementVisible(driver, quantityInput);
+            WaitUtils.waitForElementVisible(driver, By.xpath("//input[contains(@class,'quantity')]"));
             quantityInput.clear();
             quantityInput.sendKeys(String.valueOf(newQuantity));
 
-            // Click update button if exists
             try {
                 if (updateCartButton.isDisplayed()) {
                     updateCartButton.click();
@@ -99,20 +90,6 @@ public class CartPage {
         }
     }
 
-    public void increaseQuantity(int itemIndex) {
-        if (itemIndex < increaseQuantityButtons.size()) {
-            WaitUtils.waitForElementClickable(driver, increaseQuantityButtons.get(itemIndex));
-            increaseQuantityButtons.get(itemIndex).click();
-        }
-    }
-
-    public void decreaseQuantity(int itemIndex) {
-        if (itemIndex < decreaseQuantityButtons.size()) {
-            WaitUtils.waitForElementClickable(driver, decreaseQuantityButtons.get(itemIndex));
-            decreaseQuantityButtons.get(itemIndex).click();
-        }
-    }
-
     public int getProductQuantity(int itemIndex) {
         if (itemIndex < quantityInputs.size()) {
             return Integer.parseInt(quantityInputs.get(itemIndex).getAttribute("value"));
@@ -120,7 +97,7 @@ public class CartPage {
         return 0;
     }
 
-    // TC003: Remove product from cart
+    // Remove product methods
     public void removeProductFromCart(int itemIndex) {
         if (itemIndex < removeButtons.size()) {
             WaitUtils.waitForElementClickable(driver, removeButtons.get(itemIndex));
@@ -133,9 +110,9 @@ public class CartPage {
         return getCartItemCount() < originalItemCount;
     }
 
-    // TC004: Verify cart total price
+    // Price calculation methods
     public String getTotalPrice() {
-        WaitUtils.waitForElementVisible(driver, totalPriceElement);
+        WaitUtils.waitForElementVisible(driver, By.xpath("//div[contains(@class,'cart-total')]"));
         return totalPriceElement.getText().replaceAll("[^0-9]", "");
     }
 
@@ -158,13 +135,13 @@ public class CartPage {
         try {
             double displayedTotal = Double.parseDouble(getTotalPrice());
             double calculatedTotal = calculateExpectedTotal();
-            return Math.abs(displayedTotal - calculatedTotal) < 0.01; // Allow small floating point differences
+            return Math.abs(displayedTotal - calculatedTotal) < 0.01;
         } catch (Exception e) {
             return false;
         }
     }
 
-    // TC005: Navigate to checkout
+    // Checkout methods
     public void proceedToCheckout() {
         WaitUtils.waitForElementClickable(driver, checkoutButton);
         checkoutButton.click();
@@ -207,7 +184,7 @@ public class CartPage {
 
     public void waitForCartUpdate() {
         try {
-            Thread.sleep(2000); // Wait for cart to update
+            Thread.sleep(2000);
             WaitUtils.waitForPageLoad(driver);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

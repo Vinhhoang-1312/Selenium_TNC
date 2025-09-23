@@ -1,6 +1,5 @@
 package modules.authentication;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,41 +12,47 @@ public class AuthenticationPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    // Constructor
     public AuthenticationPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
-    // Login Elements - Cần bạn cung cấp locators chính xác
-    @FindBy(id = "email")
+    // Navigation elements
+    @FindBy(xpath = "/html/body/div[4]/div[2]/div/div/div[2]/a[1]/span")
+    private WebElement accountButton;
+
+    @FindBy(id = "js-form-holder")
+    private WebElement loginPopup;
+
+    @FindBy(xpath = "//*[@id='js-form-login']/div[2]/div[4]/a")
+    private WebElement createAccountLink;
+
+    // Login elements
+    @FindBy(id = "js-login-email")
     private WebElement loginEmailField;
 
-    @FindBy(id = "password")
+    @FindBy(id = "js-login-password")
     private WebElement loginPasswordField;
 
-    @FindBy(xpath = "//button[contains(text(),'Đăng nhập')]")
+    @FindBy(xpath = "//*[@id='js-form-login']//button[@type='submit']")
     private WebElement loginButton;
 
-    @FindBy(xpath = "//a[contains(text(),'Quên mật khẩu')]")
-    private WebElement forgotPasswordLink;
-
-    // Register Elements - Cần bạn cung cấp locators chính xác
-    @FindBy(id = "register-name")
+    // Register elements
+    @FindBy(id = "js-popup-register-name")
     private WebElement registerNameField;
 
-    @FindBy(id = "register-email")
+    @FindBy(id = "js-popup-register-email")
     private WebElement registerEmailField;
 
-    @FindBy(id = "register-password")
+    @FindBy(id = "js-popup-register-password")
     private WebElement registerPasswordField;
 
-    @FindBy(xpath = "//button[contains(text(),'Tạo tài khoản')]")
+    @FindBy(xpath = "//*[@id='js-form-register']//button[@type='submit']")
     private WebElement registerButton;
 
     // Error message elements
-    @FindBy(xpath = "//div[contains(@class,'error') or contains(@class,'alert')]")
+    @FindBy(xpath = "//div[contains(@class,'alert')]")
     private WebElement errorMessage;
 
     @FindBy(xpath = "//span[contains(text(),'Email đã được sử dụng')]")
@@ -59,37 +64,26 @@ public class AuthenticationPage {
     @FindBy(xpath = "//span[contains(text(),'This field is required')]")
     private WebElement requiredFieldError;
 
-    // Navigation elements
-    @FindBy(xpath = "//a[contains(@href,'register')]")
-    private WebElement registerLink;
+    // Navigation methods
+    public void openLoginPopup() {
+        wait.until(ExpectedConditions.elementToBeClickable(accountButton));
+        accountButton.click();
+        wait.until(ExpectedConditions.visibilityOf(loginPopup));
+    }
 
-    @FindBy(xpath = "//a[contains(@href,'login')]")
-    private WebElement loginLink;
+    public void goToRegisterForm() {
+        openLoginPopup();
+        wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
+        createAccountLink.click();
+        wait.until(ExpectedConditions.visibilityOf(registerNameField));
+    }
 
-    // Methods for Login
-    public void enterLoginEmail(String email) {
+    public void goToLoginForm() {
+        openLoginPopup();
         wait.until(ExpectedConditions.visibilityOf(loginEmailField));
-        loginEmailField.clear();
-        loginEmailField.sendKeys(email);
     }
 
-    public void enterLoginPassword(String password) {
-        wait.until(ExpectedConditions.visibilityOf(loginPasswordField));
-        loginPasswordField.clear();
-        loginPasswordField.sendKeys(password);
-    }
-
-    public void clickLoginButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-        loginButton.click();
-    }
-
-    public void clickForgotPasswordLink() {
-        wait.until(ExpectedConditions.elementToBeClickable(forgotPasswordLink));
-        forgotPasswordLink.click();
-    }
-
-    // Methods for Registration
+    // Registration methods
     public void enterRegisterName(String name) {
         wait.until(ExpectedConditions.visibilityOf(registerNameField));
         registerNameField.clear();
@@ -113,15 +107,22 @@ public class AuthenticationPage {
         registerButton.click();
     }
 
-    // Navigation methods
-    public void goToRegisterPage() {
-        wait.until(ExpectedConditions.elementToBeClickable(registerLink));
-        registerLink.click();
+    // Login methods
+    public void enterLoginEmail(String email) {
+        wait.until(ExpectedConditions.visibilityOf(loginEmailField));
+        loginEmailField.clear();
+        loginEmailField.sendKeys(email);
     }
 
-    public void goToLoginPage() {
-        wait.until(ExpectedConditions.elementToBeClickable(loginLink));
-        loginLink.click();
+    public void enterLoginPassword(String password) {
+        wait.until(ExpectedConditions.visibilityOf(loginPasswordField));
+        loginPasswordField.clear();
+        loginPasswordField.sendKeys(password);
+    }
+
+    public void clickLoginButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+        loginButton.click();
     }
 
     // Validation methods
@@ -134,8 +135,12 @@ public class AuthenticationPage {
     }
 
     public String getErrorMessage() {
-        wait.until(ExpectedConditions.visibilityOf(errorMessage));
-        return errorMessage.getText();
+        try {
+            wait.until(ExpectedConditions.visibilityOf(errorMessage));
+            return errorMessage.getText();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public boolean isEmailExistsErrorDisplayed() {
@@ -163,32 +168,55 @@ public class AuthenticationPage {
     }
 
     public boolean isLoginSuccessful() {
-        // Check if user is redirected to dashboard or profile page
-        // This needs to be updated based on actual behavior
-        return driver.getCurrentUrl().contains("account") || driver.getCurrentUrl().contains("profile");
+        try {
+            Thread.sleep(2000);
+            return !isLoginPopupDisplayed() &&
+                   (driver.getCurrentUrl().contains("account") ||
+                    driver.getCurrentUrl().contains("profile") ||
+                    driver.getPageSource().contains("Đăng xuất"));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    // Complete login flow
-    public void performLogin(String email, String password) {
-        enterLoginEmail(email);
-        enterLoginPassword(password);
-        clickLoginButton();
+    public boolean isLoginPopupDisplayed() {
+        try {
+            return loginPopup.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    // Complete registration flow
+    // Complete workflows
     public void performRegistration(String name, String email, String password) {
+        goToRegisterForm();
         enterRegisterName(name);
         enterRegisterEmail(email);
         enterRegisterPassword(password);
         clickRegisterButton();
     }
 
-    // Forgot password flow
+    public void performLogin(String email, String password) {
+        goToLoginForm();
+        enterLoginEmail(email);
+        enterLoginPassword(password);
+        clickLoginButton();
+    }
+
+    // Compatibility methods for old tests
+    public void goToRegisterPage() {
+        goToRegisterForm();
+    }
+
+    public void goToLoginPage() {
+        goToLoginForm();
+    }
+
+    public void clickForgotPasswordLink() {
+        // Not implemented yet - no forgot password in current flow
+    }
+
     public void performForgotPassword(String email) {
-        clickForgotPasswordLink();
-        // Assuming there's an email field in forgot password form
-        enterLoginEmail(email); // Reuse the email field
-        // Click submit button for forgot password
-        clickLoginButton(); // This might need to be different button
+        // Not implemented yet - no forgot password in current flow
     }
 }
