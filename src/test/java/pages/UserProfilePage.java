@@ -1,5 +1,7 @@
-package modules.userprofile;
+package pages;
 
+import config.TNCStoreLocators;
+import config.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,61 +16,61 @@ public class UserProfilePage {
 
     public UserProfilePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(TNCStoreConfig.ELEMENT_WAIT));
         PageFactory.initElements(driver, this);
     }
 
-    // Profile navigation elements - Need real locators from TNC Store
-    @FindBy(xpath = "//a[contains(@href,'profile') or contains(@href,'account')]")
+    // Profile navigation elements using centralized locators
+    @FindBy(xpath = TNCStoreLocators.PROFILE_LINK)
     private WebElement profileLink;
 
-    @FindBy(xpath = "//a[contains(text(),'Thông tin cá nhân')]")
+    @FindBy(xpath = TNCStoreLocators.PROFILE_MENU_LINK)
     private WebElement profileMenuLink;
 
-    // Profile form elements - Need real locators
-    @FindBy(id = "profile-name")
+    // Profile form elements
+    @FindBy(css = TNCStoreLocators.PROFILE_NAME_FIELD)
     private WebElement nameField;
 
-    @FindBy(id = "profile-email")
+    @FindBy(css = TNCStoreLocators.PROFILE_EMAIL_FIELD)
     private WebElement emailField;
 
-    @FindBy(id = "profile-phone")
+    @FindBy(css = TNCStoreLocators.PROFILE_PHONE_FIELD)
     private WebElement phoneField;
 
-    @FindBy(id = "profile-address")
+    @FindBy(css = TNCStoreLocators.PROFILE_ADDRESS_FIELD)
     private WebElement addressField;
 
-    @FindBy(xpath = "//button[contains(text(),'Lưu thông tin')]")
+    @FindBy(xpath = TNCStoreLocators.SAVE_PROFILE_BUTTON)
     private WebElement saveProfileButton;
 
-    // Password change elements - Need real locators
-    @FindBy(id = "current-password")
+    // Password change elements
+    @FindBy(css = TNCStoreLocators.CURRENT_PASSWORD_FIELD)
     private WebElement currentPasswordField;
 
-    @FindBy(id = "new-password")
+    @FindBy(css = TNCStoreLocators.NEW_PASSWORD_FIELD)
     private WebElement newPasswordField;
 
-    @FindBy(id = "confirm-password")
+    @FindBy(css = TNCStoreLocators.CONFIRM_PASSWORD_FIELD)
     private WebElement confirmPasswordField;
 
-    @FindBy(xpath = "//button[contains(text(),'Đổi mật khẩu')]")
+    @FindBy(xpath = TNCStoreLocators.CHANGE_PASSWORD_BUTTON)
     private WebElement changePasswordButton;
 
-    // Message elements - Need real locators
-    @FindBy(xpath = "//div[contains(@class,'success-message')]")
+    // Message elements
+    @FindBy(xpath = TNCStoreLocators.SUCCESS_MESSAGE)
     private WebElement successMessage;
 
-    @FindBy(xpath = "//div[contains(@class,'error-message')]")
+    @FindBy(xpath = TNCStoreLocators.ERROR_MESSAGE_GENERAL)
     private WebElement errorMessage;
 
-    @FindBy(xpath = "//span[contains(text(),'Email đã được sử dụng')]")
+    @FindBy(xpath = TNCStoreLocators.EMAIL_EXISTS_ERROR)
     private WebElement emailExistsError;
 
-    @FindBy(xpath = "//span[contains(text(),'This field is required')]")
+    @FindBy(xpath = TNCStoreLocators.REQUIRED_FIELD_ERROR)
     private WebElement requiredFieldError;
 
     // Login popup for authentication check
-    @FindBy(id = "js-form-holder")
+    @FindBy(css = TNCStoreLocators.LOGIN_POPUP)
     private WebElement loginPopup;
 
     // Navigation methods
@@ -79,7 +81,7 @@ public class UserProfilePage {
             wait.until(ExpectedConditions.visibilityOf(nameField));
         } catch (Exception e) {
             // If direct navigation fails, try URL
-            driver.get("https://www.tncstore.vn/account/profile");
+            driver.get(TNCStoreConfig.PROFILE_URL);
         }
     }
 

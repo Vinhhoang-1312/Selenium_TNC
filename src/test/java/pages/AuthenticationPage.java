@@ -1,5 +1,7 @@
-package modules.authentication;
+package pages;
 
+import config.TNCStoreLocators;
+import config.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,55 +16,58 @@ public class AuthenticationPage {
 
     public AuthenticationPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(TNCStoreConfig.ELEMENT_WAIT));
         PageFactory.initElements(driver, this);
     }
 
-    // Navigation elements
-    @FindBy(xpath = "/html/body/div[4]/div[2]/div/div/div[2]/a[1]/span")
+    // Navigation elements using centralized locators
+    @FindBy(xpath = TNCStoreLocators.ACCOUNT_BUTTON)
     private WebElement accountButton;
 
-    @FindBy(id = "js-form-holder")
+    @FindBy(css = TNCStoreLocators.LOGIN_POPUP)
     private WebElement loginPopup;
 
-    @FindBy(xpath = "//*[@id='js-form-login']/div[2]/div[4]/a")
+    @FindBy(xpath = TNCStoreLocators.CREATE_ACCOUNT_LINK)
     private WebElement createAccountLink;
 
     // Login elements
-    @FindBy(id = "js-login-email")
+    @FindBy(css = TNCStoreLocators.LOGIN_EMAIL_FIELD)
     private WebElement loginEmailField;
 
-    @FindBy(id = "js-login-password")
+    @FindBy(css = TNCStoreLocators.LOGIN_PASSWORD_FIELD)
     private WebElement loginPasswordField;
 
-    @FindBy(xpath = "//*[@id='js-form-login']//button[@type='submit']")
+    @FindBy(xpath = TNCStoreLocators.LOGIN_BUTTON)
     private WebElement loginButton;
 
     // Register elements
-    @FindBy(id = "js-popup-register-name")
+    @FindBy(css = TNCStoreLocators.REGISTER_NAME_FIELD)
     private WebElement registerNameField;
 
-    @FindBy(id = "js-popup-register-email")
+    @FindBy(css = TNCStoreLocators.REGISTER_EMAIL_FIELD)
     private WebElement registerEmailField;
 
-    @FindBy(id = "js-popup-register-password")
+    @FindBy(css = TNCStoreLocators.REGISTER_PASSWORD_FIELD)
     private WebElement registerPasswordField;
 
-    @FindBy(xpath = "//*[@id='js-form-register']//button[@type='submit']")
+    @FindBy(xpath = TNCStoreLocators.REGISTER_BUTTON)
     private WebElement registerButton;
 
     // Error message elements
-    @FindBy(xpath = "//div[contains(@class,'alert')]")
+    @FindBy(xpath = TNCStoreLocators.ERROR_MESSAGE_GENERAL)
     private WebElement errorMessage;
 
-    @FindBy(xpath = "//span[contains(text(),'Email đã được sử dụng')]")
+    @FindBy(xpath = TNCStoreLocators.EMAIL_EXISTS_ERROR)
     private WebElement emailExistsError;
 
-    @FindBy(xpath = "//span[contains(text(),'Email không hợp lệ')]")
+    @FindBy(xpath = TNCStoreLocators.INVALID_EMAIL_ERROR)
     private WebElement invalidEmailError;
 
-    @FindBy(xpath = "//span[contains(text(),'This field is required')]")
+    @FindBy(xpath = TNCStoreLocators.REQUIRED_FIELD_ERROR)
     private WebElement requiredFieldError;
+
+    @FindBy(xpath = TNCStoreLocators.LOGOUT_LINK)
+    private WebElement logoutLink;
 
     // Navigation methods
     public void openLoginPopup() {

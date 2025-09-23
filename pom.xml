@@ -91,7 +91,7 @@
                 <version>3.0.0-M9</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>testng-groups.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <allure.results.directory>target/allure-results</allure.results.directory>
@@ -111,8 +111,28 @@
         </plugins>
     </build>
 
-    <!-- Profiles for easy test execution -->
+    <!-- Profiles for easy test execution by groups -->
     <profiles>
+        <!-- 🔥 SMOKE TESTS -->
+        <profile>
+            <id>smoke</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>smoke</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🧪 AUTHENTICATION TESTS -->
         <profile>
             <id>auth</id>
             <build>
@@ -121,15 +141,17 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <includes>
-                                <include>**/AuthenticationTest.java</include>
-                            </includes>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>authentication</groups>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
 
+        <!-- 👤 USER PROFILE TESTS -->
         <profile>
             <id>profile</id>
             <build>
@@ -138,9 +160,255 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <includes>
-                                <include>**/UserProfileTest.java</include>
-                            </includes>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>userprofile</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 📝 SIGNUP TESTS -->
+        <profile>
+            <id>signup</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>signup</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔐 LOGIN TESTS -->
+        <profile>
+            <id>login</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>login</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔒 PASSWORD TESTS -->
+        <profile>
+            <id>password</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>forgot-password,password-change</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔄 REGRESSION TESTS -->
+        <profile>
+            <id>regression</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>regression</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🚀 ALL TESTS -->
+        <profile>
+            <id>all</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-groups.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔥 SMOKE TESTS - FUNCTIONAL -->
+        <profile>
+            <id>smoke-functional</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>smoke</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔐 LOGIN TESTS ONLY -->
+        <profile>
+            <id>login</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>login</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 📝 REGISTER TESTS ONLY -->
+        <profile>
+            <id>register</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>signup</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔒 FORGOT PASSWORD TESTS ONLY -->
+        <profile>
+            <id>forgot-password</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>forgot-password</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 👁️ PROFILE VIEW TESTS ONLY -->
+        <profile>
+            <id>profile-view</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>profile-view</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ✏️ PROFILE UPDATE TESTS ONLY -->
+        <profile>
+            <id>profile-update</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>profile-update</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🔑 PASSWORD CHANGE TESTS ONLY -->
+        <profile>
+            <id>password-change</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <groups>password-change</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 🚀 FUNCTIONAL TESTS - Using function-based structure -->
+        <profile>
+            <id>functions</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-functions.xml</suiteXmlFile>
+                            </suiteXmlFiles>
                         </configuration>
                     </plugin>
                 </plugins>

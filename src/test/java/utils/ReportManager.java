@@ -60,8 +60,42 @@ public class ReportManager {
             setModule("productdetail");
         } else if (testClassName.contains("Checkout")) {
             setModule("checkout");
+        } else if (testClassName.contains("TNCStoreTests")) {
+            // For group-based testing, use general module name
+            setModule("tnc-store");
         } else {
             setModule("general");
+        }
+    }
+
+    // Set module based on TestNG groups being executed
+    public static void setModuleFromGroups(String[] groups) {
+        if (groups != null && groups.length > 0) {
+            String primaryGroup = groups[0].toLowerCase();
+
+            // Map groups to module names for reporting
+            if (primaryGroup.contains("smoke")) {
+                setModule("smoke-tests");
+            } else if (primaryGroup.contains("authentication") || primaryGroup.contains("signup") ||
+                    primaryGroup.contains("login") || primaryGroup.contains("forgot-password")) {
+                setModule("authentication");
+            } else if (primaryGroup.contains("userprofile") || primaryGroup.contains("profile")) {
+                setModule("userprofile");
+            } else if (primaryGroup.contains("cart")) {
+                setModule("cart");
+            } else if (primaryGroup.contains("search")) {
+                setModule("search");
+            } else if (primaryGroup.contains("productdetail")) {
+                setModule("productdetail");
+            } else if (primaryGroup.contains("checkout")) {
+                setModule("checkout");
+            } else if (primaryGroup.contains("regression")) {
+                setModule("regression-tests");
+            } else {
+                setModule("tnc-store");
+            }
+        } else {
+            setModule("tnc-store");
         }
     }
 
@@ -176,7 +210,7 @@ public class ReportManager {
 
             // Save Excel file with module name
             String excelPath = "target/" + currentModule + "_TestResults_" +
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
             try (FileOutputStream fos = new FileOutputStream(excelPath)) {
                 workbook.write(fos);
                 System.out.println("📊 Excel report generated: " + excelPath);

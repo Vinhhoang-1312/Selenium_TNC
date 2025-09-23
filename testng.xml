@@ -7,25 +7,11 @@
 
     <parameter name="browser" value="chrome"/>
 
-    <!-- 🎯 AUTHENTICATION MODULE - ĐANG ACTIVE -->
-    <test name="Authentication Tests">
+    <!-- 🎯 MAIN TEST SUITE - Using Group-based Structure -->
+    <test name="TNC Store Tests - All Features">
         <classes>
-            <class name="modules.authentication.AuthenticationTest">
-                <!-- 🔧 Có thể chỉ chạy test method cụ thể -->
-                <methods>
-                    <include name="testRegisterWithValidData"/>
-                    <include name="testRegisterWithExistingEmail"/>
-                    <include name="testLoginWithValidCredentials"/>
-                    <!-- Thêm các test khác nếu cần thiết -->
-                </methods>
-            </class>
+            <class name="tests.TNCStoreTests"/>
         </classes>
     </test>
 
-    <!-- 👤 USER PROFILE MODULE - Chưa implement -->
-    <test name="User Profile Tests">
-        <classes>
-            <class name="modules.userprofile.UserProfileTest"/>
-        </classes>
-    </test>
 </suite>

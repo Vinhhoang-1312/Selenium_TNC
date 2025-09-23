@@ -1,30 +1,37 @@
-package modules.authentication;
+package tests;
 
 import base.BaseTest;
-import com.aventstack.extentreports.Status;
+import pages.AuthenticationPage;
+import pages.UserProfilePage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.ReportManager;
 import data.AuthenticationTestData;
 
-public class AuthenticationTest extends BaseTest {
+public class TNCStoreTests extends BaseTest {
     private AuthenticationPage authPage;
+    private UserProfilePage profilePage;
 
     @BeforeMethod
-    public void setUpAuthTest() {
+    public void setUpTest() {
+        // Call parent setup with default browser
+        super.setUp("chrome");
+
+        // Initialize page objects after driver is created
         authPage = new AuthenticationPage(driver);
-        // Set module for this test class
-        ReportManager.setModule("authentication");
+        profilePage = new UserProfilePage(driver);
+        ReportManager.setModule("tnc-store");
     }
 
-    // Sign up tests
-    @Test(description = "AUTH-SU-01: Register with valid name, email, and password")
+    // ========== AUTHENTICATION GROUP ==========
+
+    @Test(groups = {"authentication", "smoke", "signup"},
+          description = "AUTH-SU-01: Register with valid name, email, and password")
     public void testRegisterWithValidData() {
         test = ReportManager.startTest("AUTH-SU-01: Register with valid data");
 
         try {
-            // Use test data from AuthenticationTestData
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
 
@@ -45,7 +52,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SU-02: Register with existing email")
+    @Test(groups = {"authentication", "regression", "signup"},
+          description = "AUTH-SU-02: Register with existing email")
     public void testRegisterWithExistingEmail() {
         test = ReportManager.startTest("AUTH-SU-02: Register with existing email");
 
@@ -70,7 +78,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SU-03: Register with invalid email format")
+    @Test(groups = {"authentication", "regression", "signup"},
+          description = "AUTH-SU-03: Register with invalid email format")
     public void testRegisterWithInvalidEmail() {
         test = ReportManager.startTest("AUTH-SU-03: Register with invalid email format");
 
@@ -95,7 +104,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SU-04: Register with blank mandatory fields")
+    @Test(groups = {"authentication", "regression", "signup"},
+          description = "AUTH-SU-04: Register with blank mandatory fields")
     public void testRegisterWithBlankFields() {
         test = ReportManager.startTest("AUTH-SU-04: Register with blank mandatory fields");
 
@@ -116,7 +126,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SU-05: Register with weak/short password")
+    @Test(groups = {"authentication", "regression", "signup"},
+          description = "AUTH-SU-05: Register with weak/short password")
     public void testRegisterWithWeakPassword() {
         test = ReportManager.startTest("AUTH-SU-05: Register with weak/short password");
 
@@ -141,8 +152,10 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    // Sign in tests
-    @Test(description = "AUTH-SI-01: Login with valid email and password")
+    // ========== LOGIN GROUP ==========
+
+    @Test(groups = {"authentication", "smoke", "login"},
+          description = "AUTH-SI-01: Login with valid email and password")
     public void testLoginWithValidCredentials() {
         test = ReportManager.startTest("AUTH-SI-01: Login with valid credentials");
 
@@ -166,7 +179,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SI-02: Login with wrong password")
+    @Test(groups = {"authentication", "regression", "login"},
+          description = "AUTH-SI-02: Login with wrong password")
     public void testLoginWithWrongPassword() {
         test = ReportManager.startTest("AUTH-SI-02: Login with wrong password");
 
@@ -190,7 +204,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SI-03: Login with unregistered email")
+    @Test(groups = {"authentication", "regression", "login"},
+          description = "AUTH-SI-03: Login with unregistered email")
     public void testLoginWithUnregisteredEmail() {
         test = ReportManager.startTest("AUTH-SI-03: Login with unregistered email");
 
@@ -214,7 +229,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-SI-04: Login with invalid email format")
+    @Test(groups = {"authentication", "regression", "login"},
+          description = "AUTH-SI-04: Login with invalid email format")
     public void testLoginWithInvalidEmailFormat() {
         test = ReportManager.startTest("AUTH-SI-04: Login with invalid email format");
 
@@ -238,8 +254,10 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    // Forgot password tests
-    @Test(description = "AUTH-FP-01: Reset password with valid registered email")
+    // ========== FORGOT PASSWORD GROUP ==========
+
+    @Test(groups = {"authentication", "regression", "forgot-password"},
+          description = "AUTH-FP-01: Reset password with valid registered email")
     public void testForgotPasswordWithValidEmail() {
         test = ReportManager.startTest("AUTH-FP-01: Reset password with valid email");
 
@@ -259,7 +277,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-FP-02: Reset password with non-existing email")
+    @Test(groups = {"authentication", "regression", "forgot-password"},
+          description = "AUTH-FP-02: Reset password with non-existing email")
     public void testForgotPasswordWithNonExistingEmail() {
         test = ReportManager.startTest("AUTH-FP-02: Reset password with non-existing email");
 
@@ -280,7 +299,8 @@ public class AuthenticationTest extends BaseTest {
         }
     }
 
-    @Test(description = "AUTH-FP-03: Reset password with invalid email format")
+    @Test(groups = {"authentication", "regression", "forgot-password"},
+          description = "AUTH-FP-03: Reset password with invalid email format")
     public void testForgotPasswordWithInvalidEmailFormat() {
         test = ReportManager.startTest("AUTH-FP-03: Reset password with invalid email format");
 
@@ -299,5 +319,183 @@ public class AuthenticationTest extends BaseTest {
             takeScreenshot("AUTH-FP-03_Failed");
             throw e;
         }
+    }
+
+    // ========== USER PROFILE GROUP ==========
+
+    @Test(groups = {"userprofile", "smoke", "profile-view"},
+          description = "UP-VW-01: View profile information when logged in")
+    public void testViewProfileWhenLoggedIn() {
+        test = ReportManager.startTest("UP-VW-01: View profile when logged in");
+
+        try {
+            // Login first
+            loginBeforeTest();
+
+            // Navigate to profile page
+            profilePage.navigateToProfile();
+            ReportManager.logInfo("Navigated to profile page");
+
+            // Verify profile page loads
+            Assert.assertTrue(profilePage.isProfilePageLoaded(), "Profile page should load successfully");
+            ReportManager.logPass("Profile page loaded successfully");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-VW-01_Failed");
+            throw e;
+        }
+    }
+
+    @Test(groups = {"userprofile", "regression", "profile-view"},
+          description = "UP-VW-02: Redirect to login when not logged in")
+    public void testRedirectToLoginWhenNotLoggedIn() {
+        test = ReportManager.startTest("UP-VW-02: Redirect to login when not logged in");
+
+        try {
+            // Try to access profile without login
+            driver.get("https://www.tncstore.vn/account/profile");
+            ReportManager.logInfo("Attempted to access profile without login");
+
+            // Should redirect to login or show login popup
+            Assert.assertTrue(
+                driver.getCurrentUrl() != null && driver.getCurrentUrl().contains("login") ||
+                profilePage.isLoginPopupDisplayed(),
+                "Should redirect to login or show login popup"
+            );
+            ReportManager.logPass("Correctly redirected to login when not authenticated");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-VW-02_Failed");
+            throw e;
+        }
+    }
+
+    @Test(groups = {"userprofile", "regression", "profile-update"},
+          description = "UP-UD-01: Update profile with valid information")
+    public void testUpdateProfileWithValidData() {
+        test = ReportManager.startTest("UP-UD-01: Update profile with valid data");
+
+        try {
+            // Login first
+            loginBeforeTest();
+
+            // Get test data
+            String newName = "Updated Name";
+            String newPhone = "0123456789";
+            String newAddress = "123 Test Street, Ha Noi";
+
+            // Update profile
+            profilePage.updateProfile(newName, "", newPhone, newAddress);
+            ReportManager.logInfo("Updated profile with new information");
+
+            // Verify success message
+            Assert.assertTrue(profilePage.isSuccessMessageDisplayed(), "Success message should be displayed");
+            ReportManager.logPass("Profile updated successfully");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-UD-01_Failed");
+            throw e;
+        }
+    }
+
+    @Test(groups = {"userprofile", "regression", "profile-update"},
+          description = "UP-UD-02: Update with existing email")
+    public void testUpdateWithExistingEmail() {
+        test = ReportManager.startTest("UP-UD-02: Update with existing email");
+
+        try {
+            // Login first
+            loginBeforeTest();
+
+            // Try to update with existing email
+            profilePage.updateProfile("", "existing@tncstore.vn", "", "");
+            ReportManager.logInfo("Attempted to update with existing email");
+
+            // Verify error message
+            Assert.assertTrue(profilePage.isEmailExistsErrorDisplayed(), "Email exists error should be displayed");
+            ReportManager.logPass("Correctly rejected existing email");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-UD-02_Failed");
+            throw e;
+        }
+    }
+
+    @Test(groups = {"userprofile", "regression", "password-change"},
+          description = "UP-PC-01: Change password with correct current password")
+    public void testChangePasswordWithCorrectCurrentPassword() {
+        test = ReportManager.startTest("UP-PC-01: Change password with correct current password");
+
+        try {
+            // Login first
+            loginBeforeTest();
+
+            // Navigate to profile
+            profilePage.navigateToProfile();
+
+            // Change password with valid data
+            profilePage.changePassword("Abc12345", "NewPassword123", "NewPassword123");
+            ReportManager.logInfo("Submitted password change with valid data");
+
+            // Verify success
+            Assert.assertTrue(profilePage.isSuccessMessageDisplayed(), "Success message should be displayed");
+            ReportManager.logPass("Password changed successfully");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-PC-01_Failed");
+            throw e;
+        }
+    }
+
+    @Test(groups = {"userprofile", "regression", "password-change"},
+          description = "UP-PC-02: Change password with wrong current password")
+    public void testChangePasswordWithWrongCurrentPassword() {
+        test = ReportManager.startTest("UP-PC-02: Change password with wrong current password");
+
+        try {
+            // Login first
+            loginBeforeTest();
+
+            // Navigate to profile
+            profilePage.navigateToProfile();
+
+            // Try to change password with wrong current password
+            profilePage.changePassword("WrongPassword", "NewPassword123", "NewPassword123");
+            ReportManager.logInfo("Attempted password change with wrong current password");
+
+            // Verify error message
+            Assert.assertTrue(profilePage.isErrorMessageDisplayed(), "Error message should be displayed");
+            ReportManager.logPass("Wrong current password properly rejected");
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            takeScreenshot("UP-PC-02_Failed");
+            throw e;
+        }
+    }
+
+    // ========== HELPER METHODS ==========
+
+    private void loginBeforeTest() {
+        // Navigate to login and perform login
+        driver.get("https://www.tncstore.vn/");
+
+        // Use authentication page to login
+        authPage.performLogin("john@test.com", "Abc12345");
+
+        // Wait for login to complete
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // Verify login success
+        Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in before tests");
     }
 }
