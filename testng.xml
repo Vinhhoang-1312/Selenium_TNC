@@ -1,8 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="AutomationSuite">
-    <test name="Google Tests">
+<suite name="TNC Store Automation Test Suite" verbose="1">
+    <listeners>
+        <listener class-name="listener.TestListener"/>
+    </listeners>
+
+    <parameter name="browser" value="chrome"/>
+
+    <!-- Authentication Module Tests -->
+    <test name="Authentication Tests">
         <classes>
-            <class name="tests.GoogleSearchTest"/>
+            <class name="modules.authentication.AuthenticationTest"/>
         </classes>
     </test>
+
+    <!-- Cart Module Tests -->
+    <test name="Cart Tests">
+        <classes>
+            <class name="modules.cart.CartTest"/>
+        </classes>
+    </test>
+
+    <!-- User Profile Module Tests - To be implemented -->
+    <!--
+    <test name="User Profile Tests">
+        <classes>
+            <class name="modules.userprofile.UserProfileTest"/>
+        </classes>
+    </test>
+    -->
+
+    <!-- Search Module Tests - To be implemented -->
+    <!--
+    <test name="Search Tests">
+        <classes>
+            <class name="modules.search.SearchTest"/>
+        </classes>
+    </test>
+    -->
+
+    <!-- Product Detail Module Tests - To be implemented -->
+    <!--
+    <test name="Product Detail Tests">
+        <classes>
+            <class name="modules.productdetail.ProductDetailTest"/>
+        </classes>
+    </test>
+    -->
+
+    <!-- Checkout Module Tests - To be implemented -->
+    <!--
+    <test name="Checkout Tests">
+        <classes>
+            <class name="modules.checkout.CheckoutTest"/>
+        </classes>
+    </test>
+    -->
 </suite>

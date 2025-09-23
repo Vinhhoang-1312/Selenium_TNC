@@ -20,23 +20,30 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
-        ExtentManager.startTest(result.getMethod().getMethodName());
+        String testName = result.getMethod().getMethodName();
+        ExtentManager.startTest(testName);
+        ExtentManager.getTest().log(Status.INFO, "Test started: " + testName);
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        ExtentManager.getTest().log(Status.PASS, "Test Passed");
+        ExtentManager.getTest().log(Status.PASS, "Test passed: " + result.getMethod().getMethodName());
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
+        String testName = result.getMethod().getMethodName();
+        ExtentManager.getTest().log(Status.FAIL, "Test failed: " + testName);
+        ExtentManager.getTest().log(Status.FAIL, "Error: " + result.getThrowable().getMessage());
+
+        // Take screenshot on failure
         WebDriver driver = DriverFactory.getDriver();
         if (driver != null) {
             try {
                 String screenshotDir = "report/screenshots/";
                 Files.createDirectories(Paths.get(screenshotDir));
 
-                String screenshotPath = screenshotDir + result.getName() + "_" + System.currentTimeMillis() + ".png";
+                String screenshotPath = screenshotDir + testName + "_" + System.currentTimeMillis() + ".png";
 
                 File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 Files.copy(src.toPath(), Paths.get(screenshotPath));
@@ -52,7 +59,8 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        ExtentManager.getTest().log(Status.SKIP, "Test Skipped");
+        ExtentManager.getTest().log(Status.SKIP, "Test skipped: " + result.getMethod().getMethodName());
+        ExtentManager.getTest().log(Status.SKIP, "Reason: " + result.getThrowable().getMessage());
     }
 
     @Override
