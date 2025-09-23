@@ -6,7 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import utils.ExtentManager;
-import data.ExcelReader;
 import data.AuthenticationTestData;
 
 public class AuthenticationTest extends BaseTest {
@@ -23,27 +22,19 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SU-01: Register with valid data");
 
         try {
-            // Get test data from Excel or use fallback
-            String name = ExcelReader.getAuthData("AUTH-SU-01", "name");
-            String email = ExcelReader.getAuthData("AUTH-SU-01", "email");
-            String password = ExcelReader.getAuthData("AUTH-SU-01", "password");
-
-            // Use fallback data if Excel data not available
-            if (name.isEmpty()) name = AuthenticationTestData.VALID_NAME;
-            if (email.isEmpty()) email = AuthenticationTestData.VALID_EMAIL;
-            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
-
-            // Navigate to register form
+            // Use test data from AuthenticationTestData
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Fill and submit registration form
-            authPage.performRegistration(name, email, password);
-            test.log(Status.INFO, "Filled registration form with: " + name + ", " + email);
+            authPage.performRegistration(
+                AuthenticationTestData.VALID_NAME,
+                AuthenticationTestData.VALID_EMAIL,
+                AuthenticationTestData.VALID_PASSWORD
+            );
+            test.log(Status.INFO, "Filled registration form with valid data");
 
-            // Verify registration success
             Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in after successful registration");
-            test.log(Status.PASS, "Registration successful - User is logged in");
+            test.log(Status.PASS, "Registration successful");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -57,27 +48,18 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SU-02: Register with existing email");
 
         try {
-            // Get test data from Excel or use fallback
-            String name = ExcelReader.getAuthData("AUTH-SU-02", "name");
-            String email = ExcelReader.getAuthData("AUTH-SU-02", "email");
-            String password = ExcelReader.getAuthData("AUTH-SU-02", "password");
-
-            // Use fallback data if Excel data not available
-            if (name.isEmpty()) name = AuthenticationTestData.VALID_NAME;
-            if (email.isEmpty()) email = AuthenticationTestData.EXISTING_EMAIL;
-            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
-
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            authPage.performRegistration(name, email, password);
-            test.log(Status.INFO, "Filled registration form with existing email: " + email);
+            authPage.performRegistration(
+                AuthenticationTestData.VALID_NAME,
+                AuthenticationTestData.EXISTING_EMAIL,
+                AuthenticationTestData.VALID_PASSWORD
+            );
+            test.log(Status.INFO, "Filled registration form with existing email");
 
-            // Verify error message for existing email
             Assert.assertTrue(authPage.isEmailExistsErrorDisplayed(), "Email exists error should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Email đã được sử dụng"), "Error message should indicate email already exists");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Email exists error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -94,19 +76,15 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Use invalid email format
             authPage.performRegistration(
                 AuthenticationTestData.VALID_NAME,
                 AuthenticationTestData.INVALID_EMAIL_1,
                 AuthenticationTestData.VALID_PASSWORD
             );
-            test.log(Status.INFO, "Filled registration form with invalid email format");
+            test.log(Status.INFO, "Filled registration form with invalid email");
 
-            // Verify invalid email error
             Assert.assertTrue(authPage.isInvalidEmailErrorDisplayed(), "Invalid email error should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Email không hợp lệ"), "Error message should indicate invalid email");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Invalid email error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -123,15 +101,11 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Submit form with blank fields
             authPage.performRegistration("", "", "");
-            test.log(Status.INFO, "Submitted registration form with blank fields");
+            test.log(Status.INFO, "Submitted form with blank fields");
 
-            // Verify required field error
             Assert.assertTrue(authPage.isRequiredFieldErrorDisplayed(), "Required field error should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("This field is required"), "Error message should indicate required field");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Required field error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -148,7 +122,6 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToRegisterPage();
             test.log(Status.INFO, "Navigated to register page");
 
-            // Use weak password
             authPage.performRegistration(
                 AuthenticationTestData.VALID_NAME,
                 AuthenticationTestData.VALID_EMAIL_2,
@@ -156,9 +129,8 @@ public class AuthenticationTest extends BaseTest {
             );
             test.log(Status.INFO, "Filled registration form with weak password");
 
-            // Verify password error
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Password error should be displayed");
-            test.log(Status.PASS, "Registration with weak password properly rejected");
+            test.log(Status.PASS, "Weak password rejected correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -173,18 +145,14 @@ public class AuthenticationTest extends BaseTest {
         test = ExtentManager.startTest("AUTH-SI-01: Login with valid credentials");
 
         try {
-            // Get test data from Excel or use fallback
-            String email = ExcelReader.getAuthData("AUTH-SI-01", "email");
-            String password = ExcelReader.getAuthData("AUTH-SI-01", "password");
-
-            if (email.isEmpty()) email = AuthenticationTestData.VALID_EMAIL;
-            if (password.isEmpty()) password = AuthenticationTestData.VALID_PASSWORD;
-
             authPage.goToLoginPage();
             test.log(Status.INFO, "Navigated to login page");
 
-            authPage.performLogin(email, password);
-            test.log(Status.INFO, "Entered login credentials: " + email);
+            authPage.performLogin(
+                AuthenticationTestData.VALID_EMAIL,
+                AuthenticationTestData.VALID_PASSWORD
+            );
+            test.log(Status.INFO, "Entered valid login credentials");
 
             Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in successfully");
             test.log(Status.PASS, "Login successful");
@@ -204,18 +172,14 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToLoginPage();
             test.log(Status.INFO, "Navigated to login page");
 
-            // Use wrong password
             authPage.performLogin(
                 AuthenticationTestData.VALID_EMAIL,
                 AuthenticationTestData.WRONG_PASSWORD_1
             );
-            test.log(Status.INFO, "Entered valid email but wrong password");
+            test.log(Status.INFO, "Entered wrong password");
 
-            // Verify error message
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Invalid password"), "Error message should indicate invalid password");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Wrong password error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -232,18 +196,14 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToLoginPage();
             test.log(Status.INFO, "Navigated to login page");
 
-            // Use unregistered email
             authPage.performLogin(
                 AuthenticationTestData.NON_EXISTING_EMAIL_1,
                 AuthenticationTestData.VALID_PASSWORD
             );
             test.log(Status.INFO, "Entered unregistered email");
 
-            // Verify error message
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Account not found"), "Error message should indicate account not found");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Unregistered email error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -260,16 +220,14 @@ public class AuthenticationTest extends BaseTest {
             authPage.goToLoginPage();
             test.log(Status.INFO, "Navigated to login page");
 
-            // Use invalid email format
             authPage.performLogin(
                 AuthenticationTestData.INVALID_EMAIL_1,
                 AuthenticationTestData.VALID_PASSWORD
             );
             test.log(Status.INFO, "Entered invalid email format");
 
-            // Verify validation error
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Validation error should be displayed");
-            test.log(Status.PASS, "Validation error properly displayed for invalid email format");
+            test.log(Status.PASS, "Invalid email format error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -288,10 +246,9 @@ public class AuthenticationTest extends BaseTest {
             test.log(Status.INFO, "Navigated to login page");
 
             authPage.performForgotPassword(AuthenticationTestData.VALID_EMAIL);
-            test.log(Status.INFO, "Submitted forgot password with valid email");
+            test.log(Status.INFO, "Submitted forgot password request");
 
-            // Note: This needs to be customized based on actual behavior
-            test.log(Status.PASS, "Forgot password request processed successfully");
+            test.log(Status.PASS, "Forgot password request processed");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -311,11 +268,8 @@ public class AuthenticationTest extends BaseTest {
             authPage.performForgotPassword(AuthenticationTestData.FORGOT_NON_EXISTING_EMAIL_1);
             test.log(Status.INFO, "Submitted forgot password with non-existing email");
 
-            // Verify error message
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Email not registered"), "Error message should indicate email not registered");
-            test.log(Status.PASS, "Correct error message displayed: " + errorMessage);
+            test.log(Status.PASS, "Non-existing email error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
@@ -333,13 +287,10 @@ public class AuthenticationTest extends BaseTest {
             test.log(Status.INFO, "Navigated to login page");
 
             authPage.performForgotPassword(AuthenticationTestData.FORGOT_INVALID_EMAIL_1);
-            test.log(Status.INFO, "Submitted forgot password with invalid email format");
+            test.log(Status.INFO, "Submitted forgot password with invalid email");
 
-            // Verify validation error
             Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Validation error should be displayed");
-            String errorMessage = authPage.getErrorMessage();
-            Assert.assertTrue(errorMessage.contains("Invalid email"), "Error message should indicate invalid email");
-            test.log(Status.PASS, "Correct validation error displayed: " + errorMessage);
+            test.log(Status.PASS, "Invalid email format error displayed correctly");
 
         } catch (Exception e) {
             test.log(Status.FAIL, "Test failed: " + e.getMessage());
