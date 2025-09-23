@@ -14,57 +14,18 @@
                 <!-- 🔧 Có thể chỉ chạy test method cụ thể -->
                 <methods>
                     <include name="testRegisterWithValidData"/>
-                    <!-- Uncomment để chạy thêm test khác:
                     <include name="testRegisterWithExistingEmail"/>
                     <include name="testLoginWithValidCredentials"/>
-                    -->
+                    <!-- Thêm các test khác nếu cần thiết -->
                 </methods>
             </class>
         </classes>
     </test>
 
-    <!-- 🛒 CART MODULE - COMMENT ĐỂ TẮT -->
-    <!--
-    <test name="Cart Tests">
-        <classes>
-            <class name="modules.cart.CartTest"/>
-        </classes>
-    </test>
-    -->
-
-    <!-- 🔍 SEARCH MODULE - COMMENT ĐỂ TẮT -->
-    <!--
-    <test name="Search Tests">
-        <classes>
-            <class name="modules.search.SearchTest"/>
-        </classes>
-    </test>
-    -->
-
-    <!-- 📱 PRODUCT DETAIL MODULE - COMMENT ĐỂ TẮT -->
-    <!--
-    <test name="Product Detail Tests">
-        <classes>
-            <class name="modules.productdetail.ProductDetailTest"/>
-        </classes>
-    </test>
-    -->
-
     <!-- 👤 USER PROFILE MODULE - Chưa implement -->
-    <!--
     <test name="User Profile Tests">
         <classes>
             <class name="modules.userprofile.UserProfileTest"/>
         </classes>
     </test>
-    -->
-
-    <!-- 💳 CHECKOUT MODULE - Chưa implement -->
-    <!--
-    <test name="Checkout Tests">
-        <classes>
-            <class name="modules.checkout.CheckoutTest"/>
-        </classes>
-    </test>
-    -->
 </suite>
