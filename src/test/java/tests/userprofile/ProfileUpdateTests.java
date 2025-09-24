@@ -14,7 +14,7 @@ public class ProfileUpdateTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        super.setUp("chrome");
+        // BaseTest tự động khởi tạo driver, chỉ cần tạo page objects
         authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
         ReportManager.setModule("userprofile-update");

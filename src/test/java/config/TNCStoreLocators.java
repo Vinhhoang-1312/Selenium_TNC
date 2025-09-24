@@ -3,37 +3,40 @@ package config;
 /**
  * XPath locators for TNC Store website (https://www.tncstore.vn/)
  * Organized by page/functionality
+ * Based on actual website flow analysis
  */
 public class TNCStoreLocators {
 
     // ========== NAVIGATION & GENERAL ==========
+    // Nút "Tài khoản" - click để mở popup login
     public static final String ACCOUNT_BUTTON = "/html/body/div[4]/div[2]/div/div/div[2]/a[1]/span";
-    public static final String LOGIN_POPUP = "#js-form-holder";
-    public static final String MAIN_LOGO = "//a[@class='logo']";
-    public static final String SEARCH_BOX = "//input[@name='query']";
-    public static final String CART_ICON = "//a[contains(@href,'cart')]";
 
-    // ========== LOGIN/AUTHENTICATION ==========
+    // Popup khung đăng nhập xuất hiện sau khi click "Tài khoản"
+    public static final String LOGIN_POPUP = "#js-form-holder";
+
+    // ========== LOGIN FLOW ==========
+    // Từ popup #js-form-holder, nhập thông tin login trực tiếp
     public static final String LOGIN_EMAIL_FIELD = "#js-login-email";
     public static final String LOGIN_PASSWORD_FIELD = "#js-login-password";
-    public static final String LOGIN_BUTTON = "//*[@id='js-form-login']//button[@type='submit']";
-    public static final String CREATE_ACCOUNT_LINK = "//*[@id='js-form-login']/div[2]/div[4]/a";
-    public static final String FORGOT_PASSWORD_LINK = "//a[contains(text(),'Quên mật khẩu')]";
+    public static final String LOGIN_BUTTON = "#js-form-login button[type='submit']";
 
-    // ========== REGISTRATION ==========
-    public static final String REGISTER_NAME_FIELD = "#js-popup-register-name";
-    public static final String REGISTER_EMAIL_FIELD = "#js-popup-register-email";
-    public static final String REGISTER_PASSWORD_FIELD = "#js-popup-register-password";
-    public static final String REGISTER_BUTTON = "//*[@id='js-form-register']//button[@type='submit']";
-    public static final String REGISTER_TERMS_CHECKBOX = "//input[@name='terms']";
+    // ========== REGISTRATION FLOW ==========
+    // Từ popup login, click "Tạo tài khoản" để chuyển sang form register
+    public static final String CREATE_ACCOUNT_LINK = "#js-form-login div:nth-child(2) div:nth-child(4) a";
+
+    // 3 input fields xuất hiện sau khi click "Tạo tài khoản"
+    public static final String REGISTER_NAME_FIELD = "#js-popup-register-name";     // 1. Họ và tên
+    public static final String REGISTER_EMAIL_FIELD = "#js-popup-register-email";   // 2. Email
+    public static final String REGISTER_PASSWORD_FIELD = "#js-popup-register-password"; // 3. Mật khẩu
+    public static final String REGISTER_BUTTON = "#js-form-register button[type='submit']";
 
     // ========== ERROR/SUCCESS MESSAGES ==========
-    public static final String ERROR_MESSAGE_GENERAL = "//div[contains(@class,'alert')]";
-    public static final String SUCCESS_MESSAGE = "//div[contains(@class,'success-message')]";
-    public static final String EMAIL_EXISTS_ERROR = "//span[contains(text(),'Email đã được sử dụng')]";
-    public static final String INVALID_EMAIL_ERROR = "//span[contains(text(),'Email không hợp lệ')]";
-    public static final String REQUIRED_FIELD_ERROR = "//span[contains(text(),'This field is required')]";
-    public static final String PASSWORD_WEAK_ERROR = "//span[contains(text(),'Mật khẩu quá yếu')]";
+    public static final String ERROR_MESSAGE_GENERAL = "//div[contains(@class,'alert') or contains(@class,'error')]";
+    public static final String SUCCESS_MESSAGE = "//div[contains(@class,'success')]";
+    public static final String EMAIL_EXISTS_ERROR = "//span[contains(text(),'Email đã được sử dụng') or contains(text(),'Email already exists')]";
+    public static final String INVALID_EMAIL_ERROR = "//span[contains(text(),'Email không hợp lệ') or contains(text(),'Invalid email')]";
+    public static final String REQUIRED_FIELD_ERROR = "//span[contains(text(),'This field is required') or contains(text(),'Trường này là bắt buộc')]";
+    public static final String PASSWORD_WEAK_ERROR = "//span[contains(text(),'Mật khẩu quá yếu') or contains(text(),'Password too weak')]";
 
     // ========== USER PROFILE ==========
     public static final String PROFILE_LINK = "//a[contains(@href,'profile') or contains(@href,'account')]";
@@ -52,15 +55,14 @@ public class TNCStoreLocators {
 
     // ========== LOGOUT ==========
     public static final String LOGOUT_LINK = "//a[contains(text(),'Đăng xuất')]";
-    public static final String USER_MENU_DROPDOWN = "//div[@class='user-menu']";
-
-    // ========== PRODUCT & SHOPPING ==========
-    public static final String PRODUCT_ITEM = "//div[@class='product-item']";
-    public static final String ADD_TO_CART_BUTTON = "//button[contains(text(),'Thêm vào giỏ')]";
-    public static final String CART_ITEMS_COUNT = "//span[@class='cart-count']";
-    public static final String CHECKOUT_BUTTON = "//a[contains(@href,'checkout')]";
 
     // ========== LOADING & STATES ==========
     public static final String LOADING_SPINNER = "//div[@class='loading']";
-    public static final String PAGE_LOADER = "//div[@id='page-loader']";
+
+    // ========== ALTERNATIVES - More stable locators ==========
+    // Backup locators using better strategies
+    public static final String ACCOUNT_BUTTON_ALT = "//span[contains(text(),'Tài khoản') or contains(text(),'Account')]";
+    public static final String LOGIN_EMAIL_ALT = "input[placeholder*='email' i], input[name*='email']";
+    public static final String LOGIN_PASSWORD_ALT = "input[type='password'][id*='login']";
+    public static final String REGISTER_NAME_ALT = "input[placeholder*='tên' i], input[name*='name']";
 }

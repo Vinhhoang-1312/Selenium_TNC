@@ -13,9 +13,14 @@ public class ForgotPasswordTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        super.setUp("chrome");
+        // Gọi parent setup trước để đảm bảo driver được khởi tạo
+        super.setUp();
+
+        // Khởi tạo page objects sau khi driver ready
         authPage = new AuthenticationPage(driver);
         ReportManager.setModule("authentication-forgot-password");
+
+        System.out.println("✅ ForgotPasswordTests setup completed");
     }
 
     @Test(groups = {"authentication", "regression", "forgot-password"},

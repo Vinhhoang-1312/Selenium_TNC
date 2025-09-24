@@ -13,9 +13,20 @@ public class LoginTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        super.setUp("chrome");
+        // Gọi parent setup trước để đảm bảo driver được khởi tạo
+        super.setUp();
+
+        // Kiểm tra driver đã được khởi tạo chưa
+        if (driver == null) {
+            System.out.println("❌ Driver is still null after BaseTest setup");
+            throw new RuntimeException("Driver not initialized");
+        }
+
+        // Khởi tạo page objects sau khi driver ready
         authPage = new AuthenticationPage(driver);
         ReportManager.setModule("authentication-login");
+
+        System.out.println("✅ LoginTests setup completed - authPage: " + (authPage != null ? "OK" : "NULL"));
     }
 
     @Test(groups = {"authentication", "smoke", "login"},

@@ -15,10 +15,7 @@ public class TNCStoreTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        // Call parent setup with default browser
-        super.setUp("chrome");
-
-        // Initialize page objects after driver is created
+        // BaseTest tự động khởi tạo driver, chỉ cần tạo page objects
         authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
         ReportManager.setModule("tnc-store");

@@ -14,10 +14,15 @@ public class ProfileViewTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        super.setUp("chrome");
+        // Gọi parent setup trước để đảm bảo driver được khởi tạo
+        super.setUp();
+
+        // Khởi tạo page objects sau khi driver ready
         authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
         ReportManager.setModule("userprofile-view");
+
+        System.out.println("✅ ProfileViewTests setup completed");
     }
 
     @Test(groups = {"userprofile", "smoke", "profile-view"},

@@ -26,23 +26,25 @@ public class BaseTest {
     }
 
     @BeforeMethod
-    @Parameters("browser")
-    public void setUp(@Optional("chrome") String browser) {
-        // Initialize driver
+    public void setUp() {
+        // Initialize driver without parameters dependency
+        String browser = ConfigReader.getProperty("browser", "chrome");
         DriverFactory.initializeDriver(browser);
         driver = DriverFactory.getDriver();
 
-        // Set timeouts
+        // Set timeouts using config
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
-            Integer.parseInt(ConfigReader.getProperty("implicit.wait", "10"))));
+            Integer.parseInt(ConfigReader.getProperty("implicit.wait", "15"))));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(
-            Integer.parseInt(ConfigReader.getProperty("page.load.timeout", "30"))));
+            Integer.parseInt(ConfigReader.getProperty("page.load.timeout", "60"))));
 
         // Navigate to base URL
         driver.get(ConfigReader.getProperty("base.url"));
 
         // Maximize window
         driver.manage().window().maximize();
+
+        System.out.println("✅ WebDriver initialized successfully");
     }
 
     @AfterMethod

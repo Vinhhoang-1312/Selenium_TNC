@@ -13,9 +13,19 @@ public class RegisterTests extends BaseTest {
 
     @BeforeMethod
     public void setUpTest() {
-        super.setUp("chrome");
+        // Gọi parent setup trước để đảm bảo driver được khởi tạo
+        super.setUp();
+
+        // Kiểm tra driver
+        if (driver == null) {
+            throw new RuntimeException("Driver not initialized by BaseTest");
+        }
+
+        // Khởi tạo page objects
         authPage = new AuthenticationPage(driver);
         ReportManager.setModule("authentication-register");
+
+        System.out.println("✅ RegisterTests setup completed");
     }
 
     @Test(groups = {"authentication", "smoke", "signup"},

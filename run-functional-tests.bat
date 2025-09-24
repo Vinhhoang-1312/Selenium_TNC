@@ -32,7 +32,7 @@ if "%choice%"=="1" (
 
 if "%choice%"=="2" (
     echo Running Login Tests...
-    call mvn clean test -Plogin
+    call mvn clean test -Plogin-only
     goto :open_reports
 )
 
