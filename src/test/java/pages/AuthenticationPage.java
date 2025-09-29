@@ -1,7 +1,7 @@
 package pages;
 
-import config.TNCStoreLocators;
-import config.TNCStoreConfig;
+import team.three.automation.commons.TNCStoreLocators;
+import team.three.automation.commons.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -33,27 +33,23 @@ public class AuthenticationPage {
     private WebElement createAccountLink;
 
     // ========== LOGIN ELEMENTS ==========
-    // Input email trong popup login (không cần click "Tạo tài khoản")
     @FindBy(css = TNCStoreLocators.LOGIN_EMAIL_FIELD)
     private WebElement loginEmailField;
 
-    // Input password trong popup login
     @FindBy(css = TNCStoreLocators.LOGIN_PASSWORD_FIELD)
     private WebElement loginPasswordField;
 
-    // Button submit login
     @FindBy(css = TNCStoreLocators.LOGIN_BUTTON)
     private WebElement loginButton;
 
     // ========== REGISTER ELEMENTS ==========
-    // 3 input fields xuất hiện sau khi click "Tạo tài khoản"
-    @FindBy(css = TNCStoreLocators.REGISTER_NAME_FIELD)      // 1. Họ và tên
+    @FindBy(css = TNCStoreLocators.REGISTER_NAME_FIELD)
     private WebElement registerNameField;
 
-    @FindBy(css = TNCStoreLocators.REGISTER_EMAIL_FIELD)     // 2. Email
+    @FindBy(css = TNCStoreLocators.REGISTER_EMAIL_FIELD)
     private WebElement registerEmailField;
 
-    @FindBy(css = TNCStoreLocators.REGISTER_PASSWORD_FIELD)  // 3. Mật khẩu
+    @FindBy(css = TNCStoreLocators.REGISTER_PASSWORD_FIELD)
     private WebElement registerPasswordField;
 
     @FindBy(css = TNCStoreLocators.REGISTER_BUTTON)
@@ -76,16 +72,10 @@ public class AuthenticationPage {
     private WebElement logoutLink;
 
     // ========== NAVIGATION METHODS ==========
-
-    /**
-     * Bước 1: Click nút "Tài khoản" để mở popup login
-     */
     public void openLoginPopup() {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(accountButton));
             accountButton.click();
-
-            // Đợi popup xuất hiện
             wait.until(ExpectedConditions.visibilityOf(loginPopup));
             System.out.println("✅ Đã mở popup login thành công");
         } catch (Exception e) {
@@ -94,132 +84,71 @@ public class AuthenticationPage {
         }
     }
 
-    // ========== LOGIN FLOW ==========
-
-    /**
-     * Flow đăng nhập: Click "Tài khoản" → Nhập email/password trực tiếp
-     * (KHÔNG click "Tạo tài khoản")
-     */
-    public void goToLoginForm() {
-        openLoginPopup();
-        // Popup đã mở, có thể nhập email/password ngay
-        wait.until(ExpectedConditions.visibilityOf(loginEmailField));
-        System.out.println("✅ Form login đã sẵn sàng");
-    }
-
+    // ========== LOGIN METHODS ==========
     public void performLogin(String email, String password) {
         try {
-            // Bước 1: Mở popup
-            goToLoginForm();
+            openLoginPopup();
 
-            // Bước 2: Nhập email
-            wait.until(ExpectedConditions.visibilityOf(loginEmailField));
+            wait.until(ExpectedConditions.elementToBeClickable(loginEmailField));
             loginEmailField.clear();
             loginEmailField.sendKeys(email);
 
-            // Bước 3: Nhập password
-            wait.until(ExpectedConditions.visibilityOf(loginPasswordField));
+            wait.until(ExpectedConditions.elementToBeClickable(loginPasswordField));
             loginPasswordField.clear();
             loginPasswordField.sendKeys(password);
 
-            // Bước 4: Click login
-            wait.until(ExpectedConditions.elementToBeClickable(loginButton));
             loginButton.click();
-
             System.out.println("✅ Đã thực hiện login với email: " + email);
 
-            // Đợi popup đóng hoặc redirect
-            Thread.sleep(2000);
-
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi login: " + e.getMessage());
-            throw new RuntimeException("Login thất bại", e);
+            System.out.println("❌ Lỗi khi đăng nhập: " + e.getMessage());
+            throw new RuntimeException("Không thể đăng nhập", e);
         }
     }
 
-    // ========== REGISTRATION FLOW ==========
-
-    /**
-     * Flow đăng ký: Click "Tài khoản" → Click "Tạo tài khoản" → Nhập 3 fields
-     */
-    public void goToRegisterForm() {
+    // ========== REGISTRATION METHODS ==========
+    public void goToRegisterPage() {
         try {
-            // Bước 1: Mở popup login
             openLoginPopup();
-
-            // Bước 2: Click "Tạo tài khoản"
             wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
             createAccountLink.click();
-
-            // Bước 3: Đợi 3 input fields xuất hiện
-            wait.until(ExpectedConditions.visibilityOf(registerNameField));
-            wait.until(ExpectedConditions.visibilityOf(registerEmailField));
-            wait.until(ExpectedConditions.visibilityOf(registerPasswordField));
-
-            System.out.println("✅ Form đăng ký đã hiển thị với 3 input fields");
-
+            System.out.println("✅ Đã chuyển sang form đăng ký");
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi mở form đăng ký: " + e.getMessage());
-            throw new RuntimeException("Không thể mở form đăng ký", e);
+            System.out.println("❌ Lỗi khi chuyển sang form đăng ký: " + e.getMessage());
+            throw new RuntimeException("Không thể chuyển sang form đăng ký", e);
         }
     }
 
     public void performRegistration(String name, String email, String password) {
         try {
-            // Bước 1: Mở form đăng ký
-            goToRegisterForm();
+            goToRegisterPage();
 
-            // Bước 2: Nhập họ và tên
+            wait.until(ExpectedConditions.elementToBeClickable(registerNameField));
             registerNameField.clear();
             registerNameField.sendKeys(name);
 
-            // Bước 3: Nhập email
+            wait.until(ExpectedConditions.elementToBeClickable(registerEmailField));
             registerEmailField.clear();
             registerEmailField.sendKeys(email);
 
-            // Bước 4: Nhập mật khẩu
+            wait.until(ExpectedConditions.elementToBeClickable(registerPasswordField));
             registerPasswordField.clear();
             registerPasswordField.sendKeys(password);
 
-            // Bước 5: Submit
-            wait.until(ExpectedConditions.elementToBeClickable(registerButton));
             registerButton.click();
-
-            System.out.println("✅ Đã thực hiện đăng ký với:");
-            System.out.println("   - Tên: " + name);
-            System.out.println("   - Email: " + email);
-
-            // Đợi xử lý
-            Thread.sleep(2000);
+            System.out.println("✅ Đã thực hiện đăng ký với email: " + email);
 
         } catch (Exception e) {
             System.out.println("❌ Lỗi khi đăng ký: " + e.getMessage());
-            throw new RuntimeException("Đăng ký thất bại", e);
+            throw new RuntimeException("Không thể đăng ký", e);
         }
     }
 
     // ========== VALIDATION METHODS ==========
-
     public boolean isLoginSuccessful() {
         try {
-            Thread.sleep(2000);
-
-            // Kiểm tra nhiều dấu hiệu login thành công
-            boolean popupClosed = !isLoginPopupDisplayed();
-            boolean hasLogoutLink = driver.getPageSource().contains("Đăng xuất");
-            boolean urlChanged = driver.getCurrentUrl().contains("account") ||
-                                driver.getCurrentUrl().contains("profile");
-
-            return popupClosed || hasLogoutLink || urlChanged;
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isLoginPopupDisplayed() {
-        try {
-            return loginPopup.isDisplayed();
+            // Check if logout link is present (indicates successful login)
+            return wait.until(ExpectedConditions.visibilityOf(logoutLink)).isDisplayed();
         } catch (Exception e) {
             return false;
         }
@@ -233,43 +162,20 @@ public class AuthenticationPage {
         }
     }
 
-    public boolean isEmailExistsErrorDisplayed() {
+    public String getErrorMessage() {
         try {
-            return emailExistsError.isDisplayed();
+            if (emailExistsError.isDisplayed()) {
+                return emailExistsError.getText();
+            } else if (invalidEmailError.isDisplayed()) {
+                return invalidEmailError.getText();
+            } else if (requiredFieldError.isDisplayed()) {
+                return requiredFieldError.getText();
+            } else if (errorMessage.isDisplayed()) {
+                return errorMessage.getText();
+            }
+            return "";
         } catch (Exception e) {
-            return false;
+            return "";
         }
-    }
-
-    public boolean isInvalidEmailErrorDisplayed() {
-        try {
-            return invalidEmailError.isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isRequiredFieldErrorDisplayed() {
-        try {
-            return requiredFieldError.isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    // ========== COMPATIBILITY METHODS ==========
-    // Để tương thích với code cũ
-
-    public void goToLoginPage() {
-        goToLoginForm();
-    }
-
-    public void goToRegisterPage() {
-        goToRegisterForm();
-    }
-
-    public void performForgotPassword(String email) {
-        // Chưa implement - cần xem flow forgot password của TNC Store
-        System.out.println("⚠️ Forgot password chưa được implement");
     }
 }

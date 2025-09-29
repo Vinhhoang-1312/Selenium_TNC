@@ -1,34 +1,34 @@
-package config;
+package team.three.automation.commons;
 
 /**
  * XPath locators for TNC Store website (https://www.tncstore.vn/)
  * Organized by page/functionality
- * Based on actual website flow analysis
+ * Based on actual website flow analysis - UPDATED 2024
  */
 public class TNCStoreLocators {
 
     // ========== NAVIGATION & GENERAL ==========
     // Nút "Tài khoản" - click để mở popup login
-    public static final String ACCOUNT_BUTTON = "/html/body/div[4]/div[2]/div/div/div[2]/a[1]/span";
+    public static final String ACCOUNT_BUTTON = "//span[contains(text(),'Tài khoản')]";
 
     // Popup khung đăng nhập xuất hiện sau khi click "Tài khoản"
     public static final String LOGIN_POPUP = "#js-form-holder";
 
-    // ========== LOGIN FLOW ==========
-    // Từ popup #js-form-holder, nhập thông tin login trực tiếp
-    public static final String LOGIN_EMAIL_FIELD = "#js-login-email";
-    public static final String LOGIN_PASSWORD_FIELD = "#js-login-password";
-    public static final String LOGIN_BUTTON = "#js-form-login button[type='submit']";
-
     // ========== REGISTRATION FLOW ==========
     // Từ popup login, click "Tạo tài khoản" để chuyển sang form register
-    public static final String CREATE_ACCOUNT_LINK = "#js-form-login div:nth-child(2) div:nth-child(4) a";
+    public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'ạo tài')]";
 
     // 3 input fields xuất hiện sau khi click "Tạo tài khoản"
-    public static final String REGISTER_NAME_FIELD = "#js-popup-register-name";     // 1. Họ và tên
-    public static final String REGISTER_EMAIL_FIELD = "#js-popup-register-email";   // 2. Email
-    public static final String REGISTER_PASSWORD_FIELD = "#js-popup-register-password"; // 3. Mật khẩu
-    public static final String REGISTER_BUTTON = "#js-form-register button[type='submit']";
+    public static final String REGISTER_NAME_FIELD = "//input[@id='js-popup-register-name']";     // 1. Họ và tên
+    public static final String REGISTER_EMAIL_FIELD = "//input[@id='js-popup-register-email']";   // 2. Email
+    public static final String REGISTER_PASSWORD_FIELD = "//input[@id='js-popup-register-password']"; // 3. Mật khẩu
+    public static final String REGISTER_BUTTON = "//a[@class='btn-submit']";
+
+    // ========== LOGIN FLOW ==========
+    // Từ popup #js-form-holder, nhập thông tin login trực tiếp
+    public static final String LOGIN_EMAIL_FIELD = "//input[@id='js-login-email']";
+    public static final String LOGIN_PASSWORD_FIELD = "//input[@id='js-login-password']";
+    public static final String LOGIN_BUTTON = "//a[@class='btn-submit']";
 
     // ========== ERROR/SUCCESS MESSAGES ==========
     public static final String ERROR_MESSAGE_GENERAL = "//div[contains(@class,'alert') or contains(@class,'error')]";

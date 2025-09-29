@@ -1,7 +1,7 @@
 package pages;
 
-import config.TNCStoreLocators;
-import config.TNCStoreConfig;
+import team.three.automation.commons.TNCStoreLocators;
+import team.three.automation.commons.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -56,168 +56,110 @@ public class UserProfilePage {
     @FindBy(xpath = TNCStoreLocators.CHANGE_PASSWORD_BUTTON)
     private WebElement changePasswordButton;
 
-    // Message elements
-    @FindBy(xpath = TNCStoreLocators.SUCCESS_MESSAGE)
-    private WebElement successMessage;
-
-    @FindBy(xpath = TNCStoreLocators.ERROR_MESSAGE_GENERAL)
-    private WebElement errorMessage;
-
-    @FindBy(xpath = TNCStoreLocators.EMAIL_EXISTS_ERROR)
-    private WebElement emailExistsError;
-
-    @FindBy(xpath = TNCStoreLocators.REQUIRED_FIELD_ERROR)
-    private WebElement requiredFieldError;
-
-    // Login popup for authentication check
-    @FindBy(css = TNCStoreLocators.LOGIN_POPUP)
-    private WebElement loginPopup;
-
-    // Navigation methods
+    // ========== NAVIGATION METHODS ==========
     public void navigateToProfile() {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(profileLink));
             profileLink.click();
-            wait.until(ExpectedConditions.visibilityOf(nameField));
+            System.out.println("✅ Navigated to profile page");
         } catch (Exception e) {
-            // If direct navigation fails, try URL
-            driver.get(TNCStoreConfig.PROFILE_URL);
+            System.out.println("❌ Failed to navigate to profile: " + e.getMessage());
+            throw new RuntimeException("Cannot navigate to profile page", e);
         }
     }
 
-    // Profile update methods
-    public void enterName(String name) {
-        if (!name.isEmpty()) {
-            wait.until(ExpectedConditions.visibilityOf(nameField));
-            nameField.clear();
-            nameField.sendKeys(name);
+    // ========== PROFILE UPDATE METHODS ==========
+    public void updateProfile(String name, String phone, String address) {
+        try {
+            if (name != null && !name.isEmpty()) {
+                wait.until(ExpectedConditions.elementToBeClickable(nameField));
+                nameField.clear();
+                nameField.sendKeys(name);
+            }
+
+            if (phone != null && !phone.isEmpty()) {
+                wait.until(ExpectedConditions.elementToBeClickable(phoneField));
+                phoneField.clear();
+                phoneField.sendKeys(phone);
+            }
+
+            if (address != null && !address.isEmpty()) {
+                wait.until(ExpectedConditions.elementToBeClickable(addressField));
+                addressField.clear();
+                addressField.sendKeys(address);
+            }
+
+            saveProfileButton.click();
+            System.out.println("✅ Profile updated successfully");
+
+        } catch (Exception e) {
+            System.out.println("❌ Failed to update profile: " + e.getMessage());
+            throw new RuntimeException("Cannot update profile", e);
         }
     }
 
-    public void enterEmail(String email) {
-        if (!email.isEmpty()) {
-            wait.until(ExpectedConditions.visibilityOf(emailField));
-            emailField.clear();
-            emailField.sendKeys(email);
+    // ========== PASSWORD CHANGE METHODS ==========
+    public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(currentPasswordField));
+            currentPasswordField.clear();
+            currentPasswordField.sendKeys(currentPassword);
+
+            wait.until(ExpectedConditions.elementToBeClickable(newPasswordField));
+            newPasswordField.clear();
+            newPasswordField.sendKeys(newPassword);
+
+            wait.until(ExpectedConditions.elementToBeClickable(confirmPasswordField));
+            confirmPasswordField.clear();
+            confirmPasswordField.sendKeys(confirmPassword);
+
+            changePasswordButton.click();
+            System.out.println("✅ Password change request submitted");
+
+        } catch (Exception e) {
+            System.out.println("❌ Failed to change password: " + e.getMessage());
+            throw new RuntimeException("Cannot change password", e);
         }
     }
 
-    public void enterPhone(String phone) {
-        if (!phone.isEmpty()) {
-            wait.until(ExpectedConditions.visibilityOf(phoneField));
-            phoneField.clear();
-            phoneField.sendKeys(phone);
-        }
-    }
-
-    public void enterAddress(String address) {
-        if (!address.isEmpty()) {
-            wait.until(ExpectedConditions.visibilityOf(addressField));
-            addressField.clear();
-            addressField.sendKeys(address);
-        }
-    }
-
-    public void clickSaveProfile() {
-        wait.until(ExpectedConditions.elementToBeClickable(saveProfileButton));
-        saveProfileButton.click();
-    }
-
-    // Password change methods
-    public void enterCurrentPassword(String password) {
-        wait.until(ExpectedConditions.visibilityOf(currentPasswordField));
-        currentPasswordField.clear();
-        currentPasswordField.sendKeys(password);
-    }
-
-    public void enterNewPassword(String password) {
-        wait.until(ExpectedConditions.visibilityOf(newPasswordField));
-        newPasswordField.clear();
-        newPasswordField.sendKeys(password);
-    }
-
-    public void enterConfirmPassword(String password) {
-        wait.until(ExpectedConditions.visibilityOf(confirmPasswordField));
-        confirmPasswordField.clear();
-        confirmPasswordField.sendKeys(password);
-    }
-
-    public void clickChangePassword() {
-        wait.until(ExpectedConditions.elementToBeClickable(changePasswordButton));
-        changePasswordButton.click();
-    }
-
-    // Validation methods
+    // ========== VALIDATION METHODS ==========
     public boolean isProfilePageLoaded() {
         try {
-            return nameField.isDisplayed() && emailField.isDisplayed();
-        } catch (Exception e) {
-            return driver.getCurrentUrl().contains("profile") ||
-                   driver.getCurrentUrl().contains("account");
-        }
-    }
-
-    public boolean isSuccessMessageDisplayed() {
-        try {
-            return successMessage.isDisplayed();
+            return wait.until(ExpectedConditions.visibilityOf(nameField)).isDisplayed();
         } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean isErrorMessageDisplayed() {
+    public String getProfileName() {
         try {
-            return errorMessage.isDisplayed();
+            return nameField.getAttribute("value");
         } catch (Exception e) {
-            return false;
+            return "";
         }
     }
 
-    public boolean isEmailExistsErrorDisplayed() {
+    public String getProfileEmail() {
         try {
-            return emailExistsError.isDisplayed();
+            return emailField.getAttribute("value");
         } catch (Exception e) {
-            return false;
+            return "";
         }
     }
 
-    public boolean isRequiredFieldErrorDisplayed() {
+    public String getProfilePhone() {
         try {
-            return requiredFieldError.isDisplayed();
+            return phoneField.getAttribute("value");
         } catch (Exception e) {
-            return false;
+            return "";
         }
     }
 
-    public boolean isLoginPopupDisplayed() {
+    public String getProfileAddress() {
         try {
-            return loginPopup.isDisplayed();
+            return addressField.getAttribute("value");
         } catch (Exception e) {
-            return false;
+            return "";
         }
-    }
-
-    // Check if user is logged in
-    public boolean isUserLoggedIn() {
-        return driver.getPageSource().contains("Đăng xuất") ||
-               driver.getCurrentUrl().contains("account") ||
-               !isLoginPopupDisplayed();
-    }
-
-    // Complete workflows
-    public void updateProfile(String name, String email, String phone, String address) {
-        navigateToProfile();
-        enterName(name);
-        enterEmail(email);
-        enterPhone(phone);
-        enterAddress(address);
-        clickSaveProfile();
-    }
-
-    public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
-        enterCurrentPassword(currentPassword);
-        enterNewPassword(newPassword);
-        enterConfirmPassword(confirmPassword);
-        clickChangePassword();
     }
 }
