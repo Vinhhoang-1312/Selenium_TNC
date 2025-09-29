@@ -1,10 +1,8 @@
 package test.authentication;
 
 import pages.AuthenticationPage;
-import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
