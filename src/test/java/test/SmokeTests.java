@@ -1,7 +1,7 @@
 package test;
 
-import helpers.BaseTest;
 import helpers.ReportManager;
+import helpers.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

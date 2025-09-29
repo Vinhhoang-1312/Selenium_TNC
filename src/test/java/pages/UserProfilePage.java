@@ -5,19 +5,13 @@ import commons.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.Duration;
 
-public class UserProfilePage {
-    private WebDriver driver;
-    private WebDriverWait wait;
+public class UserProfilePage extends BasePage {
 
     public UserProfilePage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(TNCStoreConfig.ELEMENT_WAIT));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     // Profile navigation elements using centralized locators

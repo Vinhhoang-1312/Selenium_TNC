@@ -19,6 +19,52 @@ public class WaitUtils {
     private static final int DEFAULT_TIMEOUT = 15;
     private static final int DEFAULT_POLLING = 2;
 
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    // Constructor for instance usage (used in BasePage)
+    public WaitUtils(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
+    }
+
+    // ========== INSTANCE METHODS (for BasePage usage) ==========
+
+    /**
+     * Wait for element to be visible (instance method)
+     */
+    public WebElement waitForElementToBeVisible(WebElement element) {
+        try {
+            return wait.until(ExpectedConditions.visibilityOf(element));
+        } catch (TimeoutException e) {
+            throw new TimeoutException("Element not visible after " + DEFAULT_TIMEOUT + " seconds: " + element);
+        }
+    }
+
+    /**
+     * Wait for element to be clickable (instance method)
+     */
+    public WebElement waitForElementToBeClickable(WebElement element) {
+        try {
+            return wait.until(ExpectedConditions.elementToBeClickable(element));
+        } catch (TimeoutException e) {
+            throw new TimeoutException("Element not clickable after " + DEFAULT_TIMEOUT + " seconds: " + element);
+        }
+    }
+
+    /**
+     * Wait for element to be present (instance method)
+     */
+    public boolean waitForElementToBePresent(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // ========== STATIC METHODS (for direct usage) ==========
+
     /**
      * Wait for element to be visible
      */

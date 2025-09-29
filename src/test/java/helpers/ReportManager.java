@@ -143,6 +143,12 @@ public class ReportManager {
         }
     }
 
+    public static void logWarning(String message) {
+        if (test.get() != null) {
+            test.get().warning(message);
+        }
+    }
+
     public static void logTestResult(String testName, String status, String duration, String error) {
         testResults.add(new TestResult(testName, status, duration, error));
     }
