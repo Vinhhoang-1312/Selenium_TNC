@@ -1,7 +1,7 @@
 package pages;
 
-import team.three.automation.commons.TNCStoreLocators;
-import team.three.automation.commons.TNCStoreConfig;
+import commons.TNCStoreLocators;
+import commons.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

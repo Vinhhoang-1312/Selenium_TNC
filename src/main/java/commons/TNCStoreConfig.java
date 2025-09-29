@@ -1,4 +1,4 @@
-package team.three.automation.commons;
+package commons;
 
 /**
  * Configuration constants for TNC Store automation tests

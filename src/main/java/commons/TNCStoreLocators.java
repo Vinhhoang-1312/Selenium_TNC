@@ -1,4 +1,4 @@
-package team.three.automation.commons;
+package commons;
 
 /**
  * XPath locators for TNC Store website (https://www.tncstore.vn/)
