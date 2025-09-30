@@ -3,7 +3,8 @@
 
 <suite name="TNC Store Test Suite - Divided by Functions" verbose="1">
     <listeners>
-        <listener class-name="listener.TestListener"/>
+        <!-- Corrected listener package -->
+        <listener class-name="commons.listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>
@@ -16,13 +17,13 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.authentication.LoginTests"/>
-            <class name="tests.authentication.RegisterTests"/>
-            <class name="tests.userprofile.ProfileViewTests"/>
+            <class name="test.authentication.LoginTests"/>
+            <class name="test.authentication.RegisterTests"/>
+            <class name="test.userprofile.ProfileViewTests"/>
         </classes>
     </test>
 
-    <!-- 🧪 AUTHENTICATION TESTS - All divided by functions -->
+    <!-- 🧪 AUTHENTICATION TESTS - Login -->
     <test name="Authentication Tests - Login">
         <groups>
             <run>
@@ -30,10 +31,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.authentication.LoginTests"/>
+            <class name="test.authentication.LoginTests"/>
         </classes>
     </test>
 
+    <!-- 🧪 AUTHENTICATION TESTS - Register -->
     <test name="Authentication Tests - Register">
         <groups>
             <run>
@@ -41,10 +43,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.authentication.RegisterTests"/>
+            <class name="test.authentication.RegisterTests"/>
         </classes>
     </test>
 
+    <!-- 🧪 AUTHENTICATION TESTS - Forgot Password -->
     <test name="Authentication Tests - Forgot Password">
         <groups>
             <run>
@@ -52,11 +55,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.authentication.ForgotPasswordTests"/>
+            <class name="test.authentication.ForgotPasswordTests"/>
         </classes>
     </test>
 
-    <!-- 👤 USER PROFILE TESTS - Divided by functions -->
+    <!-- 👤 USER PROFILE TESTS - View -->
     <test name="User Profile Tests - View">
         <groups>
             <run>
@@ -64,10 +67,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.userprofile.ProfileViewTests"/>
+            <class name="test.userprofile.ProfileViewTests"/>
         </classes>
     </test>
 
+    <!-- 👤 USER PROFILE TESTS - Update -->
     <test name="User Profile Tests - Update">
         <groups>
             <run>
@@ -75,10 +79,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.userprofile.ProfileUpdateTests"/>
+            <class name="test.userprofile.ProfileUpdateTests"/>
         </classes>
     </test>
 
+    <!-- 👤 USER PROFILE TESTS - Password Change -->
     <test name="User Profile Tests - Password Change">
         <groups>
             <run>
@@ -86,11 +91,11 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.userprofile.PasswordChangeTests"/>
+            <class name="test.userprofile.PasswordChangeTests"/>
         </classes>
     </test>
 
-    <!-- 🔄 REGRESSION TESTS - All comprehensive tests -->
+    <!-- 🔄 REGRESSION TESTS - Authentication -->
     <test name="Regression Tests - All Authentication">
         <groups>
             <run>
@@ -98,12 +103,13 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.authentication.LoginTests"/>
-            <class name="tests.authentication.RegisterTests"/>
-            <class name="tests.authentication.ForgotPasswordTests"/>
+            <class name="test.authentication.LoginTests"/>
+            <class name="test.authentication.RegisterTests"/>
+            <class name="test.authentication.ForgotPasswordTests"/>
         </classes>
     </test>
 
+    <!-- 🔄 REGRESSION TESTS - User Profile -->
     <test name="Regression Tests - All User Profile">
         <groups>
             <run>
@@ -111,21 +117,21 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.userprofile.ProfileViewTests"/>
-            <class name="tests.userprofile.ProfileUpdateTests"/>
-            <class name="tests.userprofile.PasswordChangeTests"/>
+            <class name="test.userprofile.ProfileViewTests"/>
+            <class name="test.userprofile.ProfileUpdateTests"/>
+            <class name="test.userprofile.PasswordChangeTests"/>
         </classes>
     </test>
 
     <!-- 🚀 FULL SUITE - All tests by functions -->
     <test name="Full Test Suite - By Functions">
         <classes>
-            <class name="tests.authentication.LoginTests"/>
-            <class name="tests.authentication.RegisterTests"/>
-            <class name="tests.authentication.ForgotPasswordTests"/>
-            <class name="tests.userprofile.ProfileViewTests"/>
-            <class name="tests.userprofile.ProfileUpdateTests"/>
-            <class name="tests.userprofile.PasswordChangeTests"/>
+            <class name="test.authentication.LoginTests"/>
+            <class name="test.authentication.RegisterTests"/>
+            <class name="test.authentication.ForgotPasswordTests"/>
+            <class name="test.userprofile.ProfileViewTests"/>
+            <class name="test.userprofile.ProfileUpdateTests"/>
+            <class name="test.userprofile.PasswordChangeTests"/>
         </classes>
     </test>
 

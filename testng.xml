@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="TNC Store Automation Test Suite" verbose="1">
     <listeners>
-        <listener class-name="listener.TestListener"/>
+        <listener class-name="commons.listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>
@@ -10,7 +10,7 @@
     <!-- 🎯 MAIN TEST SUITE - Using Group-based Structure -->
     <test name="TNC Store Tests - All Features">
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
