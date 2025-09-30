@@ -69,6 +69,13 @@ public class AuthenticationPage extends BasePage {
     @FindBy(xpath = TNCStoreLocators.LOGOUT_LINK)
     private WebElement logoutLink;
 
+    // ========== SUCCESS VERIFICATION ELEMENTS ==========
+    @FindBy(xpath = TNCStoreLocators.LOGGED_IN_USER_NAME)
+    private WebElement loggedInUserName;
+
+    @FindBy(xpath = TNCStoreLocators.ACCOUNT_DROPDOWN_LOGGED_IN)
+    private WebElement accountDropdownLoggedIn;
+
     // ========== NAVIGATION METHODS ==========
     public void openLoginPopup() {
         try {
@@ -201,8 +208,64 @@ public class AuthenticationPage extends BasePage {
     // ========== VALIDATION METHODS ==========
     public boolean isLoginSuccessful() {
         try {
-            return wait.until(ExpectedConditions.visibilityOf(logoutLink)).isDisplayed();
+            // Wait for popup to close first
+            Thread.sleep(3000);
+
+            // Check if user name is displayed instead of "Tài khoản"
+            // This indicates successful login
+            return wait.until(ExpectedConditions.visibilityOf(loggedInUserName)).isDisplayed();
         } catch (Exception e) {
+            log.warn("Login success check failed, trying alternative method: {}", e.getMessage());
+            try {
+                return accountDropdownLoggedIn.isDisplayed();
+            } catch (Exception e2) {
+                log.error("All login success checks failed: {}", e2.getMessage());
+                return false;
+            }
+        }
+    }
+
+    // ========== USER LOGIN VERIFICATION METHODS ==========
+    public String getLoggedInUserName() {
+        try {
+            if (loggedInUserName.isDisplayed()) {
+                String userName = loggedInUserName.getText().trim();
+                log.info("Retrieved logged-in user name: {}", userName);
+                return userName;
+            }
+        } catch (Exception e) {
+            log.warn("Could not get user name from primary element, trying alternative");
+            try {
+                if (accountDropdownLoggedIn.isDisplayed()) {
+                    String userName = accountDropdownLoggedIn.getText().trim();
+                    log.info("Retrieved logged-in user name from alternative element: {}", userName);
+                    return userName;
+                }
+            } catch (Exception e2) {
+                log.error("Failed to get logged-in user name: {}", e2.getMessage());
+            }
+        }
+        return "";
+    }
+
+    public boolean isUserLoggedIn() {
+        try {
+            // Wait a bit for the page to update after login/registration
+            Thread.sleep(2000);
+
+            // Check if the account button now shows a user name instead of "Tài khoản"
+            String userName = getLoggedInUserName();
+            boolean loggedIn = !userName.isEmpty() && !userName.equals("Tài khoản") && !userName.equals("Account");
+
+            if (loggedIn) {
+                log.info("User is logged in with name: {}", userName);
+            } else {
+                log.warn("User appears not to be logged in. Current text: {}", userName);
+            }
+
+            return loggedIn;
+        } catch (Exception e) {
+            log.error("Error checking if user is logged in: {}", e.getMessage());
             return false;
         }
     }

@@ -5,7 +5,7 @@
 ### 1. authentication_testdata.xlsx
 ```
 TestCaseID    | name      | email           | password    | expectedResult
-AUTH-SU-01    | John Doe  | john@test.com   | Abc12345    | success
+AUTH-SU-01    | John Doe  | john5@test.com   | Abc12345    | success
 AUTH-SU-02    | Jane Doe  | existing@tnc.vn | Abc12345    | email_exists_error
 AUTH-SI-01    |           | john@test.com   | Abc12345    | login_success
 AUTH-FP-01    |           | john@test.com   |             | reset_email_sent

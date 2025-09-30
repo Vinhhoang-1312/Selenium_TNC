@@ -4,7 +4,7 @@ public class AuthenticationTestData {
 
     // Valid test data
     public static final String VALID_NAME = "John Doe";
-    public static final String VALID_EMAIL = "john@test.com";
+    public static final String VALID_EMAIL = "john5@test.com";
     public static final String VALID_PASSWORD = "Abc12345";
 
     public static final String VALID_NAME_2 = "Jane Smith";

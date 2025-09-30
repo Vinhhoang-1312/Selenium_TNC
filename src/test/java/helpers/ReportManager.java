@@ -104,20 +104,34 @@ public class ReportManager {
 
     public static void initReports() {
         if (extent == null) {
-            String reportPath = "target/" + currentModule + "_report.html";
+            // Create main report in root target folder for easy access
+            String reportPath = "target/TNC_Store_Test_Report.html";
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
 
-            sparkReporter.config().setDocumentTitle("TNC Store Automation Test Report");
-            sparkReporter.config().setReportName(currentModule.toUpperCase() + " Module Test Results");
+            // Enhanced report configuration for PM viewing
+            sparkReporter.config().setDocumentTitle("TNC Store - Automation Test Execution Report");
+            sparkReporter.config().setReportName("TNC Store Test Results Dashboard");
             sparkReporter.config().setTheme(Theme.STANDARD);
+
+            // Add custom CSS for better presentation
+            sparkReporter.config().setCss(".brand-logo { display: none; } .nav-wrapper { background-color: #2196F3; }");
 
             extent = new ExtentReports();
             extent.attachReporter(sparkReporter);
-            extent.setSystemInfo("Application", "TNC Store");
-            extent.setSystemInfo("Environment", "QA");
-            extent.setSystemInfo("Module", currentModule);
 
-            log.info("ExtentReport initialized: {}", reportPath);
+            // System information for PM
+            extent.setSystemInfo("Project", "TNC Store E-commerce Website");
+            extent.setSystemInfo("Website URL", "https://www.tncstore.vn/");
+            extent.setSystemInfo("Test Environment", "QA Environment");
+            extent.setSystemInfo("Test Type", "Functional Automation Testing");
+            extent.setSystemInfo("Browser", "Chrome (Latest)");
+            extent.setSystemInfo("Operating System", "Windows 11");
+            extent.setSystemInfo("Java Version", "21");
+            extent.setSystemInfo("Test Framework", "TestNG + Selenium WebDriver");
+            extent.setSystemInfo("Report Generated", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            extent.setSystemInfo("Module Tested", currentModule.toUpperCase());
+
+            log.info("Main Test Report initialized: {}", reportPath);
         }
     }
 

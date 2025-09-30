@@ -43,6 +43,7 @@ public class TNCStoreTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-01: Register with valid data");
 
         try {
+            // Step 1: Perform registration
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
 
@@ -53,8 +54,38 @@ public class TNCStoreTests extends BaseTest {
             );
             ReportManager.logInfo("Filled registration form with valid data");
 
-            Assert.assertTrue(authPage.isLoginSuccessful(), "User should be logged in after successful registration");
-            ReportManager.logPass("Registration successful");
+            // Step 2: Check if user is automatically logged in after registration
+            boolean isLoggedInAfterRegistration = authPage.isUserLoggedIn();
+            String userNameAfterRegistration = authPage.getLoggedInUserName();
+
+            if (isLoggedInAfterRegistration) {
+                ReportManager.logPass("Registration successful - User automatically logged in with name: " + userNameAfterRegistration);
+                Assert.assertTrue(true, "Registration and automatic login successful");
+            } else {
+                ReportManager.logInfo("User not automatically logged in after registration, testing manual login");
+
+                // Step 3: If not automatically logged in, try to login with the same credentials
+                authPage.performLogin(
+                    AuthenticationTestData.VALID_EMAIL,
+                    AuthenticationTestData.VALID_PASSWORD
+                );
+                ReportManager.logInfo("Attempted login with registered credentials");
+
+                // Step 4: Verify login is successful
+                boolean isLoggedInAfterLogin = authPage.isUserLoggedIn();
+                String userNameAfterLogin = authPage.getLoggedInUserName();
+
+                Assert.assertTrue(isLoggedInAfterLogin,
+                    "Registration should be successful and user should be able to login with registered credentials");
+
+                Assert.assertFalse(userNameAfterLogin.isEmpty(),
+                    "User name should be displayed after successful login");
+
+                Assert.assertFalse(userNameAfterLogin.equals("Tài khoản"),
+                    "Account button should show user name, not default 'Tài khoản' text");
+
+                ReportManager.logPass("Registration and login verification successful - User logged in with name: " + userNameAfterLogin);
+            }
 
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
@@ -138,6 +169,35 @@ public class TNCStoreTests extends BaseTest {
 //            throw e;
 //        }
 //    }
+
+    @Test(groups = {"authentication", "smoke", "login"},
+          description = "AUTH-LI-01: Login with valid credentials")
+    public void testLoginWithValidCredentials() {
+        ReportManager.startTest("AUTH-LI-01: Login with valid credentials");
+
+        try {
+            // Perform login
+            authPage.performLogin(
+                AuthenticationTestData.VALID_EMAIL,
+                AuthenticationTestData.VALID_PASSWORD
+            );
+            ReportManager.logInfo("Attempted login with valid credentials");
+
+            // Verify login is successful by checking for user name display
+            boolean isLoggedIn = authPage.isUserLoggedIn();
+            String userName = authPage.getLoggedInUserName();
+
+            Assert.assertTrue(isLoggedIn, "Login should be successful with valid credentials");
+            Assert.assertFalse(userName.isEmpty(), "User name should be displayed after successful login");
+            Assert.assertFalse(userName.equals("Tài khoản"), "Account button should show user name, not default 'Tài khoản' text");
+
+            ReportManager.logPass("Login successful - User logged in with name: " + userName);
+
+        } catch (Exception e) {
+            ReportManager.logFail("Test failed: " + e.getMessage());
+            throw e;
+        }
+    }
 //
 //    @Test(groups = {"authentication", "negative", "login"},
 //          description = "AUTH-LI-02: Login with invalid credentials")

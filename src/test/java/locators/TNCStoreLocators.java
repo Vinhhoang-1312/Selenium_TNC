@@ -56,6 +56,11 @@ public class TNCStoreLocators {
     // ========== LOGOUT ==========
     public static final String LOGOUT_LINK = "//a[contains(text(),'Logout') or contains(text(),'Đăng xuất')]";
 
+    // ========== LOGGED IN USER VERIFICATION ==========
+    // When user is logged in, the account button shows user's name instead of "Tài khoản"
+    public static final String LOGGED_IN_USER_NAME = "//span[@class='hover-txt line-clamp-1']";
+    public static final String ACCOUNT_DROPDOWN_LOGGED_IN = "//div[contains(@class,'account-info')]//span[@class='hover-txt line-clamp-1']";
+
     // ========== LOADING & STATES ==========
     public static final String LOADING_SPINNER = "//div[@class='loading']";
 
