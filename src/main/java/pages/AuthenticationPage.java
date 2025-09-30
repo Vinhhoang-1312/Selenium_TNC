@@ -1,7 +1,6 @@
 package pages;
 
 import locators.TNCStoreLocators;
-import config.TNCStoreConfig;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -23,30 +22,30 @@ public class AuthenticationPage extends BasePage {
     private WebElement loginPopup;
 
     // Link "Tạo tài khoản" trong popup login
-    @FindBy(css = TNCStoreLocators.CREATE_ACCOUNT_LINK)
+    @FindBy(xpath = TNCStoreLocators.CREATE_ACCOUNT_LINK)
     private WebElement createAccountLink;
 
     // ========== LOGIN ELEMENTS ==========
-    @FindBy(css = TNCStoreLocators.LOGIN_EMAIL_FIELD)
+    @FindBy(xpath = TNCStoreLocators.LOGIN_EMAIL_FIELD)
     private WebElement loginEmailField;
 
-    @FindBy(css = TNCStoreLocators.LOGIN_PASSWORD_FIELD)
+    @FindBy(xpath = TNCStoreLocators.LOGIN_PASSWORD_FIELD)
     private WebElement loginPasswordField;
 
-    @FindBy(css = TNCStoreLocators.LOGIN_BUTTON)
+    @FindBy(xpath = TNCStoreLocators.LOGIN_BUTTON)
     private WebElement loginButton;
 
     // ========== REGISTER ELEMENTS ==========
-    @FindBy(css = TNCStoreLocators.REGISTER_NAME_FIELD)
+    @FindBy(xpath = TNCStoreLocators.REGISTER_NAME_FIELD)
     private WebElement registerNameField;
 
-    @FindBy(css = TNCStoreLocators.REGISTER_EMAIL_FIELD)
+    @FindBy(xpath = TNCStoreLocators.REGISTER_EMAIL_FIELD)
     private WebElement registerEmailField;
 
-    @FindBy(css = TNCStoreLocators.REGISTER_PASSWORD_FIELD)
+    @FindBy(xpath = TNCStoreLocators.REGISTER_PASSWORD_FIELD)
     private WebElement registerPasswordField;
 
-    @FindBy(css = TNCStoreLocators.REGISTER_BUTTON)
+    @FindBy(xpath = TNCStoreLocators.REGISTER_BUTTON)
     private WebElement registerButton;
 
     // Error message elements
