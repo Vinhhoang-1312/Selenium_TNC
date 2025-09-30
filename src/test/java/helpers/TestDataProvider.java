@@ -79,9 +79,9 @@ public class TestDataProvider {
     // Fallback data methods
     private static Object[][] getAuthenticationFallbackData() {
         return new Object[][] {
-            {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john@test.com", "password", "Abc12345")},
+            {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john5@test.com", "password", "Abc12345")},
             {"AUTH-SU-02", Map.of("name", "Jane Smith", "email", "jane@test.com", "password", "Pass123456")},
-            {"AUTH-LI-01", Map.of("email", "john@test.com", "password", "Abc12345")},
+            {"AUTH-LI-01", Map.of("email", "john5@test.com", "password", "Abc12345")},
             {"AUTH-LI-02", Map.of("email", "invalid@test.com", "password", "WrongPass123")}
         };
     }
