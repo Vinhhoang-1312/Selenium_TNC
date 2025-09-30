@@ -11,7 +11,8 @@ public class AddToCartTest extends BaseTest {
     @Test
     public void testAddToCart() {
         HomePage homePage = new HomePage(driver);
-        homePage.clickFirstProduct();
+        homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
+        homePage.clickProduct();
 
         ProductDetailPage productDetailPage = new ProductDetailPage(driver);
         productDetailPage.addToCart();
