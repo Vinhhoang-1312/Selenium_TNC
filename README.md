@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏪 TNC Store Automation Testing Framework
 
 ## 📋 Project Overview
