@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TNC Store Automation Test Suite" verbose="1">
-
-    <parameter name="browser" value="chrome"/>
-
-    <test name="All test_case">
+<suite name="Search and Product Detail">
+    <test verbose="2" preserve-order="true" name="D:/git_clone/nhomnhom">
         <classes>
-
-            <class name="test.debug.DebugTest">
-                <methods>
-                    <include name="testDriverSetup"/>
-                </methods>
-            </class>
-
             <!--class test cho product_detail-->
             <class name="test.productdetail.product_detail_test">
-                <methods><include name="testAddToCart"/>
+                <methods>
+                    <include name="testAddToCart"/>
                     <include name="testScrollToBottomAndViewProductDetail"/>
                 </methods>
             </class>
@@ -32,16 +23,6 @@
                     <include name="testSearchWithNoKeyword"/>
                 </methods>
             </class>
-
-
-            <class name="test.simple.SimpleDriverTest">
-                <methods><include name="testDriverWorks"/>
-                </methods>
-            </class>
-
-            <!-- REGISTER VÀ LOGIN (FIXED) -->
-            <class name="test.authentication.RegisterTests"/>
-            <class name="test.authentication.LoginTests"/>
 
         </classes>
     </test>
