@@ -16,7 +16,11 @@ public class TNCStoreLocators {
 
     // ========== REGISTRATION FLOW ==========
     // From login popup, click "Create Account" to switch to register form
-    public static final String CREATE_ACCOUNT_LINK = "//*[@id=\"js-form-login\"]/div[2]/div[4]/a";
+    public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'Tạo tài khoản') or contains(text(),'Đăng ký') or contains(@onclick, 'register')]";
+
+    // Alternative locators for registration link
+    public static final String CREATE_ACCOUNT_LINK_ALT1 = "//a[@href='javascript:void(0)'][contains(@onclick, 'register')]";
+    public static final String CREATE_ACCOUNT_LINK_ALT2 = "//*[contains(@class,'register-link') or contains(@id,'register')]";
 
     // 3 input fields that appear after clicking "Create Account"
     public static final String REGISTER_NAME_FIELD = "//input[@id='js-popup-register-name']";     // 1. Full name
@@ -60,6 +64,13 @@ public class TNCStoreLocators {
     // When user is logged in, the account button shows user's name instead of "Tài khoản"
     public static final String LOGGED_IN_USER_NAME = "//span[@class='hover-txt line-clamp-1']";
     public static final String ACCOUNT_DROPDOWN_LOGGED_IN = "//div[contains(@class,'account-info')]//span[@class='hover-txt line-clamp-1']";
+
+    // Alternative user name locators
+    public static final String LOGGED_IN_USER_NAME_ALT1 = "//span[contains(@class,'user-name') or contains(@class,'account-name')]";
+    public static final String LOGGED_IN_USER_NAME_ALT2 = "//*[@id='account-dropdown']//span[not(contains(text(),'Tài khoản'))]";
+
+    // Check if user is NOT logged in (shows default text)
+    public static final String NOT_LOGGED_IN_TEXT = "//span[contains(text(),'Tài khoản') or contains(text(),'Account')]";
 
     // ========== LOADING & STATES ==========
     public static final String LOADING_SPINNER = "//div[@class='loading']";

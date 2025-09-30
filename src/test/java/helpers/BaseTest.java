@@ -1,11 +1,11 @@
 package helpers;
 
-import com.aventstack.extentreports.ExtentTest;
-import commons.DriverFactory;
-import helpers.*;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.*;
 import config.TNCStoreConfig;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,88 +13,95 @@ import java.time.Duration;
 
 public class BaseTest {
     protected WebDriver driver;
-    protected ExtentTest test;
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
-
-    @BeforeSuite
-    public void setupSuite() {
-        ExtentManager.initReports();
-    }
-
-    @AfterSuite
-    public void tearDownSuite() {
-        ExtentManager.flush();
-    }
 
     @BeforeMethod
     public void setUp() {
         try {
-            // Force cleanup any existing driver first
-            if (DriverFactory.isDriverInitialized()) {
-                log.info("Existing driver found, cleaning up first...");
-                DriverFactory.quitDriver();
+            log.info("🔄 Starting simplified BaseTest setup...");
+
+            // Directly initialize Chrome driver without DriverFactory
+            log.info("📦 Setting up ChromeDriver...");
+            WebDriverManager.chromedriver().setup();
+
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--disable-extensions");
+
+            log.info("🚀 Creating ChromeDriver instance...");
+            driver = new ChromeDriver(options);
+
+            if (driver == null) {
+                throw new RuntimeException("ChromeDriver creation failed - driver is null");
             }
 
-            // Initialize driver without parameters dependency
-            String browser = ConfigReader.getProperty("browser", "chrome");
-            DriverFactory.initializeDriver(browser);
-            driver = DriverFactory.getDriver();
+            log.info("✅ Driver created successfully: {}", driver.getClass().getSimpleName());
 
-            // Set increased timeouts to handle slow page loads
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30)); // Increased from default
-            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120)); // Increased to 2 minutes
-            driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(60)); // Added script timeout
+            // Set basic timeouts
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
-            // Navigate to base URL
+            // Navigate to website
+            log.info("🌐 Navigating to: {}", TNCStoreConfig.BASE_URL);
             driver.get(TNCStoreConfig.BASE_URL);
-            log.info("Navigated to: {}", TNCStoreConfig.BASE_URL);
 
-            // Maximize window with retry logic
+            // Maximize window
             try {
                 driver.manage().window().maximize();
-                log.info("Browser window maximized");
+                log.info("✅ Window maximized");
             } catch (Exception e) {
-                log.warn("Warning: Could not maximize window: {}", e.getMessage());
-                // Continue without maximizing if it fails
+                log.warn("⚠️ Could not maximize window: {}", e.getMessage());
             }
 
-            // Additional wait for page stability
-            Thread.sleep(3000); // 3 seconds for page to stabilize
-            log.info("WebDriver initialized successfully");
+            // Wait for page load
+            Thread.sleep(2000);
+
+            log.info("✅ Setup completed successfully");
+            log.info("📍 Current URL: {}", driver.getCurrentUrl());
+            log.info("📝 Page title: {}", driver.getTitle());
 
         } catch (Exception e) {
-            log.error("Failed to setup WebDriver: {}", e.getMessage());
-            // Force cleanup on setup failure
-            DriverFactory.forceCleanup();
-            throw new RuntimeException("WebDriver setup failed", e);
+            log.error("❌ BaseTest setup failed: {}", e.getMessage(), e);
+
+            // Cleanup on failure
+            if (driver != null) {
+                try {
+                    driver.quit();
+                } catch (Exception cleanupError) {
+                    log.error("Cleanup failed: {}", cleanupError.getMessage());
+                }
+            }
+
+            throw new RuntimeException("BaseTest setup failed: " + e.getMessage(), e);
         }
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        try {
-            if (driver != null) {
-                log.info("Cleaning up WebDriver...");
+        if (driver != null) {
+            try {
+                log.info("🧹 Cleaning up WebDriver...");
                 driver.quit();
-                log.info("WebDriver quit successfully");
+                log.info("✅ Driver cleanup completed");
+            } catch (Exception e) {
+                log.warn("⚠️ Error during cleanup: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            log.warn("Warning: Error during driver cleanup: {}", e.getMessage());
-        } finally {
-            // Force cleanup even if quit() fails
-            DriverFactory.quitDriver();
-            log.info("Driver cleanup completed");
         }
     }
 
-    // Screenshot utility method
-    protected void takeScreenshot(String testName) {
-        ScreenshotUtils.captureScreenshot(driver, testName);
+    // ADDED BACK: Utility methods that tests may need
+    protected String getCurrentUrl() {
+        return driver.getCurrentUrl();
     }
 
-    // Wait utility methods
-    protected void waitForPageLoad() {
-        WaitUtils.waitForPageLoad(driver);
+    protected String getPageTitle() {
+        return driver.getTitle();
+    }
+
+    protected void refreshPage() {
+        driver.navigate().refresh();
     }
 
     protected void sleep(int seconds) {
@@ -105,49 +112,12 @@ public class BaseTest {
         }
     }
 
-    // Browser utility methods
-    protected void refreshPage() {
-        driver.navigate().refresh();
-    }
-
-    protected void navigateBack() {
-        driver.navigate().back();
-    }
-
-    protected void navigateForward() {
-        driver.navigate().forward();
-    }
-
-    protected String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    protected String getPageTitle() {
-        return driver.getTitle();
-    }
-
-    // Test data and reporting helpers
-    protected void logInfo(String message) {
-        if (test != null) {
-            test.info(message);
-        }
-    }
-
-    protected void logPass(String message) {
-        if (test != null) {
-            test.pass(message);
-        }
-    }
-
-    protected void logFail(String message) {
-        if (test != null) {
-            test.fail(message);
-        }
-    }
-
-    protected void logWarning(String message) {
-        if (test != null) {
-            test.warning(message);
+    protected void takeScreenshot(String testName) {
+        // Simple implementation - can be enhanced later
+        try {
+            log.info("Taking screenshot for: {}", testName);
+        } catch (Exception e) {
+            log.warn("Could not take screenshot: {}", e.getMessage());
         }
     }
 }

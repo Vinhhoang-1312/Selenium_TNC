@@ -1,6 +1,32 @@
 package model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class AuthenticationTestData {
+
+    // TestUser inner class to hold user data
+    public static class TestUser {
+        public final String name;
+        public final String email;
+        public final String password;
+
+        public TestUser(String name, String email, String password) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+        }
+    }
+
+    // Method to create unique users for testing
+    public static TestUser createUniqueUser(String prefix) {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String uniqueName = prefix + "_User_" + timestamp;
+        String uniqueEmail = prefix.toLowerCase() + "_" + timestamp + "@test.com";
+        String password = "Test123456";
+
+        return new TestUser(uniqueName, uniqueEmail, password);
+    }
 
     // Valid test data
     public static final String VALID_NAME = "John Doe";
@@ -23,12 +49,18 @@ public class AuthenticationTestData {
     // Invalid email formats
     public static final String INVALID_EMAIL_1 = "test@";
     public static final String INVALID_EMAIL_2 = "abc.com";
-    public static final String INVALID_EMAIL_3 = "1234";
+    public static final String INVALID_EMAIL_3 = "@test.com";
 
-    // Weak passwords
+    // Invalid passwords
+    public static final String INVALID_PASSWORD = "WrongPassword123";
     public static final String WEAK_PASSWORD_1 = "123";
     public static final String WEAK_PASSWORD_2 = "abc";
-    public static final String WEAK_PASSWORD_3 = "11111";
+    public static final String WEAK_PASSWORD_3 = "password";
+
+    // Empty/null data
+    public static final String EMPTY_EMAIL = "";
+    public static final String EMPTY_PASSWORD = "";
+    public static final String EMPTY_NAME = "";
 
     // Wrong passwords for login tests
     public static final String WRONG_PASSWORD_1 = "WrongPass123";

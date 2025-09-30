@@ -16,7 +16,7 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
     └── TestListener.java    # 👂 Global test execution listener (REUSABLE)
 ```
 
-### 📁 **src/test/java/config/** - TEST-SPECIFIC Configuration  
+### 📁 **src/test/java/config/** - TEST-SPECIFIC Configuration
 ```
 └── TNCStoreConfig.java      # ⚙️ TNC Store specific config (URLs, timeouts)
                              # 🎯 Only for tncstore.vn website
@@ -31,7 +31,7 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
 ### 📁 **src/test/java/helpers/** - Test Utilities & Base Classes (9 files)
 ```
 ├── BaseTest.java           # 🏗️ Base class cho tất cả test classes
-├── ConfigReader.java       # 📋 Đọc config từ properties files  
+├── ConfigReader.java       # 📋 Đọc config từ properties files
 ├── ExcelReader.java        # 📊 Đọc test data từ Excel files
 ├── ExtentManager.java      # 📊 Quản lý ExtentReports initialization
 ├── ReportManager.java      # 📋 Quản lý logging và reporting per module
@@ -44,7 +44,7 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
 ### 📁 **src/test/java/model/** - Test Data Models (4 files)
 ```
 ├── AuthenticationTestData.java  # 🔐 Login/Register test data model
-├── CartTestData.java           # 🛒 Shopping cart test data model  
+├── CartTestData.java           # 🛒 Shopping cart test data model
 ├── ProductDetailTestData.java  # 📦 Product information test data
 └── SearchTestData.java         # 🔍 Search functionality test data
 ```
@@ -59,9 +59,10 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
 ### 📁 **src/test/java/test/** - Test Classes Organized by Features
 ```
 ├── authentication/            # 🔐 Authentication Module Tests
-├── userprofile/              # 👤 User Profile Module Tests  
+├── userprofile/              # 👤 User Profile Module Tests
 ├── cart/                     # 🛒 Shopping Cart Module Tests
 ├── search/                   # 🔍 Search Module Tests
 ├── productdetail/            # 📦 Product Detail Module Tests
 └── checkout/                 # 💳 Checkout Module Tests
 ```
+
