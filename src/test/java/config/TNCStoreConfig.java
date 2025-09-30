@@ -1,7 +1,8 @@
-package commons;
+package config;
 
 /**
  * Configuration constants for TNC Store automation tests
+ * This is TEST-SPECIFIC config for tncstore.vn website only
  */
 public class TNCStoreConfig {
 

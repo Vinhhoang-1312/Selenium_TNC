@@ -5,6 +5,7 @@ import commons.DriverFactory;
 import helpers.*;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
+import config.TNCStoreConfig;
 
 import java.time.Duration;
 
@@ -30,16 +31,16 @@ public class BaseTest {
         driver = DriverFactory.getDriver();
 
         // Set timeouts using config
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
-            Integer.parseInt(ConfigReader.getProperty("implicit.wait", "15"))));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(
-            Integer.parseInt(ConfigReader.getProperty("page.load.timeout", "60"))));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TNCStoreConfig.IMPLICIT_WAIT));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TNCStoreConfig.PAGE_LOAD_TIMEOUT));
 
         // Navigate to base URL
-        driver.get(ConfigReader.getProperty("base.url"));
+        driver.get(TNCStoreConfig.BASE_URL);
 
-        // Maximize window
-        driver.manage().window().maximize();
+        // Maximize window if configured
+        if (TNCStoreConfig.MAXIMIZE_WINDOW) {
+            driver.manage().window().maximize();
+        }
 
         System.out.println("✅ WebDriver initialized successfully");
     }

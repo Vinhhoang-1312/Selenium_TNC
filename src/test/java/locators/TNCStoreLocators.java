@@ -1,4 +1,4 @@
-package commons;
+package locators;
 
 /**
  * XPath locators for TNC Store website (https://www.tncstore.vn/)
