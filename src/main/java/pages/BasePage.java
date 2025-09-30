@@ -19,15 +19,9 @@ public class BasePage {
         try {
             Thread.sleep(2000); // Basic wait for page stability
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            // ...existing code...
         }
     }
-
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    public String getPageTitle() {
-        return driver.getTitle();
-    }
+    // ...existing code...
 }
+

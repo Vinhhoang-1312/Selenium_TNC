@@ -3,7 +3,8 @@
 
 <suite name="TNC Store Test Suite - Group Based" verbose="1">
     <listeners>
-        <listener class-name="listener.TestListener"/>
+        <!-- Updated listener package name -->
+        <listener class-name="commons.listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>
@@ -16,7 +17,8 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <!-- Updated package from tests.TNCStoreTests -->
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -28,7 +30,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -40,7 +42,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -52,7 +54,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -64,7 +66,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -77,7 +79,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -90,7 +92,7 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
@@ -102,14 +104,14 @@
             </run>
         </groups>
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
     <!-- 🚀 FULL SUITE - All tests -->
     <test name="Full Test Suite">
         <classes>
-            <class name="tests.TNCStoreTests"/>
+            <class name="test.TNCStoreTests"/>
         </classes>
     </test>
 
