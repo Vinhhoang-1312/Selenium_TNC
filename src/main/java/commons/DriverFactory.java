@@ -21,6 +21,12 @@ public class DriverFactory {
      * @param browserName Browser name (chrome, firefox, edge)
      */
     public static void initializeDriver(String browserName) {
+        // Check if driver is already initialized
+        if (isDriverInitialized()) {
+            System.out.println("⚠️ Driver already initialized, skipping...");
+            return;
+        }
+
         WebDriver driver = null;
 
         switch (browserName.toLowerCase()) {
@@ -32,6 +38,9 @@ public class DriverFactory {
                 chromeOptions.addArguments("--disable-dev-shm-usage");
                 chromeOptions.addArguments("--no-sandbox");
                 chromeOptions.addArguments("--remote-allow-origins=*");
+                // Add argument to prevent multiple instances
+                chromeOptions.addArguments("--disable-background-timer-throttling");
+                chromeOptions.addArguments("--disable-renderer-backgrounding");
                 driver = new ChromeDriver(chromeOptions);
                 break;
 
@@ -72,9 +81,48 @@ public class DriverFactory {
     public static void quitDriver() {
         WebDriver driver = driverThreadLocal.get();
         if (driver != null) {
-            driver.quit();
-            driverThreadLocal.remove();
-            System.out.println("✅ WebDriver quit successfully");
+            try {
+                driver.quit();
+                System.out.println("✅ WebDriver quit successfully");
+            } catch (Exception e) {
+                System.err.println("⚠️ Warning: Error quitting driver: " + e.getMessage());
+                // Force kill Chrome processes if quit() fails
+                try {
+                    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                        Runtime.getRuntime().exec("taskkill /F /IM chrome.exe /T");
+                        Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");
+                        System.out.println("🔧 Force killed Chrome processes");
+                    }
+                } catch (Exception killEx) {
+                    System.err.println("⚠️ Could not force kill Chrome: " + killEx.getMessage());
+                }
+            } finally {
+                driverThreadLocal.remove();
+                System.out.println("🧹 ThreadLocal cleaned up");
+            }
+        }
+    }
+
+    /**
+     * Check if driver is already initialized
+     */
+    public static boolean isDriverInitialized() {
+        return driverThreadLocal.get() != null;
+    }
+
+    /**
+     * Force cleanup all resources
+     */
+    public static void forceCleanup() {
+        quitDriver();
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                Runtime.getRuntime().exec("taskkill /F /IM chrome.exe /T");
+                Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");
+                System.out.println("🔧 Force cleanup completed");
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ Force cleanup failed: " + e.getMessage());
         }
     }
 }

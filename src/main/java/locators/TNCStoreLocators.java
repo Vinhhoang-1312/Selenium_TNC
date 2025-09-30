@@ -8,24 +8,24 @@ package locators;
 public class TNCStoreLocators {
 
     // ========== NAVIGATION & GENERAL ==========
-    // Nút "Tài khoản" - click để mở popup login
+    // Account button - click to open login popup
     public static final String ACCOUNT_BUTTON = "//span[contains(text(),'Tài khoản')]";
 
-    // Popup khung đăng nhập xuất hiện sau khi click "Tài khoản"
+    // Login popup frame that appears after clicking "Account"
     public static final String LOGIN_POPUP = "#js-form-holder";
 
     // ========== REGISTRATION FLOW ==========
-    // Từ popup login, click "Tạo tài khoản" để chuyển sang form register
+    // From login popup, click "Create Account" to switch to register form
     public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'o tài')]";
 
-    // 3 input fields xuất hiện sau khi click "Tạo tài khoản"
-    public static final String REGISTER_NAME_FIELD = "//input[@id='js-popup-register-name']";     // 1. Họ và tên
+    // 3 input fields that appear after clicking "Create Account"
+    public static final String REGISTER_NAME_FIELD = "//input[@id='js-popup-register-name']";     // 1. Full name
     public static final String REGISTER_EMAIL_FIELD = "//input[@id='js-popup-register-email']";   // 2. Email
-    public static final String REGISTER_PASSWORD_FIELD = "//input[@id='js-popup-register-password']"; // 3. Mật khẩu
+    public static final String REGISTER_PASSWORD_FIELD = "//input[@id='js-popup-register-password']"; // 3. Password
     public static final String REGISTER_BUTTON = "//a[@class='btn-submit']";
 
     // ========== LOGIN FLOW ==========
-    // Từ popup #js-form-holder, nhập thông tin login trực tiếp
+    // From popup #js-form-holder, enter login information directly
     public static final String LOGIN_EMAIL_FIELD = "//input[@id='js-login-email']";
     public static final String LOGIN_PASSWORD_FIELD = "//input[@id='js-login-password']";
     public static final String LOGIN_BUTTON = "//a[@class='btn-submit']";

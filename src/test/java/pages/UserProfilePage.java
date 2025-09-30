@@ -6,9 +6,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Duration;
 
 public class UserProfilePage extends BasePage {
+
+    private static final Logger log = LoggerFactory.getLogger(UserProfilePage.class);
 
     public UserProfilePage(WebDriver driver) {
         super(driver);
@@ -55,9 +59,9 @@ public class UserProfilePage extends BasePage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(profileLink));
             profileLink.click();
-            System.out.println("✅ Navigated to profile page");
+            log.info("Navigated to profile page");
         } catch (Exception e) {
-            System.out.println("❌ Failed to navigate to profile: " + e.getMessage());
+            log.error("Failed to navigate to profile: {}", e.getMessage());
             throw new RuntimeException("Cannot navigate to profile page", e);
         }
     }
@@ -84,10 +88,10 @@ public class UserProfilePage extends BasePage {
             }
 
             saveProfileButton.click();
-            System.out.println("✅ Profile updated successfully");
+            log.info("Profile updated successfully");
 
         } catch (Exception e) {
-            System.out.println("❌ Failed to update profile: " + e.getMessage());
+            log.error("Failed to update profile: {}", e.getMessage());
             throw new RuntimeException("Cannot update profile", e);
         }
     }
@@ -108,10 +112,10 @@ public class UserProfilePage extends BasePage {
             confirmPasswordField.sendKeys(confirmPassword);
 
             changePasswordButton.click();
-            System.out.println("✅ Password change request submitted");
+            log.info("Password change request submitted");
 
         } catch (Exception e) {
-            System.out.println("❌ Failed to change password: " + e.getMessage());
+            log.error("Failed to change password: {}", e.getMessage());
             throw new RuntimeException("Cannot change password", e);
         }
     }

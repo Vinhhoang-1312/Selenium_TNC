@@ -4,13 +4,17 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.io.FileHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ScreenshotUtils {
+
     private static final String SCREENSHOT_DIR = "target/screenshots/";
+    private static final Logger log = LoggerFactory.getLogger(ScreenshotUtils.class);
 
     static {
         // Create screenshots directory if it doesn't exist
@@ -36,11 +40,11 @@ public class ScreenshotUtils {
             File destFile = new File(filePath);
             FileHandler.copy(sourceFile, destFile);
 
-            System.out.println("Screenshot captured: " + filePath);
+            log.info("Screenshot captured: {}", filePath);
             return filePath;
 
         } catch (Exception e) {
-            System.err.println("Failed to capture screenshot: " + e.getMessage());
+            log.error("Failed to capture screenshot: {}", e.getMessage());
             return null;
         }
     }
@@ -48,7 +52,7 @@ public class ScreenshotUtils {
     public static String captureScreenshotOnFailure(WebDriver driver, String testName) {
         String filePath = captureScreenshot(driver, testName + "_FAILED");
         if (filePath != null) {
-            System.out.println("Failure screenshot saved: " + filePath);
+            log.info("Failure screenshot saved: {}", filePath);
         }
         return filePath;
     }

@@ -6,12 +6,15 @@ import helpers.*;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import config.TNCStoreConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
 public class BaseTest {
     protected WebDriver driver;
     protected ExtentTest test;
+    private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
 
     @BeforeSuite
     public void setupSuite() {
@@ -26,6 +29,12 @@ public class BaseTest {
     @BeforeMethod
     public void setUp() {
         try {
+            // Force cleanup any existing driver first
+            if (DriverFactory.isDriverInitialized()) {
+                log.info("Existing driver found, cleaning up first...");
+                DriverFactory.quitDriver();
+            }
+
             // Initialize driver without parameters dependency
             String browser = ConfigReader.getProperty("browser", "chrome");
             DriverFactory.initializeDriver(browser);
@@ -38,30 +47,44 @@ public class BaseTest {
 
             // Navigate to base URL
             driver.get(TNCStoreConfig.BASE_URL);
-            System.out.println("✅ Navigated to: " + TNCStoreConfig.BASE_URL);
+            log.info("Navigated to: {}", TNCStoreConfig.BASE_URL);
 
             // Maximize window with retry logic
             try {
                 driver.manage().window().maximize();
-                System.out.println("✅ Browser window maximized");
+                log.info("Browser window maximized");
             } catch (Exception e) {
-                System.out.println("⚠️ Warning: Could not maximize window: " + e.getMessage());
+                log.warn("Warning: Could not maximize window: {}", e.getMessage());
                 // Continue without maximizing if it fails
             }
 
             // Additional wait for page stability
             Thread.sleep(3000); // 3 seconds for page to stabilize
-            System.out.println("✅ WebDriver initialized successfully");
+            log.info("WebDriver initialized successfully");
 
         } catch (Exception e) {
-            System.err.println("❌ Failed to setup WebDriver: " + e.getMessage());
+            log.error("Failed to setup WebDriver: {}", e.getMessage());
+            // Force cleanup on setup failure
+            DriverFactory.forceCleanup();
             throw new RuntimeException("WebDriver setup failed", e);
         }
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        DriverFactory.quitDriver();
+        try {
+            if (driver != null) {
+                log.info("Cleaning up WebDriver...");
+                driver.quit();
+                log.info("WebDriver quit successfully");
+            }
+        } catch (Exception e) {
+            log.warn("Warning: Error during driver cleanup: {}", e.getMessage());
+        } finally {
+            // Force cleanup even if quit() fails
+            DriverFactory.quitDriver();
+            log.info("Driver cleanup completed");
+        }
     }
 
     // Screenshot utility method

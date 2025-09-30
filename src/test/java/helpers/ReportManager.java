@@ -7,6 +7,8 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +22,7 @@ public class ReportManager {
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
     private static List<TestResult> testResults = new ArrayList<>();
     private static String currentModule = "general"; // Default module name
+    private static final Logger log = LoggerFactory.getLogger(ReportManager.class);
 
     // Test result data structure
     public static class TestResult {
@@ -114,7 +117,7 @@ public class ReportManager {
             extent.setSystemInfo("Environment", "QA");
             extent.setSystemInfo("Module", currentModule);
 
-            System.out.println("📊 ExtentReport initialized: " + reportPath);
+            log.info("ExtentReport initialized: {}", reportPath);
         }
     }
 
@@ -190,9 +193,9 @@ public class ReportManager {
             fileOut.close();
             workbook.close();
 
-            System.out.println("📊 Excel report generated: " + fileName);
+            log.info("Excel report generated: {}", fileName);
         } catch (IOException e) {
-            System.err.println("❌ Failed to generate Excel report: " + e.getMessage());
+            log.error("Failed to generate Excel report: {}", e.getMessage());
         }
     }
 

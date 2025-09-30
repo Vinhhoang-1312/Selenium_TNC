@@ -7,15 +7,18 @@ import helpers.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginTests extends BaseTest {
     private AuthenticationPage authPage;
+    private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
 
     @BeforeMethod
     public void setUpTest() {
         authPage = new AuthenticationPage(driver);
         ReportManager.setModule("authentication-login");
-        System.out.println("✅ LoginTests setup completed");
+        log.info("LoginTests setup completed");
     }
 
     @Test(groups = {"authentication", "smoke", "login"},

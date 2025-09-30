@@ -13,15 +13,15 @@ public class AuthenticationPage extends BasePage {
         super(driver);
     }
 
-    // Navigation elements - Nút "Tài khoản" để mở popup
+    // Navigation elements - Account button to open popup
     @FindBy(xpath = TNCStoreLocators.ACCOUNT_BUTTON)
     private WebElement accountButton;
 
-    // Popup khung đăng nhập
+    // Login popup frame
     @FindBy(css = TNCStoreLocators.LOGIN_POPUP)
     private WebElement loginPopup;
 
-    // Link "Tạo tài khoản" trong popup login
+    // Create account link in login popup
     @FindBy(xpath = TNCStoreLocators.CREATE_ACCOUNT_LINK)
     private WebElement createAccountLink;
 
@@ -68,17 +68,17 @@ public class AuthenticationPage extends BasePage {
     public void openLoginPopup() {
         try {
             // Wait 20 seconds for page to fully load (network, scripts, etc.)
-            System.out.println("⏳ Đang đợi 20 giây để trang web load hoàn toàn...");
+            System.out.println("⏳ Waiting 20 seconds for website to load completely...");
             Thread.sleep(20000); // 20 seconds wait
-            System.out.println("✅ Đã đợi 20 giây, bắt đầu mở popup login");
+            System.out.println("✅ Waited 20 seconds, starting to open login popup");
 
             wait.until(ExpectedConditions.elementToBeClickable(accountButton));
             accountButton.click();
             wait.until(ExpectedConditions.visibilityOf(loginPopup));
-            System.out.println("✅ Đã mở popup login thành công");
+            System.out.println("✅ Successfully opened login popup");
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi mở popup login: " + e.getMessage());
-            throw new RuntimeException("Không thể mở popup login", e);
+            System.out.println("❌ Error when opening login popup: " + e.getMessage());
+            throw new RuntimeException("Cannot open login popup", e);
         }
     }
 
@@ -96,11 +96,11 @@ public class AuthenticationPage extends BasePage {
             loginPasswordField.sendKeys(password);
 
             loginButton.click();
-            System.out.println("✅ Đã thực hiện login với email: " + email);
+            System.out.println("✅ Successfully performed login with email: " + email);
 
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi đăng nhập: " + e.getMessage());
-            throw new RuntimeException("Không thể đăng nhập", e);
+            System.out.println("❌ Error during login: " + e.getMessage());
+            throw new RuntimeException("Cannot perform login", e);
         }
     }
 
@@ -110,10 +110,10 @@ public class AuthenticationPage extends BasePage {
             openLoginPopup();
             wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
             createAccountLink.click();
-            System.out.println("✅ Đã chuyển sang form đăng ký");
+            System.out.println("✅ Successfully switched to registration form");
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi chuyển sang form đăng ký: " + e.getMessage());
-            throw new RuntimeException("Không thể chuyển sang form đăng ký", e);
+            System.out.println("❌ Error when switching to registration form: " + e.getMessage());
+            throw new RuntimeException("Cannot switch to registration form", e);
         }
     }
 
@@ -134,11 +134,11 @@ public class AuthenticationPage extends BasePage {
             registerPasswordField.sendKeys(password);
 
             registerButton.click();
-            System.out.println("✅ Đã thực hiện đăng ký với email: " + email);
+            System.out.println("✅ Successfully performed registration with email: " + email);
 
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi đăng ký: " + e.getMessage());
-            throw new RuntimeException("Không thể đăng ký", e);
+            System.out.println("❌ Error during registration: " + e.getMessage());
+            throw new RuntimeException("Cannot perform registration", e);
         }
     }
 
