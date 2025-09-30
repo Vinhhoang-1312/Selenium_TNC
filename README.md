@@ -1,16 +1,19 @@
-<<<<<<< HEAD
 # 🏪 TNC Store Automation Testing Framework
 
 ## 📋 Project Overview
 Automation testing framework for TNC Store website using Selenium WebDriver, TestNG, and ExtentReports.
 **Enterprise-grade framework designed for team collaboration and scalable test automation.**
 
+**Final project of nhomnhom team. Automation testing for https://www.tncstore.vn/**
+
 ## 🏗️ UPDATED Project Structure & File Explanations
 
 ### 📁 **src/main/java/commons/** - REUSABLE Core Components Only
 ```
-└── DriverFactory.java       # 🚗 WebDriver management (Chrome, Firefox, Edge)
-                             # ✅ REUSABLE for any website/project
+├── DriverFactory.java       # 🚗 WebDriver management (Chrome, Firefox, Edge)
+│                            # ✅ REUSABLE for any website/project
+└── listener/                # 📡 TestNG Listeners for test events
+    └── TestListener.java    # 👂 Global test execution listener (REUSABLE)
 ```
 
 ### 📁 **src/test/java/config/** - TEST-SPECIFIC Configuration  
@@ -25,7 +28,7 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
                              # 🏪 Only for tncstore.vn website
 ```
 
-### 📁 **src/test/java/helpers/** - Test Utilities & Base Classes (10 files)
+### 📁 **src/test/java/helpers/** - Test Utilities & Base Classes (9 files)
 ```
 ├── BaseTest.java           # 🏗️ Base class cho tất cả test classes
 ├── ConfigReader.java       # 📋 Đọc config từ properties files  
@@ -35,7 +38,6 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
 ├── ScreenshotUtils.java    # 📸 Capture screenshots on test failures
 ├── TestDataProvider.java  # 🎲 Provide test data cho TestNG
 ├── TestDataReader.java     # 📖 Đọc test data từ multiple sources
-├── TestListener.java       # 👂 TestNG listener cho events
 └── WaitUtils.java          # ⏰ Wait strategies (explicit, fluent waits)
 ```
 
@@ -80,6 +82,7 @@ Automation testing framework for TNC Store website using Selenium WebDriver, Tes
 
 #### ✅ **src/main/java/** - CHỈ REUSABLE Components:
 - `DriverFactory` ✅ → Dùng được cho mọi website/project
+- `commons/listener/` ✅ → TestNG listeners có thể reuse cho mọi project
 - ❌ KHÔNG chứa TNCStoreConfig/Locators (đã di chuyển đúng chỗ)
 
 #### ✅ **src/test/java/** - CHỈ TEST-SPECIFIC Components:
