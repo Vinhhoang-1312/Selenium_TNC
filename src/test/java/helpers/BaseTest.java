@@ -3,11 +3,17 @@ package helpers;
 import com.aventstack.extentreports.ExtentTest;
 import commons.DriverFactory;
 import helpers.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import config.TNCStoreConfig;
+import org.openqa.selenium.TimeoutException;
 
 import java.time.Duration;
+import java.util.List;
 
 public class BaseTest {
     protected WebDriver driver;
@@ -113,4 +119,19 @@ public class BaseTest {
             test.warning(message);
         }
     }
+    public void clickIfPresent(By locator) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+
+            if (element.isDisplayed() && element.isEnabled()) {
+                element.click();
+                System.out.println("Clicked on element: " + locator.toString());
+            }
+        } catch (TimeoutException e) {
+            System.out.println("Element not found within timeout, skip clicking: " + locator.toString());
+        }
+    }
+
+
 }

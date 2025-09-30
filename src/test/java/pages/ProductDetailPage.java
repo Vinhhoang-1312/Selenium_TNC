@@ -6,10 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 public class ProductDetailPage extends BasePage {
-    // Locators with meaningful names using xpath
     private final By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
-    private final By cartLink = By.xpath("//a[contains(@href, 'cart') or contains(@href, 'gio-hang')]");
+    private final By viewCartLink = By.xpath("//a[@class='btn-goCart']");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
 
     private final Actions actions;
@@ -39,8 +38,8 @@ public class ProductDetailPage extends BasePage {
         System.out.println("✅ Successfully hovered over cart icon");
 
         // Then wait for and click the view cart link
-        waitForElementToBeVisible(cartLink);
-        WebElement cartElement = driver.findElement(cartLink);
+        waitForElementToBeVisible(viewCartLink);
+        WebElement cartElement = driver.findElement(viewCartLink);
         waitForElementToBeClickable(cartElement);
         cartElement.click();
         System.out.println("✅ Successfully navigated to cart page");
