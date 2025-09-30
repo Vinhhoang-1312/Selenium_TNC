@@ -22,6 +22,7 @@ public class BasePage {
             Thread.currentThread().interrupt();
         }
     }
+
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
