@@ -3,13 +3,16 @@ package helpers;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * 📋 Config Reader - Đọc configuration từ properties file
+ * 📋 Config Reader - Read configuration from properties file
  */
 public class ConfigReader {
     private static Properties properties;
     private static final String CONFIG_FILE_PATH = "src/test/resources/config.properties";
+    private static final Logger log = LoggerFactory.getLogger(ConfigReader.class);
 
     static {
         loadProperties();
@@ -24,9 +27,9 @@ public class ConfigReader {
             FileInputStream fis = new FileInputStream(CONFIG_FILE_PATH);
             properties.load(fis);
             fis.close();
-            System.out.println("✅ Configuration loaded successfully");
+            log.info("Configuration loaded successfully");
         } catch (IOException e) {
-            System.err.println("❌ Failed to load configuration file: " + e.getMessage());
+            log.error("Failed to load configuration file: {}", e.getMessage());
             // Initialize with default properties if file not found
             properties = new Properties();
             setDefaultProperties();
@@ -44,7 +47,7 @@ public class ConfigReader {
         properties.setProperty("page.load.timeout", "60");
         properties.setProperty("screenshot.on.failure", "true");
         properties.setProperty("headless", "false");
-        System.out.println("✅ Default configuration applied");
+        log.info("Default configuration applied");
     }
 
     /**
@@ -55,7 +58,7 @@ public class ConfigReader {
     public static String getProperty(String key) {
         String value = properties.getProperty(key);
         if (value == null) {
-            System.err.println("⚠️ Property not found: " + key);
+            log.warn("Property not found: {}", key);
         }
         return value;
     }
@@ -81,7 +84,7 @@ public class ConfigReader {
             String value = properties.getProperty(key);
             return value != null ? Integer.parseInt(value) : defaultValue;
         } catch (NumberFormatException e) {
-            System.err.println("⚠️ Invalid number format for property: " + key);
+            log.warn("Invalid number format for property: {}", key);
             return defaultValue;
         }
     }
@@ -97,7 +100,7 @@ public class ConfigReader {
             String value = properties.getProperty(key);
             return value != null ? Boolean.parseBoolean(value) : defaultValue;
         } catch (Exception e) {
-            System.err.println("⚠️ Invalid boolean format for property: " + key);
+            log.warn("Invalid boolean format for property: {}", key);
             return defaultValue;
         }
     }

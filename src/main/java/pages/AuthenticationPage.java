@@ -1,18 +1,13 @@
 package pages;
 
 import locators.TNCStoreLocators;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.time.Duration;
 
 public class AuthenticationPage extends BasePage {
-
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
 
     public AuthenticationPage(WebDriver driver) {
         super(driver);
@@ -72,17 +67,40 @@ public class AuthenticationPage extends BasePage {
     // ========== NAVIGATION METHODS ==========
     public void openLoginPopup() {
         try {
-            log.info("Waiting 5 seconds for website to load completely...");
-            Thread.sleep(5000);
-            log.info("Waited 5 seconds, starting to open login popup");
+            // Wait 20 seconds for page to fully load (network, scripts, etc.)
+            System.out.println("⏳ Waiting 20 seconds for website to load completely...");
+            Thread.sleep(20000); // 20 seconds wait
+            System.out.println("✅ Waited 20 seconds, starting to open login popup");
 
             wait.until(ExpectedConditions.elementToBeClickable(accountButton));
             accountButton.click();
             wait.until(ExpectedConditions.visibilityOf(loginPopup));
-            log.info("Successfully opened login popup");
+            System.out.println("✅ Successfully opened login popup");
         } catch (Exception e) {
-            log.error("Error when opening login popup: {}", e.getMessage());
+            System.out.println("❌ Error when opening login popup: " + e.getMessage());
             throw new RuntimeException("Cannot open login popup", e);
+        }
+    }
+
+    // ========== LOGIN METHODS ==========
+    public void performLogin(String email, String password) {
+        try {
+            openLoginPopup();
+
+            wait.until(ExpectedConditions.elementToBeClickable(loginEmailField));
+            loginEmailField.clear();
+            loginEmailField.sendKeys(email);
+
+            wait.until(ExpectedConditions.elementToBeClickable(loginPasswordField));
+            loginPasswordField.clear();
+            loginPasswordField.sendKeys(password);
+
+            loginButton.click();
+            System.out.println("✅ Successfully performed login with email: " + email);
+
+        } catch (Exception e) {
+            System.out.println("❌ Error during login: " + e.getMessage());
+            throw new RuntimeException("Cannot perform login", e);
         }
     }
 
@@ -90,63 +108,11 @@ public class AuthenticationPage extends BasePage {
     public void goToRegisterPage() {
         try {
             openLoginPopup();
-
-            // Wait for popup to be fully loaded and stable
-            Thread.sleep(2000);
-
-            // Try to dismiss any overlays that might be blocking the element
-            try {
-                JavascriptExecutor js = (JavascriptExecutor) driver;
-                js.executeScript(
-                    "var overlays = document.querySelectorAll('.widget-layout'); " +
-                    "overlays.forEach(function(overlay) { overlay.style.display = 'none'; });"
-                );
-                Thread.sleep(1000);
-            } catch (Exception overlayEx) {
-                log.warn("Could not dismiss overlays: {}", overlayEx.getMessage());
-            }
-
-            // Try multiple strategies to click the create account link
-            boolean clicked = false;
-
-            // Strategy 1: Regular click
-            try {
-                wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
-                createAccountLink.click();
-                clicked = true;
-                log.info("Successfully clicked create account link using regular click");
-            } catch (Exception e1) {
-                log.warn("Regular click failed, trying JavaScript click");
-
-                // Strategy 2: JavaScript click
-                try {
-                    JavascriptExecutor js = (JavascriptExecutor) driver;
-                    js.executeScript("arguments[0].click();", createAccountLink);
-                    clicked = true;
-                    log.info("Successfully clicked create account link using JavaScript");
-                } catch (Exception e2) {
-                    log.warn("JavaScript click failed, trying Actions click");
-
-                    // Strategy 3: Actions click
-                    try {
-                        Actions actions = new Actions(driver);
-                        actions.moveToElement(createAccountLink).click().perform();
-                        clicked = true;
-                        log.info("Successfully clicked create account link using Actions");
-                    } catch (Exception e3) {
-                        log.error("All click strategies failed for create account link");
-                        throw new RuntimeException("Cannot click create account link after trying multiple strategies", e3);
-                    }
-                }
-            }
-
-            if (clicked) {
-                Thread.sleep(2000);
-                log.info("Successfully switched to registration form");
-            }
-
+            wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
+            createAccountLink.click();
+            System.out.println("✅ Successfully switched to registration form");
         } catch (Exception e) {
-            log.error("Error when switching to registration form: {}", e.getMessage());
+            System.out.println("❌ Error when switching to registration form: " + e.getMessage());
             throw new RuntimeException("Cannot switch to registration form", e);
         }
     }
@@ -168,39 +134,18 @@ public class AuthenticationPage extends BasePage {
             registerPasswordField.sendKeys(password);
 
             registerButton.click();
-            log.info("Successfully performed registration with email: {}", email);
+            System.out.println("✅ Successfully performed registration with email: " + email);
 
         } catch (Exception e) {
-            log.error("Error during registration: {}", e.getMessage());
+            System.out.println("❌ Error during registration: " + e.getMessage());
             throw new RuntimeException("Cannot perform registration", e);
-        }
-    }
-
-    // ========== LOGIN METHODS ==========
-    public void performLogin(String email, String password) {
-        try {
-            openLoginPopup();
-
-            wait.until(ExpectedConditions.elementToBeClickable(loginEmailField));
-            loginEmailField.clear();
-            loginEmailField.sendKeys(email);
-
-            wait.until(ExpectedConditions.elementToBeClickable(loginPasswordField));
-            loginPasswordField.clear();
-            loginPasswordField.sendKeys(password);
-
-            loginButton.click();
-            log.info("Successfully performed login with email: {}", email);
-
-        } catch (Exception e) {
-            log.error("Error during login: {}", e.getMessage());
-            throw new RuntimeException("Cannot perform login", e);
         }
     }
 
     // ========== VALIDATION METHODS ==========
     public boolean isLoginSuccessful() {
         try {
+            // Check if logout link is present (indicates successful login)
             return wait.until(ExpectedConditions.visibilityOf(logoutLink)).isDisplayed();
         } catch (Exception e) {
             return false;

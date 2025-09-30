@@ -6,12 +6,15 @@ import helpers.*;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import config.TNCStoreConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
 public class BaseTest {
     protected WebDriver driver;
     protected ExtentTest test;
+    private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
 
     @BeforeSuite
     public void setupSuite() {
@@ -25,29 +28,63 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUp() {
-        // Initialize driver without parameters dependency
-        String browser = ConfigReader.getProperty("browser", "chrome");
-        DriverFactory.initializeDriver(browser);
-        driver = DriverFactory.getDriver();
+        try {
+            // Force cleanup any existing driver first
+            if (DriverFactory.isDriverInitialized()) {
+                log.info("Existing driver found, cleaning up first...");
+                DriverFactory.quitDriver();
+            }
 
-        // Set timeouts using config
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(TNCStoreConfig.IMPLICIT_WAIT));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(TNCStoreConfig.PAGE_LOAD_TIMEOUT));
+            // Initialize driver without parameters dependency
+            String browser = ConfigReader.getProperty("browser", "chrome");
+            DriverFactory.initializeDriver(browser);
+            driver = DriverFactory.getDriver();
 
-        // Navigate to base URL
-        driver.get(TNCStoreConfig.BASE_URL);
+            // Set increased timeouts to handle slow page loads
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30)); // Increased from default
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120)); // Increased to 2 minutes
+            driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(60)); // Added script timeout
 
-        // Maximize window if configured
-        if (TNCStoreConfig.MAXIMIZE_WINDOW) {
-            driver.manage().window().maximize();
+            // Navigate to base URL
+            driver.get(TNCStoreConfig.BASE_URL);
+            log.info("Navigated to: {}", TNCStoreConfig.BASE_URL);
+
+            // Maximize window with retry logic
+            try {
+                driver.manage().window().maximize();
+                log.info("Browser window maximized");
+            } catch (Exception e) {
+                log.warn("Warning: Could not maximize window: {}", e.getMessage());
+                // Continue without maximizing if it fails
+            }
+
+            // Additional wait for page stability
+            Thread.sleep(3000); // 3 seconds for page to stabilize
+            log.info("WebDriver initialized successfully");
+
+        } catch (Exception e) {
+            log.error("Failed to setup WebDriver: {}", e.getMessage());
+            // Force cleanup on setup failure
+            DriverFactory.forceCleanup();
+            throw new RuntimeException("WebDriver setup failed", e);
         }
-
-        System.out.println("✅ WebDriver initialized successfully");
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        DriverFactory.quitDriver();
+        try {
+            if (driver != null) {
+                log.info("Cleaning up WebDriver...");
+                driver.quit();
+                log.info("WebDriver quit successfully");
+            }
+        } catch (Exception e) {
+            log.warn("Warning: Error during driver cleanup: {}", e.getMessage());
+        } finally {
+            // Force cleanup even if quit() fails
+            DriverFactory.quitDriver();
+            log.info("Driver cleanup completed");
+        }
     }
 
     // Screenshot utility method

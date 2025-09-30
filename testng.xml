@@ -7,7 +7,6 @@
 
     <parameter name="browser" value="chrome"/>
 
-    <!-- 🎯 MAIN TEST SUITE - Using Group-based Structure -->
     <test name="TNC Store Tests - All Features">
         <classes>
             <class name="test.TNCStoreTests"/>

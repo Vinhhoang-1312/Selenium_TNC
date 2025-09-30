@@ -8,17 +8,20 @@ import helpers.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfileViewTests extends BaseTest {
     private AuthenticationPage authPage;
     private UserProfilePage profilePage;
+    private static final Logger log = LoggerFactory.getLogger(ProfileViewTests.class);
 
     @BeforeMethod
     public void setUpTest() {
         authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
         ReportManager.setModule("userprofile-view");
-        System.out.println("✅ ProfileViewTests setup completed");
+        log.info("ProfileViewTests setup completed");
     }
 
     @Test(groups = {"userprofile", "smoke"},
