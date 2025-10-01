@@ -7,6 +7,43 @@
     <!-- MAIN TESTS - REGISTER VÀ LOGIN (FIXED) -->
     <test name="Authentication Tests - Register and Login (Fixed)">
         <classes>
+<<<<<<< HEAD
+
+            <class name="test.debug.DebugTest">
+                <methods>
+                    <include name="testDriverSetup"/>
+                </methods>
+            </class>
+
+            <!--class test cho product_detail-->
+            <class name="test.productdetail.ProductDetailTest">
+                <methods><include name="testAddToCart"/>
+                    <include name="testScrollToBottomAndViewProductDetail"/>
+                </methods>
+            </class>
+
+            <!--class test cho search-->
+            <class name="test.search.SearchTest">
+                <methods>
+                    <include name="testSearchFunctionality"/>
+                    <include name="testSearchResults"/>
+                    <include name="testSearchForRTX2050"/>
+                    <include name="testSearchForRTX2050Repeat"/>
+                    <include name="testSearchPerformCorrect"/>
+                    <include name="testSearchReloadPage"/>
+                    <include name="testSearchWithNoKeyword"/>
+                </methods>
+            </class>
+
+
+            <class name="test.simple.SimpleDriverTest">
+                <methods><include name="testDriverWorks"/>
+                </methods>
+            </class>
+
+            <!-- REGISTER VÀ LOGIN (FIXED) -->
+=======
+>>>>>>> 06212005e5b1461a05f8182d4b28cd380e97fde5
             <class name="test.authentication.RegisterTests"/>
             <class name="test.authentication.LoginTests"/>
         </classes>
