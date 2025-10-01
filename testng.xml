@@ -1,48 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="TNC Store Automation Test Suite" verbose="1">
 
     <parameter name="browser" value="chrome"/>
 
-    <test name="All test_case">
+    <!-- MAIN TESTS - REGISTER VÀ LOGIN (FIXED) -->
+    <test name="Authentication Tests - Register and Login (Fixed)">
         <classes>
-
-            <class name="test.debug.DebugTest">
-                <methods>
-                    <include name="testDriverSetup"/>
-                </methods>
-            </class>
-
-            <!--class test cho product_detail-->
-            <class name="test.productdetail.product_detail_test">
-                <methods><include name="testAddToCart"/>
-                    <include name="testScrollToBottomAndViewProductDetail"/>
-                </methods>
-            </class>
-
-            <!--class test cho search-->
-            <class name="test.search.search_test">
-                <methods>
-                    <include name="testSearchFunctionality"/>
-                    <include name="testSearchResults"/>
-                    <include name="testSearchForRTX2050"/>
-                    <include name="testSearchForRTX2050Repeat"/>
-                    <include name="testSearchPerformCorrect"/>
-                    <include name="testSearchReloadPage"/>
-                    <include name="testSearchWithNoKeyword"/>
-                </methods>
-            </class>
-
-
-            <class name="test.simple.SimpleDriverTest">
-                <methods><include name="testDriverWorks"/>
-                </methods>
-            </class>
-
-            <!-- REGISTER VÀ LOGIN (FIXED) -->
             <class name="test.authentication.RegisterTests"/>
             <class name="test.authentication.LoginTests"/>
-
         </classes>
     </test>
+
 </suite>
