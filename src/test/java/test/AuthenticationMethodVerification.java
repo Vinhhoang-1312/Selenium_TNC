@@ -1,16 +1,15 @@
 package test;
 
-import pages.AuthenticationPage;
+import pages.authenticationPage;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Verification class to ensure AuthenticationPage methods are accessible
- * This file helps IDEs recognize the methods by explicitly referencing them
+ * Verification class to ensure authenticationPage methods are accessible
  */
 public class AuthenticationMethodVerification {
 
-    public void verifyMethodsExist(WebDriver driver) {
-        AuthenticationPage authPage = new AuthenticationPage(driver);
+    public void verifyMethods(WebDriver driver) {
+        authenticationPage authPage = new authenticationPage(driver);
 
         // These method calls confirm that isUserLoggedIn and getLoggedInUserName exist
         boolean userLoggedIn = authPage.isUserLoggedIn();

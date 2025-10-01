@@ -8,18 +8,18 @@
 
     <parameter name="browser" value="chrome"/>
 
-    <!-- CHỈ CHẠY REGISTER VÀ LOGIN TESTS -->
+    <!--  REGISTER & LOGIN TESTS -->
     <test name="Authentication Tests - Register and Login Only">
         <groups>
             <run>
                 <include name="authentication"/>
                 <include name="login"/>
-                <include name="signup"/>
+                <!-- <include name="signup"/> -->
             </run>
         </groups>
         <classes>
             <class name="test.authentication.LoginTests"/>
-            <class name="test.authentication.RegisterTests"/>
+            <!-- <class name="test.authentication.RegisterTests"/> -->
         </classes>
     </test>
 

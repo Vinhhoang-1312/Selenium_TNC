@@ -6,7 +6,7 @@ import model.AuthenticationTestData;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.AuthenticationPage;
+import pages.authenticationPage;
 import pages.UserProfilePage;
 
 /**
@@ -14,13 +14,13 @@ import pages.UserProfilePage;
  * You can extend with real assertions and flows later.
  */
 public class ProfileUpdateTests extends BaseTest {
-    private AuthenticationPage authPage;
     private UserProfilePage profilePage;
+    private authenticationPage authPage;
 
     @BeforeMethod
     public void setUp() {
-        authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
+        authPage = new authenticationPage(driver);
         ReportManager.setModule("userprofile-update");
     }
 
@@ -42,4 +42,3 @@ public class ProfileUpdateTests extends BaseTest {
         }
     }
 }
-

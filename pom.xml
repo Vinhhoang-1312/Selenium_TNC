@@ -397,5 +397,23 @@
                 </plugins>
             </build>
         </profile>
+
+        <!-- NEW: Authentication-only suite using testng-auth-only.xml -->
+        <profile>
+            <id>auth-only</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>testng-auth-only.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

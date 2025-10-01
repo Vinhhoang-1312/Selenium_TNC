@@ -1,14 +1,12 @@
 package pages;
 
-import locators.TNCStoreLocators;
-import config.TNCStoreConfig;
+import locators.authenticationLocators;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.time.Duration;
 
 public class UserProfilePage extends BasePage {
 
@@ -19,39 +17,39 @@ public class UserProfilePage extends BasePage {
     }
 
     // Profile navigation elements using centralized locators
-    @FindBy(xpath = TNCStoreLocators.PROFILE_LINK)
+    @FindBy(xpath = authenticationLocators.PROFILE_LINK)
     private WebElement profileLink;
 
-    @FindBy(xpath = TNCStoreLocators.PROFILE_MENU_LINK)
+    @FindBy(xpath = authenticationLocators.PROFILE_MENU_LINK)
     private WebElement profileMenuLink;
 
     // Profile form elements
-    @FindBy(css = TNCStoreLocators.PROFILE_NAME_FIELD)
+    @FindBy(css = authenticationLocators.PROFILE_NAME_FIELD)
     private WebElement nameField;
 
-    @FindBy(css = TNCStoreLocators.PROFILE_EMAIL_FIELD)
+    @FindBy(css = authenticationLocators.PROFILE_EMAIL_FIELD)
     private WebElement emailField;
 
-    @FindBy(css = TNCStoreLocators.PROFILE_PHONE_FIELD)
+    @FindBy(css = authenticationLocators.PROFILE_PHONE_FIELD)
     private WebElement phoneField;
 
-    @FindBy(css = TNCStoreLocators.PROFILE_ADDRESS_FIELD)
+    @FindBy(css = authenticationLocators.PROFILE_ADDRESS_FIELD)
     private WebElement addressField;
 
-    @FindBy(xpath = TNCStoreLocators.SAVE_PROFILE_BUTTON)
+    @FindBy(xpath = authenticationLocators.SAVE_PROFILE_BUTTON)
     private WebElement saveProfileButton;
 
     // Password change elements
-    @FindBy(css = TNCStoreLocators.CURRENT_PASSWORD_FIELD)
+    @FindBy(css = authenticationLocators.CURRENT_PASSWORD_FIELD)
     private WebElement currentPasswordField;
 
-    @FindBy(css = TNCStoreLocators.NEW_PASSWORD_FIELD)
+    @FindBy(css = authenticationLocators.NEW_PASSWORD_FIELD)
     private WebElement newPasswordField;
 
-    @FindBy(css = TNCStoreLocators.CONFIRM_PASSWORD_FIELD)
+    @FindBy(css = authenticationLocators.CONFIRM_PASSWORD_FIELD)
     private WebElement confirmPasswordField;
 
-    @FindBy(xpath = TNCStoreLocators.CHANGE_PASSWORD_BUTTON)
+    @FindBy(xpath = authenticationLocators.CHANGE_PASSWORD_BUTTON)
     private WebElement changePasswordButton;
 
     // ========== NAVIGATION METHODS ==========
