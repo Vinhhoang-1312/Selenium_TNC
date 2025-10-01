@@ -1,7 +1,7 @@
 package test;
 
-import pages.AuthenticationPage;
-import pages.UserProfilePage;
+import pages.authenticationPage;
+//import pages.UserProfilePage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
@@ -37,7 +37,7 @@ public class TNCStoreTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-01: Register with valid data");
 
         // Initialize pages for this test method
-        AuthenticationPage authPage = new AuthenticationPage(driver);
+        authenticationPage authPage = new authenticationPage(driver);
 
         try {
             // IMPROVED: Use dynamic test data instead of hardcoded
@@ -114,7 +114,7 @@ public class TNCStoreTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-01: Login with valid credentials");
 
         // Initialize pages for this test method
-        AuthenticationPage authPage = new AuthenticationPage(driver);
+        authenticationPage authPage = new authenticationPage(driver);
 
         try {
             // First register a user to test login

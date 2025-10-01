@@ -5,7 +5,7 @@ package locators;
  * Organized by page/functionality
  * Based on actual website flow analysis - UPDATED 2024
  */
-public class TNCStoreLocators {
+public class authenticationLocators {
 
     // ========== NAVIGATION & GENERAL ==========
     // Account button - click to open login popup

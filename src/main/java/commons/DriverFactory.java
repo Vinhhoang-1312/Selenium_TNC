@@ -37,7 +37,6 @@ public class DriverFactory {
                     System.out.println("📦 Setting up ChromeDriver with WebDriverManager...");
                     WebDriverManager.chromedriver().setup();
                     System.out.println("✅ WebDriverManager setup completed");
-
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
                     chromeOptions.addArguments("--disable-extensions");

@@ -4,9 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ProductDetailPage extends BasePage {
+    private static final Logger log = LoggerFactory.getLogger(ProductDetailPage.class);
     public static By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
     private final By viewCartLink = By.xpath("//a[@class='btn-goCart']");
@@ -32,7 +35,7 @@ public class ProductDetailPage extends BasePage {
         WebElement addToCartElement = driver.findElement(addToCartButton);
         waitForElementToBeClickable(addToCartElement);
         addToCartElement.click();
-        System.out.println("✅ Successfully added product to cart");
+        log.info("Successfully added product to cart");
     }
 
     public void goToCart() {
@@ -42,13 +45,13 @@ public class ProductDetailPage extends BasePage {
         WebElement cartIconElement = driver.findElement(cartIcon);
         waitForElementToBeVisible(cartIcon);
         actions.moveToElement(cartIconElement).perform();
-        System.out.println("✅ Successfully hovered over cart icon");
+        log.info("Successfully hovered over cart icon");
 
         // Then wait for and click the view cart link
         waitForElementToBeVisible(viewCartLink);
         WebElement cartElement = driver.findElement(viewCartLink);
         waitForElementToBeClickable(cartElement);
         cartElement.click();
-        System.out.println("✅ Successfully navigated to cart page");
+        log.info("Successfully navigated to cart page");
     }
 }

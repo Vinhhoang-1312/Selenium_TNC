@@ -9,19 +9,22 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
 import pages.SearchPage;
 
 public class SearchTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
     @BeforeClass
     public void setUp() {
-        
+
         driver = Driver_Factory.getDriver();
-        driver.get(baseUrl); 
+        driver.get(baseUrl);
     }
 
     @Test
@@ -63,7 +66,12 @@ public class SearchTest {
         List<WebElement> suggestedItems = helpers.PageHelpers.waitForAllElementsPresence(driver, SearchPage.suggestionList, 4);
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
-            System.out.println("Đang kiểm tra gợi ý: " + itemName);            
+            log.info("Đang kiểm tra gợi ý: {}", itemName);
+//            System.out.println("HTML: " + item.getAttribute("innerHTML"));
+//            System.out.println("Class: " + item.getAttribute("class"));
+//            System.out.println("Link: " + item.getAttribute("href")); // nếu là thẻ <a>
+
+            System.out.println("Đang kiểm tra gợi ý: " + itemName);
             Assert.assertTrue(itemName.contains("rtx 2050".toLowerCase()), "Suggested item contains the search query");
         }
     }
@@ -78,17 +86,17 @@ public class SearchTest {
     }
 
     @Test
-    public void testSearchWithNoKeyword() {        
+    public void testSearchWithNoKeyword() {
         driver.findElement(SearchPage.searchInput).sendKeys("");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Thread interrupted", e);
         }
         List<WebElement> suggestedItems = driver.findElements(SearchPage.suggestionList);
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
-            System.out.println("Checking item: " + itemName);
+            log.info("Checking item: {}", itemName);
             Assert.assertTrue(itemName.contains("no information".toLowerCase()), "Suggested item contains information");
         }
     }

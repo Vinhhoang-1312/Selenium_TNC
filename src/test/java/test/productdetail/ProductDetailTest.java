@@ -9,18 +9,21 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
 import helpers.PageHelpers;
 import pages.ProductDetailPage;
 
 public class ProductDetailTest {
-
+    private static final Logger log = LoggerFactory.getLogger(ProductDetailTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
     @BeforeClass
     public void setUp() {
+        // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
         driver.get(baseUrl);
     }
@@ -50,7 +53,8 @@ public class ProductDetailTest {
         js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
         WebElement itemnameElement = helpers.PageHelpers.waitForElementVisible(driver, ProductDetailPage.itemnameInMainPage, 10);
         String productNameOnMainPage = itemnameElement.getText();
-        System.out.println("Tên sản phẩm trên trang chủ: " + productNameOnMainPage);
+        log.info("Tên sản phẩm trên trang chủ: {}", productNameOnMainPage);
+
         WebElement itemElement = driver.findElement(ProductDetailPage.itemInMainPage);
         itemElement.click();
 
@@ -60,6 +64,7 @@ public class ProductDetailTest {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
+
         WebElement productNameElement = helpers.PageHelpers.waitForElementVisible(driver, ProductDetailPage.productName, 10);
         String productNameOnDetailPage = productNameElement.getText();
 
@@ -74,21 +79,22 @@ public class ProductDetailTest {
         WebElement originalPriceElement = driver.findElement(ProductDetailPage.originPrice);
         String originalPriceText = originalPriceElement.getText().replaceAll("[^0-9]", "");
         double originalPrice = Double.parseDouble(originalPriceText);
-        System.out.println(originalPrice);
+        log.info("Giá gốc: {}", originalPrice);
 
         WebElement salePriceElement = driver.findElement(ProductDetailPage.Price);
         String salePriceText = salePriceElement.getText().replaceAll("[^0-9]", "");
         double salePrice = Double.parseDouble(salePriceText);
-        System.out.println(salePrice);
+        log.info("Giá sau khi giảm: {}", salePrice);
 
         WebElement discountElement = driver.findElement(ProductDetailPage.SaleOff);
         String discountText = discountElement.getText().replaceAll("[^0-9]", "");
         double discountPercent = Double.parseDouble(discountText);
-        System.out.println(discountPercent);
+        log.info("Phần trăm giảm giá: {}", discountPercent);
+
         double expectedPrice = originalPrice - (originalPrice * discountPercent / 100);
         Assert.assertEquals(salePrice, expectedPrice, "Giá sau khi giảm không đúng! Expected: " + expectedPrice + " | Actual: " + salePrice);
 
-        System.out.println("Giá sau khi giảm đúng: " + salePrice);
+        log.info("Giá sau khi giảm đúng: {}", salePrice);
     }
 
     @AfterClass
