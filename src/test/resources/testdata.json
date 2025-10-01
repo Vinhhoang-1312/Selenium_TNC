@@ -1,0 +1,142 @@
+{
+  "authentication": {
+    "validData": {
+      "name": "John Doe",
+      "email": "john5@test.com",
+      "password": "Abc12345",
+      "name2": "Jane Smith",
+      "email2": "jane@test.com",
+      "password2": "Pass123456",
+      "name3": "Mike Johnson",
+      "email3": "mike@test.com",
+      "password3": "SecurePass789"
+    },
+    "invalidData": {
+      "existingEmail": "existing@tncstore.vn",
+      "existingEmail2": "admin@tncstore.vn",
+      "invalidEmailFormat": "test@",
+      "invalidEmailFormat2": "abc.com",
+      "invalidEmailFormat3": "1234",
+      "weakPassword": "123",
+      "weakPassword2": "abc",
+      "weakPassword3": "11111",
+      "wrongPassword": "WrongPass123",
+      "nonExistingEmail": "abc@fake.com"
+    },
+    "errorMessages": {
+      "emailExists": "Email đã được sử dụng Vui lòng đăng ký lại !",
+      "invalidEmail": "Email không hợp lệ",
+      "requiredField": "This field is required",
+      "invalidPassword": "Invalid password",
+      "accountNotFound": "Account not found",
+      "emailNotRegistered": "Email not registered"
+    }
+  },
+  "userProfile": {
+    "validData": {
+      "name": "Updated Name",
+      "phone": "0123456789",
+      "address": "123 Test Street, Ha Noi",
+      "newPassword": "NewPassword123"
+    },
+    "invalidData": {
+      "longName": "This is a very very very long name that exceeds the maximum allowed length",
+      "invalidPhone": "abc123",
+      "emptyAddress": ""
+    }
+  },
+  "search": {
+    "validKeywords": [
+      "laptop gaming",
+      "PC",
+      "RTX 4070",
+      "gaming chair",
+      "monitor"
+    ],
+    "invalidKeywords": [
+      "xyz123",
+      "!@#$%",
+      "nonexistentproduct999"
+    ],
+    "categories": [
+      "Laptop",
+      "PC Gaming",
+      "Linh kiện",
+      "Gaming Gear"
+    ],
+    "priceRanges": {
+      "low": "10000000-20000000",
+      "medium": "20000000-50000000",
+      "high": "50000000-100000000"
+    }
+  },
+  "productDetail": {
+    "sampleProducts": {
+      "laptop": {
+        "name": "Laptop Gaming ASUS",
+        "price": "25000000",
+        "inStock": true
+      },
+      "pc": {
+        "name": "PC Gaming RTX 4070",
+        "price": "35000000",
+        "inStock": true
+      },
+      "outOfStock": {
+        "name": "Limited Edition Product",
+        "price": "15000000",
+        "inStock": false
+      }
+    },
+    "quantities": [1, 5, 10, 999],
+    "reviews": {
+      "rating": 5,
+      "comment": "Sản phẩm tuyệt vời, chất lượng cao!"
+    }
+  },
+  "cart": {
+    "coupons": {
+      "valid": "DISCOUNT10",
+      "expired": "EXPIRED2023",
+      "invalid": "INVALIDCODE",
+      "percentage": 10
+    },
+    "quantities": {
+      "valid": [1, 2, 5, 10],
+      "invalid": [0, -1, 9999]
+    }
+  },
+  "checkout": {
+    "shippingInfo": {
+      "fullName": "Nguyen Van Test",
+      "phone": "0987654321",
+      "address": "123 Test Street",
+      "city": "Ha Noi",
+      "district": "Dong Da",
+      "ward": "Lang Thuong"
+    },
+    "paymentMethods": [
+      "COD",
+      "Bank Transfer",
+      "VNPAY",
+      "MOMO"
+    ],
+    "guestCheckout": {
+      "email": "guest@test.com",
+      "phone": "0123456789"
+    }
+  },
+  "common": {
+    "timeouts": {
+      "short": 5,
+      "medium": 10,
+      "long": 30
+    },
+    "urls": {
+      "homepage": "https://www.tncstore.vn/",
+      "login": "https://www.tncstore.vn/account/login",
+      "register": "https://www.tncstore.vn/account/register"
+    }
+  }
+}
+
