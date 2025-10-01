@@ -16,14 +16,14 @@
             </class>
 
             <!--class test cho product_detail-->
-            <class name="test.productdetail.ProductDetailTest">
+            <class name="test.productdetail.ProductNameCorrectTest">
                 <methods><include name="testAddToCart"/>
                     <include name="testScrollToBottomAndViewProductDetail"/>
                 </methods>
             </class>
 
             <!--class test cho search-->
-            <class name="test.search.SearchTest">
+            <class name="test.search.SearchRepeatTest">
                 <methods>
                     <include name="testSearchFunctionality"/>
                     <include name="testSearchResults"/>
