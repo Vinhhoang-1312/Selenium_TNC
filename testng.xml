@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="TNC Store Automation Test Suite" verbose="1">
 
     <parameter name="browser" value="chrome"/>
 
-    <test name="All test_case">
+    <!-- MAIN TESTS - REGISTER VÀ LOGIN (FIXED) -->
+    <test name="Authentication Tests - Register and Login (Fixed)">
         <classes>
+<<<<<<< HEAD
 
             <class name="test.debug.DebugTest">
                 <methods>
@@ -40,9 +42,11 @@
             </class>
 
             <!-- REGISTER VÀ LOGIN (FIXED) -->
+=======
+>>>>>>> 06212005e5b1461a05f8182d4b28cd380e97fde5
             <class name="test.authentication.RegisterTests"/>
             <class name="test.authentication.LoginTests"/>
-
         </classes>
     </test>
+
 </suite>
