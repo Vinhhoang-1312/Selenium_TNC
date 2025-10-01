@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Full Test Suite" verbose="1">
+    <listeners>
+        <listener class-name="listener.TestListener"/>
+    </listeners>
+
+    <parameter name="browser" value="chrome"/>
+
+    <test name="All Tests">
+        <classes>
+            <class name="test.authentication.LoginTests"/>
+<!--            <class name="test.authentication.RegisterTests"/>-->
+            <class name="test.search.SearchTest"/>
+            <class name="test.productdetail.ProductDetailTest"/>
+            <class name="test.cart.IncreaseItemQuantityTest"/>
+            <class name="test.cart.DecreaseItemQuantityTest"/>
+        </classes>
+    </test>
+
+</suite>

@@ -3,9 +3,13 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class HomePage extends BasePage {
+    private static final Logger log = LoggerFactory.getLogger(HomePage.class);
+
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//span[contains(text(),'Tìm kiếm')]");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
@@ -31,7 +35,7 @@ public class HomePage extends BasePage {
 
         // Wait for loading to complete
         waitForElementToDisappear(loadingSpinner);
-        System.out.println("✅ Successfully searched for product: " + productName);
+        log.info("Successfully searched for product: {}", productName);
     }
 
     public void clickProduct() {
@@ -43,13 +47,15 @@ public class HomePage extends BasePage {
             WebElement firstProduct = availableProducts.get(0);
             waitForElementToBeClickable(firstProduct);
             firstProduct.click();
-            System.out.println("✅ Successfully clicked product");
+            log.info("Successfully clicked product");
         } else {
-            System.out.println("❌ No products found on the page");
-            System.out.println("Current URL: " + driver.getCurrentUrl());
+            log.error("No products found on the page");
+            log.error("Current URL: {}", driver.getCurrentUrl());
             throw new RuntimeException("No products found on homepage - Please check if products are loaded correctly");
         }
-    }public void clickFirstNormalProduct() {
+    }
+
+    public void clickFirstNormalProduct() {
         List<WebElement> products = driver.findElements(By.cssSelector(".product-box"));
         for (WebElement product : products) {
             List<WebElement> saleTag = product.findElements(By.cssSelector(".old-price"));
@@ -60,6 +66,4 @@ public class HomePage extends BasePage {
         }
         throw new RuntimeException("No normal product found");
     }
-
-
 }

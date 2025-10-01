@@ -10,10 +10,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.List;
 
 public class authenticationPage extends BasePage {
+    private static final Logger log = LoggerFactory.getLogger(authenticationPage.class);
 
     public authenticationPage(WebDriver driver) {
         super(driver);
@@ -78,27 +81,27 @@ public class authenticationPage extends BasePage {
 
     public void openLoginPopup() {
         try {
-            System.out.println("🚀 Opening login popup and dismissing popups immediately...");
+            log.info("Opening login popup and dismissing popups immediately...");
             dismissAllPopupsOnPageLoad();
             wait.until(ExpectedConditions.elementToBeClickable(accountButton));
             accountButton.click();
             wait.until(ExpectedConditions.visibilityOf(loginPopup));
-            System.out.println("✅ Successfully opened login popup");
+            log.info("Successfully opened login popup");
         } catch (Exception e) {
-            System.out.println("❌ Error when opening login popup: " + e.getMessage());
+            log.error("Error when opening login popup: {}", e.getMessage());
             throw new RuntimeException("Cannot open login popup", e);
         }
     }
 
     private void dismissAllPopupsOnPageLoad() {
         try {
-            System.out.println("🎯 Checking and dismissing popups immediately...");
+            log.info("Checking and dismissing popups immediately...");
             clickIfPresent(By.cssSelector(".widget-header--button-close"));
             clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
             forceHideBlockingElements();
-            System.out.println("✅ Popup dismissal completed");
+            log.info("Popup dismissal completed");
         } catch (Exception e) {
-            System.out.println("⚠️ Error dismissing popups: " + e.getMessage());
+            log.warn("Error dismissing popups: {}", e.getMessage());
         }
     }
 
@@ -112,9 +115,9 @@ public class authenticationPage extends BasePage {
             loginPasswordField.clear();
             loginPasswordField.sendKeys(password);
             clickElementWithRetry(loginButton, "login button");
-            System.out.println("✅ Successfully performed login with email: " + email);
+            log.info("Successfully performed login with email: {}", email);
         } catch (Exception e) {
-            System.out.println("❌ Error during login: " + e.getMessage());
+            log.error("Error during login: {}", e.getMessage());
             throw new RuntimeException("Cannot perform login", e);
         }
     }
@@ -124,9 +127,9 @@ public class authenticationPage extends BasePage {
             openLoginPopup();
             wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
             createAccountLink.click();
-            System.out.println(" Successfully switched to registration form");
+            log.info("Successfully switched to registration form");
         } catch (Exception e) {
-            System.out.println(" Error when switching to registration form: " + e.getMessage());
+            log.error("Error when switching to registration form: {}", e.getMessage());
             throw new RuntimeException("Cannot switch to registration form", e);
         }
     }
@@ -144,9 +147,9 @@ public class authenticationPage extends BasePage {
             registerPasswordField.clear();
             registerPasswordField.sendKeys(password);
             clickElementWithRetry(registerButton, "register button");
-            System.out.println("✅ Successfully performed registration with email: " + email);
+            log.info("Successfully performed registration with email: {}", email);
         } catch (Exception e) {
-            System.out.println("❌ Error during registration: " + e.getMessage());
+            log.error("Error during registration: {}", e.getMessage());
             throw new RuntimeException("Cannot perform registration", e);
         }
     }
@@ -158,16 +161,16 @@ public class authenticationPage extends BasePage {
                 dismissChatWidget();
                 wait.until(ExpectedConditions.elementToBeClickable(element));
                 element.click();
-                System.out.println("✅ Successfully clicked " + elementName + " on attempt " + attempt);
+                log.info("Successfully clicked {} on attempt {}", elementName, attempt);
                 return;
             } catch (ElementClickInterceptedException e) {
-                System.out.println("⚠️ Click intercepted on " + elementName + " (attempt " + attempt + "), trying JavaScript click...");
+                log.warn("Click intercepted on {} (attempt {}), trying JavaScript click...", elementName, attempt);
                 try {
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-                    System.out.println("✅ Successfully clicked " + elementName + " using JavaScript on attempt " + attempt);
+                    log.info("Successfully clicked {} using JavaScript on attempt {}", elementName, attempt);
                     return;
                 } catch (Exception jsError) {
-                    System.out.println("❌ JavaScript click failed on attempt " + attempt + ": " + jsError.getMessage());
+                    log.error("JavaScript click failed on attempt {}: {}", attempt, jsError.getMessage());
                     if (attempt == maxAttempts) {
                         throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
                     }
@@ -178,7 +181,7 @@ public class authenticationPage extends BasePage {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("❌ Unexpected error clicking " + elementName + " on attempt " + attempt + ": " + e.getMessage());
+                log.error("Unexpected error clicking {} on attempt {}: {}", elementName, attempt, e.getMessage());
                 if (attempt == maxAttempts) {
                     throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
                 }
@@ -197,30 +200,30 @@ public class authenticationPage extends BasePage {
             WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
-                System.out.println("Clicked on element: " + locator.toString());
+                log.debug("Clicked on element: {}", locator.toString());
             }
         } catch (TimeoutException e) {
-            System.out.println("Element not found within timeout, skip clicking: " + locator.toString());
+            log.debug("Element not found within timeout, skip clicking: {}", locator.toString());
         }
     }
 
     private void dismissChatWidget() {
         try {
-            System.out.println("🔧 Starting professional popup dismissal with clickIfPresent...");
+            log.info("Starting professional popup dismissal with clickIfPresent...");
             clickIfPresent(By.xpath("//div[@class='widget-header--inner widget-header--inner--collapsed']//span[@class='widget-header--button-close-icon']"));
             clickIfPresent(By.xpath("//div[@class='widget-preview--btn-close']"));
             clickIfPresent(By.cssSelector(".widget-header--button-close"));
             clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
             forceHideBlockingElements();
-            System.out.println("✅ Professional popup dismissal completed");
+            log.info("Professional popup dismissal completed");
         } catch (Exception e) {
-            System.out.println("⚠️ Error in popup dismissal: " + e.getMessage());
+            log.warn("Error in popup dismissal: {}", e.getMessage());
         }
     }
 
     private void forceHideBlockingElements() {
         try {
-            System.out.println("💥 Force hiding known blocking elements...");
+            log.debug("Force hiding known blocking elements...");
             ((JavascriptExecutor) driver).executeScript(
                 "var blockingElements = document.querySelectorAll('.widget-preview--action-text');" +
                 "for(var i = 0; i < blockingElements.length; i++) {" +
@@ -232,57 +235,61 @@ public class authenticationPage extends BasePage {
                 "}" +
                 "console.log('Forced hiding of blocking elements completed');"
             );
-            System.out.println("✅ Force hiding completed");
+            log.debug("Force hiding completed");
         } catch (Exception e) {
-            System.out.println("⚠️ Force hiding failed: " + e.getMessage());
+            log.warn("Force hiding failed: {}", e.getMessage());
         }
     }
 
     public boolean isLoginSuccessful() {
         try {
             Thread.sleep(3000);
-            System.out.println("🔍 Checking login success by examining account text element...");
+            log.info("Checking login success by examining account text element...");
 
             try {
                 WebElement accountElement = driver.findElement(By.xpath(TNCStoreLocators.ACCOUNT_TEXT_ELEMENT));
                 if (accountElement.isDisplayed()) {
                     String accountText = accountElement.getText().trim();
-                    System.out.println("✓ Account element text: '" + accountText + "'");
+                    log.info("Account element text: '{}'", accountText);
+
                     if (accountText.equals("Tài khoản") || accountText.equals("Account")) {
-                        System.out.println("❌ Login verification: Still showing 'Tài khoản' - user not logged in");
+                        log.info("Login verification: Still showing 'Tài khoản' - user not logged in");
                         return false;
                     }
+
                     if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
-                        System.out.println("✓ Login verification: Account text changed to '" + accountText + "' - user logged in!");
+                        log.info("Login verification: Account text changed to '{}' - user logged in!", accountText);
                         return true;
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Primary account element check failed: " + e.getMessage());
+                log.warn("Primary account element check failed: {}", e.getMessage());
             }
 
             try {
                 WebElement altAccountElement = driver.findElement(By.xpath(TNCStoreLocators.ACCOUNT_TEXT_ELEMENT_ALT));
                 if (altAccountElement.isDisplayed()) {
                     String accountText = altAccountElement.getText().trim();
-                    System.out.println("✓ Alternative account element text: '" + accountText + "'");
+                    log.info("Alternative account element text: '{}'", accountText);
+
                     if (accountText.equals("Tài khoản") || accountText.equals("Account")) {
-                        System.out.println("❌ Login verification: Still showing 'Tài khoản' - user not logged in");
+                        log.info("Login verification: Still showing 'Tài khoản' - user not logged in");
                         return false;
                     }
+
                     if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
-                        System.out.println("✓ Login verification: Account text changed to '" + accountText + "' - user logged in!");
+                        log.info("Login verification: Account text changed to '{}' - user logged in!", accountText);
                         return true;
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Alternative account element check failed: " + e.getMessage());
+                log.warn("Alternative account element check failed: {}", e.getMessage());
             }
 
             try {
                 List<WebElement> taiKhoanElements = driver.findElements(By.xpath(TNCStoreLocators.NOT_LOGGED_IN_TEXT));
                 if (taiKhoanElements.isEmpty()) {
-                    System.out.println("✓ Login verification: 'Tài khoản' text not found - likely logged in");
+                    log.info("Login verification: 'Tài khoản' text not found - likely logged in");
                     return true;
                 } else {
                     boolean hasVisibleTaiKhoan = false;
@@ -293,65 +300,66 @@ public class authenticationPage extends BasePage {
                         }
                     }
                     if (!hasVisibleTaiKhoan) {
-                        System.out.println("✓ Login verification: No visible 'Tài khoản' text - likely logged in");
+                        log.info("Login verification: No visible 'Tài khoản' text - likely logged in");
                         return true;
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ 'Tài khoản' text check failed: " + e.getMessage());
+                log.warn("'Tài khoản' text check failed: {}", e.getMessage());
             }
 
-            System.out.println("❌ Login verification: All methods failed - login likely unsuccessful");
+            log.warn("Login verification: All methods failed - login likely unsuccessful");
             return false;
+
         } catch (Exception e) {
-            System.out.println("❌ Login verification failed with exception: " + e.getMessage());
+            log.error("Login verification failed with exception: {}", e.getMessage());
             return false;
         }
     }
 
     public boolean isErrorMessageDisplayed() {
         try {
-            System.out.println("🔍 Checking for error messages after login attempt...");
+            log.info("Checking for error messages after login attempt...");
             Thread.sleep(3000);
 
             try {
                 WebElement generalError = driver.findElement(By.xpath(TNCStoreLocators.ERROR_MESSAGE_GENERAL));
                 if (generalError.isDisplayed()) {
                     String errorText = generalError.getText().trim();
-                    System.out.println("✓ Found general error message: '" + errorText + "'");
+                    log.info("Found general error message: '{}'", errorText);
                     if (!isMarketingText(errorText)) {
                         return true;
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ General error message not found: " + e.getMessage());
+                log.warn("General error message not found: {}", e.getMessage());
             }
 
             try {
                 if (emailExistsError.isDisplayed()) {
-                    System.out.println("✓ Found email exists error");
+                    log.info("Found email exists error");
                     return true;
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Email exists error not found");
+                log.warn("Email exists error not found");
             }
 
             try {
                 if (invalidEmailError.isDisplayed()) {
-                    System.out.println("✓ Found invalid email error");
+                    log.info("Found invalid email error");
                     return true;
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Invalid email error not found");
+                log.warn("Invalid email error not found");
             }
 
             try {
                 if (requiredFieldError.isDisplayed()) {
-                    System.out.println("✓ Found required field error");
+                    log.info("Found required field error");
                     return true;
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Required field error not found");
+                log.warn("Required field error not found");
             }
 
             String[] loginErrorSelectors = {
@@ -374,7 +382,7 @@ public class authenticationPage extends BasePage {
                         if (element.isDisplayed() && !element.getText().trim().isEmpty()) {
                             String errorText = element.getText().trim();
                             if (!isMarketingText(errorText)) {
-                                System.out.println("✓ Found login error with selector '" + selector + "': '" + errorText + "'");
+                                log.info("Found login error with selector '{}': '{}'", selector, errorText);
                                 return true;
                             }
                         }
@@ -386,14 +394,14 @@ public class authenticationPage extends BasePage {
             try {
                 WebElement popup = driver.findElement(By.cssSelector(TNCStoreLocators.LOGIN_POPUP));
                 if (popup.isDisplayed()) {
-                    System.out.println("⚠️ Login popup still visible - checking for error indicators...");
+                    log.warn("Login popup still visible - checking for error indicators...");
                     try {
                         List<WebElement> popupErrors = popup.findElements(By.xpath(".//*[(contains(@style,'color') and contains(@style,'red')) or contains(@class,'error') or contains(@class,'invalid')]"));
                         for (WebElement errorElement : popupErrors) {
                             if (errorElement.isDisplayed() && !errorElement.getText().trim().isEmpty()) {
                                 String errorText = errorElement.getText().trim();
                                 if (!isMarketingText(errorText)) {
-                                    System.out.println("✓ Found error styling in popup: '" + errorText + "'");
+                                    log.info("Found error styling in popup: '{}'", errorText);
                                     return true;
                                 }
                             }
@@ -402,13 +410,13 @@ public class authenticationPage extends BasePage {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Could not check login popup: " + e.getMessage());
+                log.warn("Could not check login popup: {}", e.getMessage());
             }
 
-            System.out.println("❌ No actual login error messages found");
+            log.info("No actual login error messages found");
             return false;
         } catch (Exception e) {
-            System.out.println("❌ Error message detection failed: " + e.getMessage());
+            log.error("Error message detection failed: {}", e.getMessage());
             return false;
         }
     }
@@ -426,7 +434,7 @@ public class authenticationPage extends BasePage {
 
         for (String keyword : marketingKeywords) {
             if (lowerText.contains(keyword.toLowerCase())) {
-                System.out.println("⚠️ Filtering out marketing text: '" + text + "'");
+                log.warn("Filtering out marketing text: '{}'", text);
                 return true;
             }
         }
@@ -437,19 +445,19 @@ public class authenticationPage extends BasePage {
         try {
             if (loggedInUserName.isDisplayed()) {
                 String userName = loggedInUserName.getText().trim();
-                System.out.println("Retrieved logged-in user name: " + userName);
+                log.info("Retrieved logged-in user name: {}", userName);
                 return userName;
             }
         } catch (Exception e) {
-            System.out.println("Could not get user name from primary element, trying alternative");
+            log.warn("Could not get user name from primary element, trying alternative");
             try {
                 if (accountDropdownLoggedIn.isDisplayed()) {
                     String userName = accountDropdownLoggedIn.getText().trim();
-                    System.out.println("Retrieved logged-in user name from alternative element: " + userName);
+                    log.info("Retrieved logged-in user name from alternative element: {}", userName);
                     return userName;
                 }
             } catch (Exception e2) {
-                System.out.println("Failed to get logged-in user name: " + e2.getMessage());
+                log.error("Failed to get logged-in user name: {}", e2.getMessage());
             }
         }
         return "";
@@ -457,22 +465,22 @@ public class authenticationPage extends BasePage {
 
     public boolean isUserLoggedIn() {
         try {
-            System.out.println("🔍 Starting login verification check...");
+            log.info("Starting login verification check...");
             Thread.sleep(3000);
             String accountText = getAccountElementText();
-            System.out.println("🎯 Account element text: '" + accountText + "'");
+            log.info("Account element text: '{}'", accountText);
             if (accountText.equals("Tài khoản") || accountText.equals("Account")) {
-                System.out.println("❌ User is NOT logged in (found 'Tài khoản')");
+                log.info("User is NOT logged in (found 'Tài khoản')");
                 return false;
             }
             if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
-                System.out.println("✅ User is logged in with name: '" + accountText + "'");
+                log.info("User is logged in with name: '{}'", accountText);
                 return true;
             }
-            System.out.println("⚠️ Could not determine login status, text: '" + accountText + "'");
+            log.warn("Could not determine login status, text: '{}'", accountText);
             return false;
         } catch (Exception e) {
-            System.out.println("❌ Error during login verification: " + e.getMessage());
+            log.error("Error during login verification: {}", e.getMessage());
             return false;
         }
     }
@@ -482,36 +490,36 @@ public class authenticationPage extends BasePage {
             WebElement accountElement = driver.findElement(By.xpath("//span[@class='hover-txt line-clamp-1']"));
             if (accountElement.isDisplayed()) {
                 String text = accountElement.getText().trim();
-                System.out.println("🎯 Found account text via primary locator: '" + text + "'");
+                log.info("Found account text via primary locator: '{}'", text);
                 return text;
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Primary locator failed: " + e.getMessage());
+            log.warn("Primary locator failed: {}", e.getMessage());
         }
 
         try {
             WebElement accountElement = driver.findElement(By.xpath("/html/body/div[4]/div[2]/div/div/div[2]/a[1]/span"));
             if (accountElement.isDisplayed()) {
                 String text = accountElement.getText().trim();
-                System.out.println("🎯 Found account text via absolute XPath: '" + text + "'");
+                log.info("Found account text via absolute XPath: '{}'", text);
                 return text;
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Absolute XPath failed: " + e.getMessage());
+            log.warn("Absolute XPath failed: {}", e.getMessage());
         }
 
         try {
             WebElement accountElement = driver.findElement(By.cssSelector(".hover-txt.line-clamp-1"));
             if (accountElement.isDisplayed()) {
                 String text = accountElement.getText().trim();
-                System.out.println("🎯 Found account text via CSS selector: '" + text + "'");
+                log.info("Found account text via CSS selector: '{}'", text);
                 return text;
             }
         } catch (Exception e) {
-            System.out.println("⚠️ CSS selector failed: " + e.getMessage());
+            log.warn("CSS selector failed: {}", e.getMessage());
         }
 
-        System.out.println("❌ All locators failed to find account element");
+        log.error("All locators failed to find account element");
         return "";
     }
 

@@ -9,11 +9,14 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
 import pages.SearchPage;
 
 public class SearchTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
@@ -84,7 +87,7 @@ public class SearchTest {
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
             // In ra nội dung phần tử đang kiểm tra
-            System.out.println("Đang kiểm tra gợi ý: " + itemName);
+            log.info("Đang kiểm tra gợi ý: {}", itemName);
 //            System.out.println("HTML: " + item.getAttribute("innerHTML"));
 //            System.out.println("Class: " + item.getAttribute("class"));
 //            System.out.println("Link: " + item.getAttribute("href")); // nếu là thẻ <a>
@@ -115,7 +118,7 @@ public class SearchTest {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Thread interrupted", e);
         }
 
         // Get the suggested items from the suggestion list
@@ -124,7 +127,7 @@ public class SearchTest {
         // Check if any of the suggested items contain no information
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
-            System.out.println("Checking item: " + itemName);
+            log.info("Checking item: {}", itemName);
             Assert.assertTrue(itemName.contains("no information".toLowerCase()), "Suggested item contains information");
         }
     }
