@@ -13,17 +13,17 @@
             </class>
 
             <!--class test cho search-->
-<!--            <class name="test.search.SearchTest">-->
-<!--                <methods>-->
-<!--                    <include name="testSearchFunctionality"/>-->
-<!--                    <include name="testSearchResults"/>-->
-<!--                    <include name="testSearchForRTX2050"/>-->
-<!--                    <include name="testSearchForRTX2050Repeat"/>-->
-<!--                    <include name="testSearchPerformCorrect"/>-->
-<!--                    <include name="testSearchReloadPage"/>-->
-<!--                    <include name="testSearchWithNoKeyword"/>-->
-<!--                </methods>-->
-<!--            </class>-->
+            <class name="test.search.SearchTest">
+                <methods>
+                    <include name="testSearchFunctionality"/>
+                    <include name="testSearchResults"/>
+                    <include name="testSearchForRTX2050"/>
+                    <include name="testSearchForRTX2050Repeat"/>
+                    <include name="testSearchPerformCorrect"/>
+                    <include name="testSearchReloadPage"/>
+                    <include name="testSearchWithNoKeyword"/>
+                </methods>
+            </class>
 
         </classes>
     </test>
