@@ -11,7 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import commons.Driver_Factory;
-import ;
+import helpers.PageHelpers;
 import pages.ProductDetailPage;
 
 public class ProductDetailTest {
