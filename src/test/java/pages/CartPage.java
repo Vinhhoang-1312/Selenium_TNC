@@ -19,7 +19,8 @@ public class CartPage extends BasePage {
         List<WebElement> inputs = driver.findElements(quantityInputs);
 
         if (!inputs.isEmpty()) {
-            WebElement firstInput = inputs.getFirst();
+            WebElement firstInput = inputs.get(0);
+            waitForElementToBeVisible(quantityInputs);
             String value = firstInput.getAttribute("value");
             if (value == null || value.isEmpty()) {
                 System.out.println("❌ Quantity value is empty or null");
@@ -49,7 +50,7 @@ public class CartPage extends BasePage {
         List<WebElement> inputs = driver.findElements(quantityInputs);
 
         if (!inputs.isEmpty()) {
-            WebElement qtyInput = inputs.getFirst();
+            WebElement qtyInput = inputs.get(0);
             waitForElementToBeClickable(qtyInput);
             qtyInput.click();
             qtyInput.sendKeys(Keys.chord(Keys.CONTROL, "a")); // Select all text

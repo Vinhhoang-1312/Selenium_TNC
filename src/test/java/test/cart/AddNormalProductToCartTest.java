@@ -1,4 +1,4 @@
-package test;
+package test.cart;
 
 import helpers.BaseTest;
 import org.testng.Assert;

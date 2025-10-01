@@ -5,13 +5,20 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+
 public class ProductDetailPage extends BasePage {
-    private final By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
+    public static By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
     private final By viewCartLink = By.xpath("//a[@class='btn-goCart']");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
-
     private final Actions actions;
+    public static By itemnameInMainPage = org.openqa.selenium.By.xpath("//div[@id=\"js-product-cate-79\"]//div[@class=\"owl-item active\"][2]//a[contains(@class,'product-name')]");
+    public static By itemInMainPage = org.openqa.selenium.By.xpath("//div[contains(@id,'79')]//div[@class='owl-item active'][2]");
+    public static By productName = org.openqa.selenium.By.xpath("//h1[@class='name']");
+    public static By originPrice = org.openqa.selenium.By.xpath("//div[@class='info-main-price']//del[@class='old-price']");
+    public static By Price = org.openqa.selenium.By.xpath("//div[@class='info-main-price']//div[@class='price']");
+    public static By SaleOff = org.openqa.selenium.By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
+
 
     public ProductDetailPage(WebDriver driver) {
         super(driver);

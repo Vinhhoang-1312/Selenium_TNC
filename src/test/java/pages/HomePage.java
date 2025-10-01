@@ -26,7 +26,7 @@ public class HomePage extends BasePage {
         // Click search button if it exists
         List<WebElement> searchButtons = driver.findElements(searchButton);
         if (!searchButtons.isEmpty()) {
-            searchButtons.getFirst().click();
+            searchButtons.get(0).click();
         }
 
         // Wait for loading to complete
@@ -40,7 +40,7 @@ public class HomePage extends BasePage {
         List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 
         if (!availableProducts.isEmpty()) {
-            WebElement firstProduct = availableProducts.getFirst();
+            WebElement firstProduct = availableProducts.get(0);
             waitForElementToBeClickable(firstProduct);
             firstProduct.click();
             System.out.println("✅ Successfully clicked product");

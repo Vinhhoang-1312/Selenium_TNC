@@ -80,8 +80,8 @@ public class TestDataProvider {
      */
     private static Object[][] getAuthenticationFallbackData() {
         return new Object[][] {
-            {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john@test.com", "password", "Abc12345")},
-            {"AUTH-SI-01", Map.of("email", "john@test.com", "password", "Abc12345")},
+            {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john5@test.com", "password", "Abc12345")},
+            {"AUTH-SI-01", Map.of("email", "john5@test.com", "password", "Abc12345")},
             {"AUTH-FP-01", Map.of("email", "john@test.com")}
         };
     }
