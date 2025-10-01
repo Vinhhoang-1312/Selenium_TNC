@@ -1,14 +1,14 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class CartPage extends BasePage {
     private final By quantityInputs = By.xpath("//input[contains(@class, 'js-buy-quantity')]");
-    private final By updateCartButton = By.xpath("//button[contains(@class, 'update-cart-button')]");
-
+    private final By firstPlusSign = By.xpath("(//a[@class='js-quantity-change'])[1]");
     public CartPage(WebDriver driver) {
         super(driver);
     }
@@ -36,6 +36,13 @@ public class CartPage extends BasePage {
         throw new RuntimeException("No items found in cart - Please check if items were added correctly");
     }
 
+    public void clickFirstPlusSign() {
+        waitForPageLoad();
+        WebElement plusSign = driver.findElement(firstPlusSign);
+        waitForElementToBeClickable(plusSign);
+        plusSign.click();
+    }
+
     public void setFirstItemQuantity(int quantity) {
         waitForPageLoad();
         waitForElementToBeVisible(quantityInputs);
@@ -44,12 +51,11 @@ public class CartPage extends BasePage {
         if (!inputs.isEmpty()) {
             WebElement qtyInput = inputs.getFirst();
             waitForElementToBeClickable(qtyInput);
-            qtyInput.clear();
+            qtyInput.click();
+            qtyInput.sendKeys(Keys.chord(Keys.CONTROL, "a")); // Select all text
+            qtyInput.sendKeys(Keys.DELETE); // Delete selected text
             qtyInput.sendKeys(String.valueOf(quantity));
-
-            WebElement updateButton = driver.findElement(updateCartButton);
-            waitForElementToBeClickable(updateButton);
-            updateButton.click();
+            qtyInput.sendKeys(Keys.ENTER);
             System.out.println("✅ Successfully updated quantity to: " + quantity);
         } else {
             System.out.println("❌ No items found in cart");

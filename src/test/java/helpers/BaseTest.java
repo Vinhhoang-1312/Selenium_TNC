@@ -121,6 +121,7 @@ public class BaseTest {
     }
     public void clickIfPresent(By locator) {
         try {
+            waitForPageLoad();
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 

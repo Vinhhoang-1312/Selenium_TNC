@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class HomePage extends BasePage {
-    // Locators with meaningful names using xpath
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//span[contains(text(),'Tìm kiếm')]");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
@@ -50,5 +49,17 @@ public class HomePage extends BasePage {
             System.out.println("Current URL: " + driver.getCurrentUrl());
             throw new RuntimeException("No products found on homepage - Please check if products are loaded correctly");
         }
+    }public void clickFirstNormalProduct() {
+        List<WebElement> products = driver.findElements(By.cssSelector(".product-box"));
+        for (WebElement product : products) {
+            List<WebElement> saleTag = product.findElements(By.cssSelector(".old-price"));
+            if (saleTag.isEmpty()) {
+                product.click();
+                return;
+            }
+        }
+        throw new RuntimeException("No normal product found");
     }
+
+
 }
