@@ -1,7 +1,7 @@
 package test;
 
 import pages.authenticationPage;
-import pages.UserProfilePage;
+//import pages.UserProfilePage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
