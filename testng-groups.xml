@@ -4,7 +4,7 @@
 <suite name="TNC Store Test Suite - Group Based" verbose="1">
     <listeners>
         <!-- Updated listener package name -->
-        <listener class-name="commons.listener.TestListener"/>
+        <listener class-name="listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>

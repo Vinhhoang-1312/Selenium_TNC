@@ -4,7 +4,7 @@
 <suite name="TNC Store Test Suite - Divided by Functions" verbose="1">
     <listeners>
         <!-- Corrected listener package -->
-        <listener class-name="commons.listener.TestListener"/>
+        <listener class-name="listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>

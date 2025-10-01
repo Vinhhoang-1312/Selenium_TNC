@@ -4,25 +4,26 @@
     <test verbose="2" preserve-order="true" name="D:/git_clone/nhomnhom">
         <classes>
             <!--class test cho product_detail-->
-            <class name="test.productdetail.product_detail_test">
+            <class name="test.productdetail.ProductDetailTest">
                 <methods>
-                    <include name="testAddToCart"/>
-                    <include name="testScrollToBottomAndViewProductDetail"/>
+<!--                    <include name="testAddToCart"/>-->
+<!--                    <include name="testScrollToBottomAndViewProductDetail"/>-->
+                        <include name="testSalePriceCorrect"/>
                 </methods>
             </class>
 
             <!--class test cho search-->
-            <class name="test.search.search_test">
-                <methods>
-                    <include name="testSearchFunctionality"/>
-                    <include name="testSearchResults"/>
-                    <include name="testSearchForRTX2050"/>
-                    <include name="testSearchForRTX2050Repeat"/>
-                    <include name="testSearchPerformCorrect"/>
-                    <include name="testSearchReloadPage"/>
-                    <include name="testSearchWithNoKeyword"/>
-                </methods>
-            </class>
+<!--            <class name="test.search.SearchTest">-->
+<!--                <methods>-->
+<!--                    <include name="testSearchFunctionality"/>-->
+<!--                    <include name="testSearchResults"/>-->
+<!--                    <include name="testSearchForRTX2050"/>-->
+<!--                    <include name="testSearchForRTX2050Repeat"/>-->
+<!--                    <include name="testSearchPerformCorrect"/>-->
+<!--                    <include name="testSearchReloadPage"/>-->
+<!--                    <include name="testSearchWithNoKeyword"/>-->
+<!--                </methods>-->
+<!--            </class>-->
 
         </classes>
     </test>
