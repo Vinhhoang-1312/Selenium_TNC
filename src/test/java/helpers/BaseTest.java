@@ -1,17 +1,27 @@
 package helpers;
 
+import com.aventstack.extentreports.ExtentTest;
+import commons.DriverFactory;
+import helpers.*;
+import org.openqa.selenium.By;
 import config.TNCStoreConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.testng.annotations.*;
+import config.TNCStoreConfig;
+import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.List;
 
 public class BaseTest {
     protected WebDriver driver;
@@ -188,10 +198,43 @@ public class BaseTest {
         try { return driver != null ? driver.getTitle() : "(no driver)"; } catch (Exception e) { return "(unavailable)"; }
     }
 
+    protected void sleep(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    // Wait utility methods
+    protected void waitForPageLoad() {
+        WaitUtils.waitForPageLoad(driver);
+    }
+    protected void takeScreenshot(String testName) {
+        // Simple implementation - can be enhanced later
+        try {
+            log.info("Taking screenshot for: {}", testName);
+        } catch (Exception e) {
+            log.warn("Could not take screenshot: {}", e.getMessage());
+        }
+    }
+    public void clickIfPresent(By locator) {
+        try {
+            waitForPageLoad();
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+
+            if (element.isDisplayed() && element.isEnabled()) {
+                element.click();
+                System.out.println("Clicked on element: " + locator.toString());
+            }
+        } catch (TimeoutException e) {
+            System.out.println("Element not found within timeout, skip clicking: " + locator.toString());
+        }
+    }
+
+
     // Utility methods
     protected String getCurrentUrl() { return safeGetCurrentUrl(); }
     protected String getPageTitle() { return safeGetTitle(); }
     protected void refreshPage() { if (driver != null) driver.navigate().refresh(); }
-    protected void sleep(int seconds) { pause(seconds * 1000L); }
-    protected void takeScreenshot(String testName) { try { log.info("(screenshot placeholder) {}", testName); } catch (Exception e) { log.warn("Screenshot capture failed: {}", e.getMessage()); } }
 }

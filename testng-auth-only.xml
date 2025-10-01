@@ -3,7 +3,7 @@
 
 <suite name="Authentication Tests Only - Register and Login" verbose="1">
     <listeners>
-        <listener class-name="commons.listener.TestListener"/>
+        <listener class-name="listener.TestListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>
