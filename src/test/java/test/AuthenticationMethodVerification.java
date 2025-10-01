@@ -1,25 +1,23 @@
 package test;
 
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Verification class to ensure authenticationPage methods are accessible
+ * Verification class to ensure AuthenticationPage methods are accessible
+ * This file helps IDEs recognize the methods by explicitly referencing them
  */
 public class AuthenticationMethodVerification {
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationMethodVerification.class);
 
-    public void verifyMethods(WebDriver driver) {
-        authenticationPage authPage = new authenticationPage(driver);
+    public void verifyMethodsExist(WebDriver driver) {
+        AuthenticationPage authPage = new AuthenticationPage(driver);
 
         // These method calls confirm that isUserLoggedIn and getLoggedInUserName exist
         boolean userLoggedIn = authPage.isUserLoggedIn();
         String userName = authPage.getLoggedInUserName();
 
-        log.info("Methods verified:");
-        log.info("- isUserLoggedIn(): {}", userLoggedIn);
-        log.info("- getLoggedInUserName(): {}", userName);
+        System.out.println("Methods verified:");
+        System.out.println("- isUserLoggedIn(): " + userLoggedIn);
+        System.out.println("- getLoggedInUserName(): " + userName);
     }
 }
