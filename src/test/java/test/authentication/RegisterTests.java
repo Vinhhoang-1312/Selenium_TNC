@@ -1,5 +1,4 @@
 package test.authentication;
-
 import pages.AuthenticationPage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
@@ -23,11 +22,10 @@ public class RegisterTests extends BaseTest {
           description = "AUTH-SU-01: Register with valid name, email, and password")
     public void testRegisterWithValidData() {
         ReportManager.startTest("AUTH-SU-01: Register with valid data");
-
         try {
             AuthenticationPage authPage = getAuthPage();
             AuthenticationTestData.TestUser testUser = AuthenticationTestData.createUniqueUser("RegisterTest");
-            log.info("\uD83D\uDD04 Starting registration test with unique user: {} ({})", testUser.name, testUser.email);
+            log.info("Starting registration test with unique user: {} ({})", testUser.name, testUser.email);
 
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
@@ -35,60 +33,25 @@ public class RegisterTests extends BaseTest {
             authPage.performRegistration(testUser.name, testUser.email, testUser.password);
             ReportManager.logInfo("Filled registration form with unique data");
 
-            // In ra text tài khoản ngay sau đăng ký
-            String accountTextAfterRegister = authPage.getLoggedInUserNameRobust();
-            log.info("[DEBUG] Account text after registration: {}", accountTextAfterRegister);
-
-            // Debug: Print console logs and page source after registration
-            String regConsoleLogs = authPage.getBrowserConsoleLogs();
-            log.info("[DEBUG] Console logs after registration: {}", regConsoleLogs);
-            String regPageSource = driver.getPageSource();
-            log.info("[DEBUG] Page source after registration (first 1000 chars): {}", regPageSource.substring(0, Math.min(1000, regPageSource.length())));
-            // Print any visible error messages
-            if (authPage.isErrorMessageDisplayed()) {
-                log.warn("[DEBUG] Error message displayed after registration");
-            }
-
-            // Nếu chưa login, thử login lại
-            if (!authPage.isLoginSuccessful()) {
-                log.info("Registration did not auto-login, attempting manual login with new credentials...");
+            boolean isLoggedIn = false;
+            String accountText = "";
+            for (int attempt = 1; attempt <= 2; attempt++) {
+                accountText = authPage.getLoggedInUserNameRobust();
+                log.info("[DEBUG] Account text after registration/login attempt {}: {}", attempt, accountText);
+                if (!accountText.equals("Tài khoản") && !accountText.isEmpty()) {
+                    isLoggedIn = true;
+                    break;
+                }
+                log.info("Registration did not auto-login, attempting manual login with new credentials (attempt {})...", attempt);
                 authPage.openLoginPopup();
                 authPage.performLogin(testUser.email, testUser.password);
-
-                // In ra text tài khoản sau đăng nhập
-                String accountTextAfterLogin = authPage.getLoggedInUserNameRobust();
-                log.info("[DEBUG] Account text after login: {}", accountTextAfterLogin);
-
-                // Debug: Print console logs and page source after login
-                String loginConsoleLogs = authPage.getBrowserConsoleLogs();
-                log.info("[DEBUG] Console logs after login: {}", loginConsoleLogs);
-                String loginPageSource = driver.getPageSource();
-                log.info("[DEBUG] Page source after login (first 1000 chars): {}", loginPageSource.substring(0, Math.min(1000, loginPageSource.length())));
-                // Print any visible error messages
-                if (authPage.isErrorMessageDisplayed()) {
-                    log.warn("[DEBUG] Error message displayed after login");
-                }
             }
-
-            // Sau khi đăng nhập, reload lại trang và kiểm tra text tài khoản
-            authPage.openLoginPopup();
-            authPage.performLogin(testUser.email, testUser.password);
-            driver.navigate().refresh();
-            try {
-                Thread.sleep(5000); // Chờ trang load lại lâu hơn
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-            String accountText = authPage.getLoggedInUserNameRobust();
-            log.info("[DEBUG] Account text after login and reload: {}", accountText);
-            Assert.assertTrue(!accountText.equals("Tài khoản") && !accountText.equals("Account") && !accountText.isEmpty(),
-                "User should be logged in after registration and login. Account text: " + accountText);
+            Assert.assertTrue(isLoggedIn, "User should be logged in after registration and login. Account text: " + accountText);
             ReportManager.logPass("Registration and login successful with unique email: " + testUser.email);
-            log.info("\uD83C\uDF89 Registration test completed successfully with user: {}", testUser.email);
-
+            log.info("Registration test completed successfully with user: {}", testUser.email);
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
-            log.error("\u274c Registration test failed: ", e);
+            log.error("Registration test failed: ", e);
             throw e;
         }
     }
@@ -97,7 +60,6 @@ public class RegisterTests extends BaseTest {
           description = "AUTH-SU-02: Register with existing email")
     public void testRegisterWithExistingEmail() {
         ReportManager.startTest("AUTH-SU-02: Register with existing email");
-
         try {
             AuthenticationPage authPage = getAuthPage();
             authPage.goToRegisterPage();
@@ -110,16 +72,38 @@ public class RegisterTests extends BaseTest {
             );
             ReportManager.logInfo("Attempted registration with existing email");
 
-            // Check browser console logs for error messages
-            String consoleLogs = authPage.getBrowserConsoleLogs();
-            log.info("Browser console logs after registration attempt: {}", consoleLogs);
-            boolean hasEmailError = consoleLogs.contains("Email error") || consoleLogs.contains("error") || consoleLogs.contains("tồn tại");
-            Assert.assertTrue(hasEmailError || authPage.isErrorMessageDisplayed(), "Should show error for existing email. Console logs: " + consoleLogs);
-            ReportManager.logPass("Correctly showed error for existing email (console or UI)");
-
+            boolean foundError = false;
+            try {
+                org.openqa.selenium.By noteBy = org.openqa.selenium.By.xpath("//div[@id='js-popup-register-note']");
+                org.openqa.selenium.WebElement noteElem = helpers.WaitUtils.waitForElementVisible(driver, noteBy, 2);
+                if (noteElem != null && noteElem.isDisplayed()) {
+                    String noteText = noteElem.getText().trim();
+                    log.info("Popup note text: {}", noteText);
+                    if (noteText.contains("Email đã được sử dụng") || noteText.contains("Email exist")) {
+                        foundError = true;
+                    }
+                }
+            } catch (Exception ex) {
+                log.info("[DEBUG] Error note element not found or disappeared quickly");
+            }
+            if (!foundError) {
+                java.util.List<org.openqa.selenium.logging.LogEntry> logs = driver.manage().logs().get(org.openqa.selenium.logging.LogType.BROWSER).getAll();
+                for (org.openqa.selenium.logging.LogEntry entry : logs) {
+                    String msg = entry.getMessage();
+                    String messageValue = helpers.JsonUtils.extractField(msg, "message");
+                    String statusValue = helpers.JsonUtils.extractField(msg, "status");
+                    if (("Email exist".equals(messageValue) || "Email đã được sử dụng".equals(messageValue)) && "error".equals(statusValue)) {
+                        foundError = true;
+                        log.info("[DEBUG] Found error in console log: {}", msg);
+                        break;
+                    }
+                }
+            }
+            Assert.assertTrue(foundError, "Phải hiển thị hoặc log lỗi 'Email exist' khi đăng ký với email đã tồn tại");
+            ReportManager.logPass("Đúng thông báo lỗi khi đăng ký với email đã tồn tại");
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
-            log.error("\u274c Existing email test failed: ", e);
+            log.error("Existing email test failed: ", e);
             throw e;
         }
     }
@@ -128,46 +112,66 @@ public class RegisterTests extends BaseTest {
           description = "AUTH-SU-03: Register with invalid email format")
     public void testRegisterWithInvalidEmail() {
         ReportManager.startTest("AUTH-SU-03: Register with invalid email format");
-
         try {
             AuthenticationPage authPage = getAuthPage();
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
 
-            String registerResponse = null;
-            if (driver instanceof org.openqa.selenium.chrome.ChromeDriver) {
-                registerResponse = helpers.NetworkResponseHelper.captureRegisterResponse(
-                    (org.openqa.selenium.chrome.ChromeDriver) driver,
-                    () -> authPage.performRegistration(
-                        AuthenticationTestData.VALID_NAME_3,
-                        AuthenticationTestData.INVALID_EMAIL_1,
-                        AuthenticationTestData.VALID_PASSWORD_3
-                    )
-                );
-                ReportManager.logInfo("Captured registration API response for invalid email");
-            } else {
-                authPage.performRegistration(
-                    AuthenticationTestData.VALID_NAME_3,
-                    AuthenticationTestData.INVALID_EMAIL_1,
-                    AuthenticationTestData.VALID_PASSWORD_3
-                );
-                ReportManager.logInfo("Attempted registration with invalid email format");
-            }
+            authPage.performRegistration(
+                AuthenticationTestData.VALID_NAME_3,
+                AuthenticationTestData.INVALID_EMAIL_1,
+                AuthenticationTestData.VALID_PASSWORD_3
+            );
+            ReportManager.logInfo("Attempted registration with invalid email format");
 
-            if (registerResponse != null) {
-                log.info("Registration API response: {}", registerResponse);
-                boolean hasError = registerResponse.contains("error") ||
-                                 registerResponse.contains("Email error") ||
-                                 registerResponse.contains("invalid") ||
-                                 registerResponse.contains("không hợp lệ");
-                Assert.assertTrue(hasError, "Should show error for invalid email. API response: " + registerResponse);
-                ReportManager.logPass("✅ API correctly returned error for invalid email");
-            } else {
-                Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed");
-                ReportManager.logPass("Validation successful - invalid email format rejected");
+            boolean foundError = false;
+            try {
+                org.openqa.selenium.By errorBy = org.openqa.selenium.By.xpath("//div[contains(text(),'Email không hợp lệ')]");
+                org.openqa.selenium.WebElement errorElem = helpers.WaitUtils.waitForElementVisible(driver, errorBy, 2);
+                if (errorElem != null && errorElem.isDisplayed()) {
+                    foundError = true;
+                    log.info("[DEBUG] Found error element: {}", errorElem.getText());
+                }
+            } catch (Exception ex) {
+                log.info("[DEBUG] Error element not found or disappeared quickly");
             }
-
+            if (!foundError) {
+                java.util.List<org.openqa.selenium.logging.LogEntry> logs = driver.manage().logs().get(org.openqa.selenium.logging.LogType.BROWSER).getAll();
+                for (org.openqa.selenium.logging.LogEntry entry : logs) {
+                    String msg = entry.getMessage();
+                    String messageValue = helpers.JsonUtils.extractField(msg, "message");
+                    String statusValue = helpers.JsonUtils.extractField(msg, "status");
+                    if ("Email error".equals(messageValue) && "error".equals(statusValue)) {
+                        foundError = true;
+                        log.info("[DEBUG] Found error in console log: {}", msg);
+                        break;
+                    }
+                }
+            }
+            Assert.assertTrue(foundError, "Phải hiển thị hoặc log lỗi 'Email error' khi đăng ký với email không hợp lệ");
+            ReportManager.logPass("Đúng thông báo lỗi khi đăng ký với email không hợp lệ");
         } catch (Exception e) {
+            try {
+                java.util.List<org.openqa.selenium.logging.LogEntry> logs = driver.manage().logs().get(org.openqa.selenium.logging.LogType.BROWSER).getAll();
+                log.error("[DEBUG] Browser console logs on failure:");
+                for (org.openqa.selenium.logging.LogEntry entry : logs) {
+                    log.error(entry.getMessage());
+                }
+                String logFile = "report/screenshots/consolelog_testRegisterWithInvalidEmail_" + System.currentTimeMillis() + ".txt";
+                java.nio.file.Files.write(java.nio.file.Paths.get(logFile),
+                    logs.stream().map(org.openqa.selenium.logging.LogEntry::getMessage).collect(java.util.stream.Collectors.toList()));
+                log.error("[DEBUG] Browser console logs saved to: {}", logFile);
+            } catch (Exception ex) {
+                log.error("[DEBUG] Could not fetch browser logs on failure: {}", ex.getMessage());
+            }
+            try {
+                String screenshotPath = "report/screenshots/fail_testRegisterWithInvalidEmail_" + System.currentTimeMillis() + ".png";
+                org.openqa.selenium.TakesScreenshot ts = (org.openqa.selenium.TakesScreenshot) driver;
+                java.nio.file.Files.write(java.nio.file.Paths.get(screenshotPath), ts.getScreenshotAs(org.openqa.selenium.OutputType.BYTES));
+                log.error("[DEBUG] Screenshot saved to: {}", screenshotPath);
+            } catch (Exception ex) {
+                log.error("[DEBUG] Could not take screenshot: {}", ex.getMessage());
+            }
             ReportManager.logFail("Test failed: " + e.getMessage());
             throw e;
         }
@@ -177,45 +181,43 @@ public class RegisterTests extends BaseTest {
           description = "AUTH-SU-04: Register with weak password")
     public void testRegisterWithWeakPassword() {
         ReportManager.startTest("AUTH-SU-04: Register with weak password");
-
         try {
             AuthenticationPage authPage = getAuthPage();
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
 
-            String registerResponse = null;
-            if (driver instanceof org.openqa.selenium.chrome.ChromeDriver) {
-                registerResponse = helpers.NetworkResponseHelper.captureRegisterResponse(
-                    (org.openqa.selenium.chrome.ChromeDriver) driver,
-                    () -> authPage.performRegistration(
-                        AuthenticationTestData.VALID_NAME,
-                        AuthenticationTestData.VALID_EMAIL_2,
-                        AuthenticationTestData.WEAK_PASSWORD_1
-                    )
-                );
-                ReportManager.logInfo("Captured registration API response for weak password");
-            } else {
-                authPage.performRegistration(
-                    AuthenticationTestData.VALID_NAME,
-                    AuthenticationTestData.VALID_EMAIL_2,
-                    AuthenticationTestData.WEAK_PASSWORD_1
-                );
-                ReportManager.logInfo("Attempted registration with weak password");
-            }
+            authPage.performRegistration(
+                AuthenticationTestData.VALID_NAME,
+                AuthenticationTestData.VALID_EMAIL_2,
+                AuthenticationTestData.WEAK_PASSWORD_1
+            );
+            ReportManager.logInfo("Attempted registration with weak password");
 
-            if (registerResponse != null) {
-                log.info("Registration API response: {}", registerResponse);
-                boolean hasError = registerResponse.contains("error") ||
-                                 registerResponse.contains("password") ||
-                                 registerResponse.contains("weak") ||
-                                 registerResponse.contains("yếu");
-                Assert.assertTrue(hasError, "Should show error for weak password. API response: " + registerResponse);
-                ReportManager.logPass("✅ API correctly returned error for weak password");
-            } else {
-                Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed");
-                ReportManager.logPass("Validation successful - weak password rejected");
+            boolean foundError = false;
+            try {
+                org.openqa.selenium.By errorBy = org.openqa.selenium.By.xpath("//div[contains(text(),'Mật khẩu có tối thiểu 6 ký tự')]");
+                org.openqa.selenium.WebElement errorElem = helpers.WaitUtils.waitForElementVisible(driver, errorBy, 2);
+                if (errorElem != null && errorElem.isDisplayed()) {
+                    foundError = true;
+                    log.info("[DEBUG] Found error element: {}", errorElem.getText());
+                }
+            } catch (Exception ex) {
+                log.info("[DEBUG] Error element not found or disappeared quickly");
             }
-
+            if (!foundError) {
+                java.util.List<org.openqa.selenium.logging.LogEntry> logs = driver.manage().logs().get(org.openqa.selenium.logging.LogType.BROWSER).getAll();
+                for (org.openqa.selenium.logging.LogEntry entry : logs) {
+                    String msg = entry.getMessage();
+                    String statusValue = helpers.JsonUtils.extractField(msg, "status");
+                    if ("error".equals(statusValue)) {
+                        foundError = true;
+                        log.info("[DEBUG] Found error in console log: {}", msg);
+                        break;
+                    }
+                }
+            }
+            Assert.assertTrue(foundError, "Phải hiển thị hoặc log lỗi khi đăng ký với mật khẩu yếu");
+            ReportManager.logPass("Đúng thông báo lỗi khi đăng ký với mật khẩu yếu");
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
             throw e;

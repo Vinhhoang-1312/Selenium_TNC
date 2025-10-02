@@ -160,12 +160,9 @@ public class BaseTest {
 
                 try {
                     driver.manage().window().maximize();
-                    if (driver instanceof org.openqa.selenium.JavascriptExecutor) {
-                        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("document.body.style.zoom='50%'");
-                        log.info("Set browser zoom to 50% using JavaScript");
-                    }
+                    // Remove browser zoom out (do not set zoom to 50%)
                 } catch (Exception e) {
-                    log.warn("Could not set browser zoom to 50%: {}", e.getMessage());
+                    log.warn("Could not maximize browser window: {}", e.getMessage());
                 }
 
                 log.info("📍 Current URL after init: {}", safeGetCurrentUrl());
@@ -282,14 +279,7 @@ public class BaseTest {
     protected void refreshPage() {
         if (driver != null) {
             driver.navigate().refresh();
-            try {
-                if (driver instanceof org.openqa.selenium.JavascriptExecutor) {
-                    ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("document.body.style.zoom='50%'");
-                    log.info("Set browser zoom to 50% after refresh");
-                }
-            } catch (Exception e) {
-                log.warn("Could not set browser zoom to 50% after refresh: {}", e.getMessage());
-            }
+            // Remove browser zoom out after refresh (do not set zoom to 50%)
         }
     }
 }
