@@ -1,6 +1,8 @@
 package test.search;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -11,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import commons.Driver_Factory;
 import pages.SearchPage;
 
-public class SearchWithSpecCharTest {
-    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
+public class SearchReloadPageTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchReloadPageTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
@@ -24,11 +26,13 @@ public class SearchWithSpecCharTest {
     }
 
     @Test
-    public void testSearchWithSpecChar() {
-        driver.findElement(SearchPage.searchInput).sendKeys("rtx & 2050");
-        driver.findElement(SearchPage.searchButton).click();
-        String result = driver.findElement(SearchPage.noproductNoti).getText();
-        Assert.assertEquals(result, "Ôi! Rất tiếc không tìm thấy sản phẩm nào...!");
+    public void testSearchReloadPage() {
+        By searchinputLocator = SearchPage.searchInput;
+
+        driver.findElement(searchinputLocator).sendKeys("rtx 2050");
+        driver.navigate().refresh();
+        WebElement searchInput = driver.findElement(searchinputLocator);
+        Assert.assertTrue(searchInput.getAttribute("value").contains("rtx 2050"), "Keyword not found after reloading page");
     }
 
     @AfterClass

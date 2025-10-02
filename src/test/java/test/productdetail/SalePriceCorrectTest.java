@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import commons.Driver_Factory;
 import helpers.PageHelpers;
 import pages.ProductDetailPage;
-public class AddToCartTest {
-    private static final Logger log = LoggerFactory.getLogger(ProductDetailTest.class);
+public class SalePriceCorrectTest {
+    private static final Logger log = LoggerFactory.getLogger(SalePriceCorrectTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
@@ -27,13 +27,29 @@ public class AddToCartTest {
     }
 
     @Test
-    public void testAddToCart() {
-        driver.findElement(ProductDetailPage.addToCartButton).click();
-        WebElement successMessage = PageHelpers.waitForElementVisible(driver,ProductDetailPage.successNotification, 10);
+    public void testSalePriceCorrect() {
+        By originpriceLocator = ProductDetailPage.originPrice;
+        By priceLocator = ProductDetailPage.Price;
+        By saleoffLocator = ProductDetailPage.SaleOff;
 
-        String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
-        String actualSuccessMessage = successMessage.getText();
-        Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");
+        WebElement originalPriceElement = driver.findElement(originpriceLocator);
+        String originalPriceText = originalPriceElement.getText().replaceAll("[^0-9]", "");
+        double originalPrice = Double.parseDouble(originalPriceText);
+        System.out.println(originalPrice);
+
+        WebElement salePriceElement = driver.findElement(priceLocator);
+        String salePriceText = salePriceElement.getText().replaceAll("[^0-9]", "");
+        double salePrice = Double.parseDouble(salePriceText);
+        System.out.println(salePrice);
+
+        WebElement discountElement = driver.findElement(saleoffLocator);
+        String discountText = discountElement.getText().replaceAll("[^0-9]", "");
+        double discountPercent = Double.parseDouble(discountText);
+        System.out.println(discountPercent);
+
+        double expectedPrice = originalPrice - (originalPrice * discountPercent / 100);
+        Assert.assertEquals(salePrice, expectedPrice, "Giá sau khi giảm không đúng! Expected: " + expectedPrice + " | Actual: " + salePrice);
+        System.out.println("Giá sau khi giảm đúng: " + salePrice);
     }
 
     @AfterClass

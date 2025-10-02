@@ -1,6 +1,8 @@
 package test.search;
 
 import commons.Driver_Factory;
+import helpers.PageHelpers;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -13,8 +15,8 @@ import pages.SearchPage;
 
 import java.util.List;
 
-public class SearchWithNoKeyword {
-    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
+public class SearchPerFormCorrectTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchPerFormCorrectTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
@@ -26,18 +28,22 @@ public class SearchWithNoKeyword {
     }
 
     @Test
-    public void testSearchWithNoKeyword() {
-        driver.findElement(SearchPage.searchInput).sendKeys("");
+    public void testSearchPerformCorrect() {
+        By searchinputLocator = SearchPage.searchInput;
+        By suggestionlistLocator = SearchPage.suggestionList;
+
+        driver.findElement(searchinputLocator).sendKeys("rtx 2050");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
-            log.error("Thread interrupted", e);
+            e.printStackTrace();
         }
-        List<WebElement> suggestedItems = driver.findElements(SearchPage.suggestionList);
+
+        List<WebElement> suggestedItems = PageHelpers.waitForAllElementsPresence(driver, suggestionlistLocator, 4);
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
-            log.info("Checking item: {}", itemName);
-            Assert.assertTrue(itemName.contains("no information".toLowerCase()), "Suggested item contains information");
+            System.out.println("Đang kiểm tra gợi ý: " + itemName);
+            Assert.assertTrue(itemName.contains("rtx 2050".toLowerCase()), "Suggested item contains the search query");
         }
     }
 

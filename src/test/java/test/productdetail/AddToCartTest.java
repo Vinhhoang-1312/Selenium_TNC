@@ -28,11 +28,11 @@ public class AddToCartTest {
 
     @Test
     public void testAddToCart() {
-        By addToCartButtonLocator = ProductDetailPage.addToCartButton;
-        By successNotiLocator = ProductDetailPage.successNotification;
-        driver.findElement(addToCartButtonLocator).click();
-        WebElement successMessage = PageHelpers.waitForElementVisible(driver,successNotiLocator, 10);
+        By addtocartbuttonlocator = ProductDetailPage.addToCartButton;
+        By successNotilocator = ProductDetailPage.successNotification;
 
+        driver.findElement(addtocartbuttonlocator).click();
+        WebElement successMessage = PageHelpers.waitForElementVisible(driver,successNotilocator, 10);
         String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
         String actualSuccessMessage = successMessage.getText();
         Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");

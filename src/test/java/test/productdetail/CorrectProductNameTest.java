@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import commons.Driver_Factory;
 import helpers.PageHelpers;
 import pages.ProductDetailPage;
-public class AddToCartTest {
-    private static final Logger log = LoggerFactory.getLogger(ProductDetailTest.class);
+public class CorrectProductNameTest {
+    private static final Logger log = LoggerFactory.getLogger(CorrectProductNameTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
@@ -27,13 +27,36 @@ public class AddToCartTest {
     }
 
     @Test
-    public void testAddToCart() {
-        driver.findElement(ProductDetailPage.addToCartButton).click();
-        WebElement successMessage = PageHelpers.waitForElementVisible(driver,ProductDetailPage.successNotification, 10);
+    public void testProductNameCorrect() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        By itemnameinmainpageLocator = ProductDetailPage.itemNameInMainPage;
+        By iteminmainpageLocator = ProductDetailPage.itemInMainPage;
+        By productnameLocator = ProductDetailPage.productName;
 
-        String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
-        String actualSuccessMessage = successMessage.getText();
-        Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");
+        driver.get(baseUrl);
+        for (int i = 0; i < 10; i++) {
+            js.executeScript("window.scrollBy(0, 600);");
+            PageHelpers.waitForPresence(driver, By.cssSelector("body"), 10);
+        }
+
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        WebElement itemnameElement = PageHelpers.waitForElementVisible(driver,itemnameinmainpageLocator, 10);
+        String productNameOnMainPage = itemnameElement.getText();
+        System.out.println("Tên sản phẩm trên trang chủ: " + productNameOnMainPage);
+        WebElement itemElement = driver.findElement(iteminmainpageLocator);
+        itemElement.click();
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
+        WebElement productNameElement = PageHelpers.waitForElementVisible(driver,productnameLocator, 10);
+        String productNameOnDetailPage = productNameElement.getText();
+        Assert.assertEquals(productNameOnDetailPage, productNameOnMainPage, "Product names do not match!");
+
     }
 
     @AfterClass

@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import commons.Driver_Factory;
 import pages.SearchPage;
 
-public class SearchWithSpecChar {
-    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
+public class SearchWithSpecCharTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchWithSpecCharTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 

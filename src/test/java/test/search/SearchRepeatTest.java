@@ -11,8 +11,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.SearchPage;
 
-public class SearchReloadPageTest {
-    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
+public class SearchRepeatTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchRepeatTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
@@ -23,13 +23,13 @@ public class SearchReloadPageTest {
         driver.get(baseUrl);
     }
 
-    @Test
-    public void testSearchReloadPage() {
+    @Test(invocationCount = 5)
+    public void testSearchRepeat() {
         driver.findElement(SearchPage.searchInput).sendKeys("rtx 2050");
+        driver.findElement(SearchPage.searchButton).click();
+        String result = driver.findElement(SearchPage.noproductNoti).getText();
+        Assert.assertEquals(result, "Ôi! Rất tiếc không tìm thấy sản phẩm nào...!");
         driver.navigate().refresh();
-
-        WebElement searchInput = driver.findElement(SearchPage.searchInput);
-        Assert.assertTrue(searchInput.getAttribute("value").contains("rtx 2050"), "Keyword not found after reloading page");
     }
 
     @AfterClass

@@ -13,8 +13,8 @@ import pages.SearchPage;
 
 import java.util.List;
 
-public class SearchWithNoKeyword {
-    private static final Logger log = LoggerFactory.getLogger(SearchTest.class);
+public class SearchWithNoKeywordTest {
+    private static final Logger log = LoggerFactory.getLogger(SearchWithNoKeywordTest.class);
     private WebDriver driver;
     private String baseUrl = "https://www.tncstore.vn/";
 
