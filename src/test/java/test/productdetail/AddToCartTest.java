@@ -11,18 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
-import helpers.PageHelpers;
 import pages.ProductDetailPage;
+import pages.BasePage;
 
 public class AddToCartTest {
     private static final Logger log = LoggerFactory.getLogger(AddToCartTest.class);
     private WebDriver driver;
+    BasePage base;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
     @BeforeClass
     public void setUp() {
         // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
+
         driver.get(baseUrl);
     }
 
@@ -32,7 +34,7 @@ public class AddToCartTest {
         By successNotilocator = ProductDetailPage.successNotification;
 
         driver.findElement(addtocartbuttonlocator).click();
-        WebElement successMessage = PageHelpers.waitForElementVisible(driver,successNotilocator, 10);
+        WebElement successMessage = base.waitForElementToBeVisible(successNotilocator);
         String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
         String actualSuccessMessage = successMessage.getText();
         Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");

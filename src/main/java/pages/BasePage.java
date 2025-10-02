@@ -21,7 +21,7 @@ public class BasePage {
         PageFactory.initElements(driver, this);
     }
 
-    protected void waitForPageLoad() {
+    public void waitForPageLoad() {
         wait.until(webDriver -> {
             String readyState = (String) ((JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState");
@@ -29,7 +29,7 @@ public class BasePage {
         });
     }
 
-    protected void waitForElementToDisappear(By locator) {
+    public void waitForElementToDisappear(By locator) {
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
@@ -42,8 +42,8 @@ public class BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    protected void waitForElementToBeVisible(By locator) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    public WebElement waitForElementToBeVisible(By locator) {
+       return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
     public WebElement waitForElementPresence(By locator) {
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));

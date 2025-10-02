@@ -12,11 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
-import helpers.PageHelpers;
+import pages.BasePage;
 import pages.ProductDetailPage;
 public class CorrectProductNameTest {
     private static final Logger log = LoggerFactory.getLogger(CorrectProductNameTest.class);
     private WebDriver driver;
+    private BasePage base;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
     @BeforeClass
@@ -36,11 +37,11 @@ public class CorrectProductNameTest {
         driver.get(baseUrl);
         for (int i = 0; i < 10; i++) {
             js.executeScript("window.scrollBy(0, 600);");
-            PageHelpers.waitForPresence(driver, By.cssSelector("body"), 10);
+            base.waitForPresence(By.cssSelector("body"));
         }
 
         js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-        WebElement itemnameElement = PageHelpers.waitForElementVisible(driver,itemnameinmainpageLocator, 10);
+        WebElement itemnameElement = base.waitForElementToBeVisible(itemnameinmainpageLocator);
         String productNameOnMainPage = itemnameElement.getText();
         System.out.println("Tên sản phẩm trên trang chủ: " + productNameOnMainPage);
         WebElement itemElement = driver.findElement(iteminmainpageLocator);
@@ -53,7 +54,7 @@ public class CorrectProductNameTest {
             throw new RuntimeException(e);
         }
 
-        WebElement productNameElement = PageHelpers.waitForElementVisible(driver,productnameLocator, 10);
+        WebElement productNameElement = base.waitForElementToBeVisible(productnameLocator);
         String productNameOnDetailPage = productNameElement.getText();
         Assert.assertEquals(productNameOnDetailPage, productNameOnMainPage, "Product names do not match!");
 

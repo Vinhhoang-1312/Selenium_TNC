@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
-import helpers.PageHelpers;
 import pages.ProductDetailPage;
 public class SalePriceCorrectTest {
     private static final Logger log = LoggerFactory.getLogger(SalePriceCorrectTest.class);
