@@ -22,6 +22,7 @@ public class ProductDetailPage extends BasePage {
     public static By originPrice = By.xpath("//div[@class='info-main-price']//del[@class='old-price']");
     public static By Price = By.xpath("//div[@class='info-main-price']//div[@class='price']");
     public static By SaleOff = By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
+    public static By similarProduct = By.xpath("//div[contains(@class,'similar')]//div[@class='owl-item active'][2]");
 
 
     public ProductDetailPage(WebDriver driver) {
