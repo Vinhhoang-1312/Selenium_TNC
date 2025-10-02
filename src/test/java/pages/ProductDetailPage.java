@@ -1,13 +1,14 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ProductDetailPage {
-    
-    public static By addtoCartButton = By.xpath("//a[contains(@class,'buy-go-cart')]");
 
-    public static By itemnameInMainPage = By.xpath("//div[@id=\"js-product-cate-79\"]//div[@class=\"owl-item active\"][2]//a[contains(@class,'product-name')]");
-    public class ProductDetailPage extends BasePage {
+public class ProductDetailPage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(ProductDetailPage.class);
     public static By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
@@ -22,4 +23,36 @@ public class ProductDetailPage {
     public static By Price = org.openqa.selenium.By.xpath("//div[@class='info-main-price']//div[@class='price']");
     public static By SaleOff = org.openqa.selenium.By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
 
+
+    public ProductDetailPage(WebDriver driver) {
+        super(driver);
+        this.actions = new Actions(driver);
+    }
+
+    public void addToCart() {
+        waitForPageLoad();
+        waitForElementToDisappear(loadingSpinner);
+        waitForElementToBeVisible(addToCartButton);
+        WebElement addToCartElement = driver.findElement(addToCartButton);
+        waitForElementToBeClickable(addToCartElement);
+        addToCartElement.click();
+        log.info("Successfully added product to cart");
+    }
+
+    public void goToCart() {
+        waitForPageLoad();
+
+        // First hover over the cart icon
+        WebElement cartIconElement = driver.findElement(cartIcon);
+        waitForElementToBeVisible(cartIcon);
+        actions.moveToElement(cartIconElement).perform();
+        log.info("Successfully hovered over cart icon");
+
+        // Then wait for and click the view cart link
+        waitForElementToBeVisible(viewCartLink);
+        WebElement cartElement = driver.findElement(viewCartLink);
+        waitForElementToBeClickable(cartElement);
+        cartElement.click();
+        log.info("Successfully navigated to cart page");
+    }
 }
