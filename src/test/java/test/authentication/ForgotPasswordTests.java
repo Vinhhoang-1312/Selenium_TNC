@@ -1,21 +1,20 @@
 package test.authentication;
 
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import helpers.ReportManager;
 import helpers.BaseTest;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ForgotPasswordTests extends BaseTest {
-    private authenticationPage authPage;
+    private AuthenticationPage authPage;
     private static final Logger log = LoggerFactory.getLogger(ForgotPasswordTests.class);
 
     @BeforeMethod
     public void setUpTest() {
-        authPage = new authenticationPage(driver);
+        authPage = new AuthenticationPage(driver);
         ReportManager.setModule("authentication-forgot-password");
         log.info("ForgotPasswordTests setup completed");
     }

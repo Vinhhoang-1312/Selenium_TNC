@@ -6,7 +6,7 @@ import model.AuthenticationTestData;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import pages.UserProfilePage;
 
 /**
@@ -15,12 +15,12 @@ import pages.UserProfilePage;
  */
 public class ProfileUpdateTests extends BaseTest {
     private UserProfilePage profilePage;
-    private authenticationPage authPage;
+    private AuthenticationPage authPage;
 
     @BeforeMethod
     public void setUp() {
         profilePage = new UserProfilePage(driver);
-        authPage = new authenticationPage(driver);
+        authPage = new AuthenticationPage(driver);
         ReportManager.setModule("userprofile-update");
     }
 

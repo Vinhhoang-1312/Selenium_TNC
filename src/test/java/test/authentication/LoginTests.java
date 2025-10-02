@@ -1,6 +1,6 @@
 package test.authentication;
 
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class LoginTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
 
-    private authenticationPage getAuthPage() {
+    private AuthenticationPage getAuthPage() {
         if (driver == null) {
             // Attempt lazy initialization before failing
             lazyInitDriver();
@@ -20,7 +20,7 @@ public class LoginTests extends BaseTest {
         if (driver == null) {
             throw new RuntimeException("Driver is null - BaseTest setup may have failed");
         }
-        return new authenticationPage(driver);
+        return new AuthenticationPage(driver);
     }
 
     @Test(groups = {"authentication", "smoke", "login"},
@@ -29,7 +29,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-01: Login with valid credentials");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             // Use existing account - no pre-registration required
             String email = AuthenticationTestData.VALID_EMAIL;
@@ -56,7 +56,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-02: Login with invalid email");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(
                 AuthenticationTestData.INVALID_EMAIL_1,
@@ -84,7 +84,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-03: Login with incorrect password");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(
                 AuthenticationTestData.VALID_EMAIL,
@@ -112,7 +112,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-04: Login with non-existent account");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             // Generate a new email that is guaranteed not to exist (do not register it)
             AuthenticationTestData.TestUser nonExistentUser = AuthenticationTestData.createUniqueUser("NonExistent");
@@ -140,7 +140,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-05: Login with empty email");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin("", AuthenticationTestData.VALID_PASSWORD);
             ReportManager.logInfo("Attempted login with empty email");
@@ -162,7 +162,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-06: Login with empty password");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(AuthenticationTestData.VALID_EMAIL, "");
             ReportManager.logInfo("Attempted login with empty password");
@@ -184,7 +184,7 @@ public class LoginTests extends BaseTest {
         ReportManager.startTest("AUTH-LI-07: Login with both fields empty");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin("", "");
             ReportManager.logInfo("Attempted login with both fields empty");
@@ -206,7 +206,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-08: Login with SQL injection in email");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String sqlInjectionEmail = "admin'; DROP TABLE users; --";
 //            authPage.performLogin(sqlInjectionEmail, AuthenticationTestData.VALID_PASSWORD);
@@ -229,7 +229,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-09: Login with XSS in email");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String xssEmail = "<script>alert('XSS')</script>@test.com";
 //            authPage.performLogin(xssEmail, AuthenticationTestData.VALID_PASSWORD);
@@ -252,7 +252,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-10: Login with very long email");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String longEmail = "a".repeat(300) + "@test.com";
 //            authPage.performLogin(longEmail, AuthenticationTestData.VALID_PASSWORD);
@@ -275,7 +275,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-11: Login with very long password");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String longPassword = "P".repeat(500);
 //            authPage.performLogin(AuthenticationTestData.VALID_EMAIL, longPassword);
@@ -298,7 +298,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-12: Login with special characters in email");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String specialCharEmail = "test!@#$%^&*()@test.com";
 //            authPage.performLogin(specialCharEmail, AuthenticationTestData.VALID_PASSWORD);
@@ -321,7 +321,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-13: Login with minimum valid email length");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String minEmail = "a@b.co";
 //            authPage.performLogin(minEmail, AuthenticationTestData.VALID_PASSWORD);
@@ -344,7 +344,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-14: Login with spaces in credentials");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String emailWithSpaces = " " + AuthenticationTestData.VALID_EMAIL + " ";
 //            String passwordWithSpaces = " " + AuthenticationTestData.VALID_PASSWORD + " ";
@@ -368,7 +368,7 @@ public class LoginTests extends BaseTest {
 //        ReportManager.startTest("AUTH-LI-15: Case sensitivity test for email");
 //
 //        try {
-//            authenticationPage authPage = getAuthPage();
+//            AuthenticationPage authPage = getAuthPage();
 //
 //            String upperCaseEmail = AuthenticationTestData.VALID_EMAIL.toUpperCase();
 //            authPage.performLogin(upperCaseEmail, AuthenticationTestData.VALID_PASSWORD);

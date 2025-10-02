@@ -1,6 +1,6 @@
 package test.userprofile;
 
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import pages.UserProfilePage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 
 public class ProfileViewTests extends BaseTest {
     private UserProfilePage profilePage;
-    private authenticationPage authPage;
+    private AuthenticationPage authPage;
     private static final Logger log = LoggerFactory.getLogger(ProfileViewTests.class);
 
     @BeforeMethod
     public void setUpTest() {
         profilePage = new UserProfilePage(driver);
-        authPage = new authenticationPage(driver);
+        authPage = new AuthenticationPage(driver);
         ReportManager.setModule("userprofile-view");
         log.info("ProfileViewTests setup completed");
     }

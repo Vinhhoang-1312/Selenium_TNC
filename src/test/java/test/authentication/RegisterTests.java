@@ -1,6 +1,6 @@
 package test.authentication;
 
-import pages.authenticationPage;
+import pages.AuthenticationPage;
 import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 public class RegisterTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(RegisterTests.class);
 
-    private authenticationPage getAuthPage() {
+    private AuthenticationPage getAuthPage() {
         if (driver == null) {
             lazyInitDriver();
         }
-        return new authenticationPage(driver);
+        return new AuthenticationPage(driver);
     }
 
     @Test(groups = {"authentication", "smoke", "signup"},
@@ -25,7 +25,7 @@ public class RegisterTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-01: Register with valid data");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             // TẠO UNIQUE USER MỖI LẦN CHẠY TEST - FIX LỖI EMAIL ĐÃ TỒN TẠI
             AuthenticationTestData.TestUser testUser = AuthenticationTestData.createUniqueUser("RegisterTest");
@@ -58,7 +58,7 @@ public class RegisterTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-02: Register with existing email");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
@@ -89,7 +89,7 @@ public class RegisterTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-03: Register with invalid email format");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");
@@ -116,7 +116,7 @@ public class RegisterTests extends BaseTest {
         ReportManager.startTest("AUTH-SU-04: Register with weak password");
 
         try {
-            authenticationPage authPage = getAuthPage();
+            AuthenticationPage authPage = getAuthPage();
 
             authPage.goToRegisterPage();
             ReportManager.logInfo("Navigated to register page");

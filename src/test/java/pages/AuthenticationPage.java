@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.List;
 
-public class authenticationPage extends BasePage {
-    private static final Logger log = LoggerFactory.getLogger(authenticationPage.class);
+public class AuthenticationPage extends BasePage {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
 
-    public authenticationPage(WebDriver driver) {
+    public AuthenticationPage(WebDriver driver) {
         super(driver);
     }
 
