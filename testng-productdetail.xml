@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Search and Product Detail">
+    <test verbose="2" preserve-order="true" name="D:/git_clone/nhomnhom">
+        <classes>
+            <!--class test cho product_detail-->
+            <class name="test.productdetail.AddToCartTest"/>
+            <class name="test.productdetail.CorrectProductNameTest"/>
+            <class name="test.productdetail.SalePriceCorrectTest"/>
+        </classes>
+    </test>
+</suite>
