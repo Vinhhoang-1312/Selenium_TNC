@@ -16,7 +16,8 @@ public class authenticationLocators {
 
     // ========== REGISTRATION FLOW ==========
     // From login popup, click "Create Account" to switch to register form
-    public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'Tạo tài khoản') or contains(text(),'Đăng ký') or contains(@onclick, 'register')]";
+//    public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'Tạo tài khoản') or contains(text(),'Đăng ký') or contains(@onclick, 'register')]";
+    public static final String CREATE_ACCOUNT_LINK = "//a[contains(text(),'o tài')]";
 
     // Alternative locators for registration link
     public static final String CREATE_ACCOUNT_LINK_ALT1 = "//a[@href='javascript:void(0)'][contains(@onclick, 'register')]";
