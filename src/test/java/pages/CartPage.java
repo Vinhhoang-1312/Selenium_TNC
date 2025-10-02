@@ -1,4 +1,4 @@
-    package pages;
+package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -67,5 +67,20 @@ public class CartPage extends BasePage {
             log.error("No items found in cart");
             throw new RuntimeException("No items found in cart - Please check if items were added correctly");
         }
+    }
+
+    public int increaseFirstItemQuantityAndGetNewQuantity() {
+        int initialQuantity = getFirstItemQuantity();
+        clickFirstPlusSign();
+        int updatedQuantity = getFirstItemQuantity();
+        return updatedQuantity;
+    }
+
+    public void checkItemQuantityIncrease() {
+        int initialQuantity = getFirstItemQuantity();
+        int newQuantity = initialQuantity + 1;
+        clickFirstPlusSign();
+        int updatedQuantity = getFirstItemQuantity();
+        org.testng.Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be increased by 1");
     }
 }
