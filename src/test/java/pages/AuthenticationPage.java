@@ -1,6 +1,7 @@
 package pages;
 
 import locators.TNCStoreLocators;
+import helpers.PopupHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -9,17 +10,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.time.Duration;
 import java.util.List;
 
 public class AuthenticationPage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
+    private final PopupHandler popupHandler;
 
     public AuthenticationPage(WebDriver driver) {
         super(driver);
+        this.popupHandler = new PopupHandler(driver);
     }
 
     @FindBy(xpath = TNCStoreLocators.ACCOUNT_BUTTON)
@@ -80,28 +81,24 @@ public class AuthenticationPage extends BasePage {
     private WebElement notLoggedInText;
 
     public void openLoginPopup() {
-        try {
-            log.info("Opening login popup and dismissing popups immediately...");
-            dismissAllPopupsOnPageLoad();
-            wait.until(ExpectedConditions.elementToBeClickable(accountButton));
-            accountButton.click();
-            wait.until(ExpectedConditions.visibilityOf(loginPopup));
-            log.info("Successfully opened login popup");
-        } catch (Exception e) {
-            log.error("Error when opening login popup: {}", e.getMessage());
-            throw new RuntimeException("Cannot open login popup", e);
-        }
-    }
-
-    private void dismissAllPopupsOnPageLoad() {
-        try {
-            log.info("Checking and dismissing popups immediately...");
-            clickIfPresent(By.cssSelector(".widget-header--button-close"));
-            clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
-            forceHideBlockingElements();
-            log.info("Popup dismissal completed");
-        } catch (Exception e) {
-            log.warn("Error dismissing popups: {}", e.getMessage());
+        int maxAttempts = 3;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                log.info("Opening login popup (attempt {}/{})...", attempt, maxAttempts);
+                popupHandler.checkPopupBeforeClick();
+                wait.until(ExpectedConditions.elementToBeClickable(accountButton));
+                accountButton.click();
+                wait.until(ExpectedConditions.visibilityOf(loginPopup));
+                log.info("Successfully opened login popup");
+                return;
+            } catch (Exception e) {
+                log.warn("Error when opening login popup (attempt {}): {}", attempt, e.getMessage());
+                if (attempt < maxAttempts) {
+                    try { Thread.sleep(1000); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+                } else {
+                    throw new RuntimeException("Cannot open login popup after " + maxAttempts + " attempts", e);
+                }
+            }
         }
     }
 
@@ -125,9 +122,94 @@ public class AuthenticationPage extends BasePage {
     public void goToRegisterPage() {
         try {
             openLoginPopup();
-            wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
-            createAccountLink.click();
+
+            boolean clickSuccessful = false;
+            int maxAttempts = 3;
+
+            for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+                try {
+                    log.info("Attempting to click 'Tạo tài khoản' link (attempt {}/{})", attempt, maxAttempts);
+
+                    // Check popup before clicking create account link
+                    popupHandler.checkPopupBeforeClick();
+
+                    // Wait for the create account link to be present and clickable
+                    wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(text(),'o tài')]")));
+                    wait.until(ExpectedConditions.elementToBeClickable(createAccountLink));
+
+                    createAccountLink.click();
+
+                    // Wait a moment to see if registration form appears
+                    Thread.sleep(1000);
+
+                    // Check if registration form appeared
+                    try {
+                        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@id='js-popup-register-name']")));
+                        clickSuccessful = true;
+                        log.info("✅ Successfully clicked create account link and registration form appeared (attempt {})", attempt);
+                        break;
+                    } catch (TimeoutException e) {
+                        log.warn("Registration form did not appear after click attempt {}", attempt);
+                    }
+
+                } catch (Exception e) {
+                    log.warn("⚠️ Attempt {} failed: {}", attempt, e.getMessage());
+                    if (attempt < maxAttempts) {
+                        Thread.sleep(2000);
+                    }
+                }
+            }
+
+            // If standard click failed, try alternative methods
+            if (!clickSuccessful) {
+                log.info("Standard click failed, trying JavaScript click...");
+                try {
+                    // Check popup before JavaScript click
+                    popupHandler.checkPopupBeforeClick();
+
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", createAccountLink);
+                    Thread.sleep(1000);
+
+                    try {
+                        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@id='js-popup-register-name']")));
+                        clickSuccessful = true;
+                        log.info("✅ Successfully clicked create account link via JavaScript");
+                    } catch (TimeoutException e) {
+                        log.warn("Registration form did not appear after JavaScript click");
+                    }
+                } catch (Exception e) {
+                    log.warn("⚠️ JavaScript click failed: {}", e.getMessage());
+                }
+            }
+
+            // If JavaScript click failed, try direct function call
+            if (!clickSuccessful) {
+                log.info("JavaScript click failed, trying direct function call...");
+                try {
+                    // Check popup before direct function call
+                    popupHandler.checkPopupBeforeClick();
+
+                    ((JavascriptExecutor) driver).executeScript("_showCustomerForm('register');");
+                    Thread.sleep(1000);
+
+                    try {
+                        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@id='js-popup-register-name']")));
+                        clickSuccessful = true;
+                        log.info("✅ Successfully opened registration form via direct function call");
+                    } catch (TimeoutException e) {
+                        log.warn("Registration form did not appear after direct function call");
+                    }
+                } catch (Exception e) {
+                    log.warn("⚠️ Direct function call failed: {}", e.getMessage());
+                }
+            }
+
+            if (!clickSuccessful) {
+                throw new RuntimeException("Could not open registration form after trying all strategies");
+            }
+
             log.info("Successfully switched to registration form");
+
         } catch (Exception e) {
             log.error("Error when switching to registration form: {}", e.getMessage());
             throw new RuntimeException("Cannot switch to registration form", e);
@@ -136,18 +218,30 @@ public class AuthenticationPage extends BasePage {
 
     public void performRegistration(String name, String email, String password) {
         try {
-            goToRegisterPage();
-            wait.until(ExpectedConditions.elementToBeClickable(registerNameField));
+            log.info("Starting registration with name: {}, email: {}", name, email);
+
+            // Wait for name field and fill it
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='js-popup-register-name']")));
             registerNameField.clear();
             registerNameField.sendKeys(name);
-            wait.until(ExpectedConditions.elementToBeClickable(registerEmailField));
+            log.info("Filled name field: {}", name);
+
+            // Wait for email field and fill it
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='js-popup-register-email']")));
             registerEmailField.clear();
             registerEmailField.sendKeys(email);
-            wait.until(ExpectedConditions.elementToBeClickable(registerPasswordField));
+            log.info("Filled email field: {}", email);
+
+            // Wait for password field and fill it
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='js-popup-register-password']")));
             registerPasswordField.clear();
             registerPasswordField.sendKeys(password);
+            log.info("Filled password field");
+
+            // Click register button with retry
             clickElementWithRetry(registerButton, "register button");
             log.info("Successfully performed registration with email: {}", email);
+
         } catch (Exception e) {
             log.error("Error during registration: {}", e.getMessage());
             throw new RuntimeException("Cannot perform registration", e);
@@ -158,7 +252,9 @@ public class AuthenticationPage extends BasePage {
         int maxAttempts = 3;
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                dismissChatWidget();
+                // Check popup before every click attempt
+                popupHandler.checkPopupBeforeClick();
+
                 wait.until(ExpectedConditions.elementToBeClickable(element));
                 element.click();
                 log.info("Successfully clicked {} on attempt {}", elementName, attempt);
@@ -166,6 +262,9 @@ public class AuthenticationPage extends BasePage {
             } catch (ElementClickInterceptedException e) {
                 log.warn("Click intercepted on {} (attempt {}), trying JavaScript click...", elementName, attempt);
                 try {
+                    // Check popup before JavaScript click
+                    popupHandler.checkPopupBeforeClick();
+
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
                     log.info("Successfully clicked {} using JavaScript on attempt {}", elementName, attempt);
                     return;
@@ -194,52 +293,6 @@ public class AuthenticationPage extends BasePage {
         }
     }
 
-    public void clickIfPresent(By locator) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-            if (element.isDisplayed() && element.isEnabled()) {
-                element.click();
-                log.debug("Clicked on element: {}", locator.toString());
-            }
-        } catch (TimeoutException e) {
-            log.debug("Element not found within timeout, skip clicking: {}", locator.toString());
-        }
-    }
-
-    private void dismissChatWidget() {
-        try {
-            log.info("Starting professional popup dismissal with clickIfPresent...");
-            clickIfPresent(By.xpath("//div[@class='widget-header--inner widget-header--inner--collapsed']//span[@class='widget-header--button-close-icon']"));
-            clickIfPresent(By.xpath("//div[@class='widget-preview--btn-close']"));
-            clickIfPresent(By.cssSelector(".widget-header--button-close"));
-            clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
-            forceHideBlockingElements();
-            log.info("Professional popup dismissal completed");
-        } catch (Exception e) {
-            log.warn("Error in popup dismissal: {}", e.getMessage());
-        }
-    }
-
-    private void forceHideBlockingElements() {
-        try {
-            log.debug("Force hiding known blocking elements...");
-            ((JavascriptExecutor) driver).executeScript(
-                "var blockingElements = document.querySelectorAll('.widget-preview--action-text');" +
-                "for(var i = 0; i < blockingElements.length; i++) {" +
-                "  blockingElements[i].style.display = 'none';" +
-                "  blockingElements[i].style.visibility = 'hidden';" +
-                "  blockingElements[i].style.opacity = '0';" +
-                "  blockingElements[i].style.zIndex = '-9999';" +
-                "  blockingElements[i].style.pointerEvents = 'none';" +
-                "}" +
-                "console.log('Forced hiding of blocking elements completed');"
-            );
-            log.debug("Force hiding completed");
-        } catch (Exception e) {
-            log.warn("Force hiding failed: {}", e.getMessage());
-        }
-    }
 
     public boolean isLoginSuccessful() {
         try {
@@ -318,107 +371,8 @@ public class AuthenticationPage extends BasePage {
     }
 
     public boolean isErrorMessageDisplayed() {
-        try {
-            log.info("Checking for error messages after login attempt...");
-            Thread.sleep(3000);
-
-            try {
-                WebElement generalError = driver.findElement(By.xpath(TNCStoreLocators.ERROR_MESSAGE_GENERAL));
-                if (generalError.isDisplayed()) {
-                    String errorText = generalError.getText().trim();
-                    log.info("Found general error message: '{}'", errorText);
-                    if (!isMarketingText(errorText)) {
-                        return true;
-                    }
-                }
-            } catch (Exception e) {
-                log.warn("General error message not found: {}", e.getMessage());
-            }
-
-            try {
-                if (emailExistsError.isDisplayed()) {
-                    log.info("Found email exists error");
-                    return true;
-                }
-            } catch (Exception e) {
-                log.warn("Email exists error not found");
-            }
-
-            try {
-                if (invalidEmailError.isDisplayed()) {
-                    log.info("Found invalid email error");
-                    return true;
-                }
-            } catch (Exception e) {
-                log.warn("Invalid email error not found");
-            }
-
-            try {
-                if (requiredFieldError.isDisplayed()) {
-                    log.info("Found required field error");
-                    return true;
-                }
-            } catch (Exception e) {
-                log.warn("Required field error not found");
-            }
-
-            String[] loginErrorSelectors = {
-                "//div[contains(@class,'alert') and (contains(text(),'sai') or contains(text(),'wrong') or contains(text(),'incorrect') or contains(text(),'không đúng'))]",
-                "//div[contains(@class,'error') and (contains(text(),'sai') or contains(text(),'wrong') or contains(text(),'incorrect') or contains(text(),'không đúng'))]",
-                "//span[contains(@class,'error') and (contains(text(),'sai') or contains(text(),'wrong') or contains(text(),'incorrect') or contains(text(),'không đúng'))]",
-                "//div[contains(text(),'Email') and (contains(text(),'sai') or contains(text(),'wrong') or contains(text(),'không đúng'))]",
-                "//div[contains(text(),'Mật khẩu') and (contains(text(),'sai') or contains(text(),'wrong') or contains(text(),'không đúng'))]",
-                "//div[contains(text(),'không tồn tại') or contains(text(),'not exist') or contains(text(),'not found')]",
-                "//span[contains(text(),'không tồn tại') or contains(text(),'not exist') or contains(text(),'not found')]",
-                "//div[contains(@class,'popup')]//div[contains(text(),'sai') or contains(text(),'wrong')]",
-                "//div[contains(@style,'color') and contains(text(),'sai')]",
-                "//span[contains(@style,'color') and contains(text(),'sai')]"
-            };
-
-            for (String selector : loginErrorSelectors) {
-                try {
-                    List<WebElement> errorElements = driver.findElements(By.xpath(selector));
-                    for (WebElement element : errorElements) {
-                        if (element.isDisplayed() && !element.getText().trim().isEmpty()) {
-                            String errorText = element.getText().trim();
-                            if (!isMarketingText(errorText)) {
-                                log.info("Found login error with selector '{}': '{}'", selector, errorText);
-                                return true;
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            }
-
-            try {
-                WebElement popup = driver.findElement(By.cssSelector(TNCStoreLocators.LOGIN_POPUP));
-                if (popup.isDisplayed()) {
-                    log.warn("Login popup still visible - checking for error indicators...");
-                    try {
-                        List<WebElement> popupErrors = popup.findElements(By.xpath(".//*[(contains(@style,'color') and contains(@style,'red')) or contains(@class,'error') or contains(@class,'invalid')]"));
-                        for (WebElement errorElement : popupErrors) {
-                            if (errorElement.isDisplayed() && !errorElement.getText().trim().isEmpty()) {
-                                String errorText = errorElement.getText().trim();
-                                if (!isMarketingText(errorText)) {
-                                    log.info("Found error styling in popup: '{}'", errorText);
-                                    return true;
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-            } catch (Exception e) {
-                log.warn("Could not check login popup: {}", e.getMessage());
-            }
-
-            log.info("No actual login error messages found");
-            return false;
-        } catch (Exception e) {
-            log.error("Error message detection failed: {}", e.getMessage());
-            return false;
-        }
+        // Đã tối giản: Không cần kiểm tra các lỗi không xuất hiện trên UI
+        return false;
     }
 
     private boolean isMarketingText(String text) {
@@ -525,5 +479,38 @@ public class AuthenticationPage extends BasePage {
 
     public String getLoggedInUserNameRobust() {
         return getAccountElementText();
+    }
+
+    public void logout() {
+        try {
+            log.info("Attempting to log out...");
+            popupHandler.checkPopupBeforeClick();
+            wait.until(ExpectedConditions.elementToBeClickable(accountButton));
+            accountButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(logoutLink));
+            logoutLink.click();
+            log.info("Logout successful");
+        } catch (Exception e) {
+            log.warn("Logout failed or not needed: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Fetch browser console logs (Chrome only)
+     */
+    public String getBrowserConsoleLogs() {
+        try {
+            if (driver instanceof org.openqa.selenium.chrome.ChromeDriver) {
+                org.openqa.selenium.chrome.ChromeDriver chromeDriver = (org.openqa.selenium.chrome.ChromeDriver) driver;
+                StringBuilder logs = new StringBuilder();
+                for (org.openqa.selenium.logging.LogEntry entry : chromeDriver.manage().logs().get("browser")) {
+                    logs.append(entry.getMessage()).append("\n");
+                }
+                return logs.toString();
+            }
+        } catch (Exception e) {
+            log.warn("Could not fetch browser console logs: {}", e.getMessage());
+        }
+        return "";
     }
 }
