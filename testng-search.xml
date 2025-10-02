@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Search and Product Detail">
+    <test verbose="2" preserve-order="true" name="D:/git_clone/nhomnhom">
+        <classes>
+
+            <!--class test cho search-->
+            <class name="test.search.SearchRepeatTest"/>
+            <class name="test.search.SearchPerformCorrectTest"/>
+            <class name="test.search.SearchWithNoKeyWordTest"/>
+            <class name="test.search.SearchWithReloadPageTest"/>
+            <class name="test.search.SearchWithSpecCharTest"/>
+        </classes>
+    </test>
+</suite>

@@ -1,7 +1,11 @@
 package test;
 
 import pages.AuthenticationPage;
+<<<<<<< HEAD
+import pages.UserProfilePage;
+=======
 //import pages.UserProfilePage;
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
 import model.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;

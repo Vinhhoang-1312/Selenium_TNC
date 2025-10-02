@@ -13,10 +13,13 @@ public class LoginTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
 
     private AuthenticationPage getAuthPage() {
+<<<<<<< HEAD
+=======
         if (driver == null) {
             // Attempt lazy initialization before failing
             lazyInitDriver();
         }
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
         if (driver == null) {
             throw new RuntimeException("Driver is null - BaseTest setup may have failed");
         }
@@ -31,17 +34,22 @@ public class LoginTests extends BaseTest {
         try {
             AuthenticationPage authPage = getAuthPage();
 
-            // Use existing account - no pre-registration required
-            String email = AuthenticationTestData.VALID_EMAIL;
-            String password = AuthenticationTestData.VALID_PASSWORD;
-            log.info("🔑 Attempting login with existing user: {}", email);
+            // TẠO UNIQUE USER VÀ REGISTER TRƯỚC KHI LOGIN - FIX LỖI EMAIL ĐÃ TỒN TẠI
+            AuthenticationTestData.TestUser testUser = AuthenticationTestData.createUniqueUser("LoginTest");
+            log.info("🔄 Starting login test with unique user: {} ({})", testUser.name, testUser.email);
 
-            authPage.performLogin(email, password);
-            ReportManager.logInfo("Performed login with existing credentials");
+            // Đăng ký user trước để có thể login
+            authPage.goToRegisterPage();
+            authPage.performRegistration(testUser.name, testUser.email, testUser.password);
+            ReportManager.logInfo("Pre-registered user for login test");
+
+            // Bây giờ test login với user vừa tạo
+            authPage.performLogin(testUser.email, testUser.password);
+            ReportManager.logInfo("Attempted login with newly registered credentials");
 
             Assert.assertTrue(authPage.isLoginSuccessful(), "Login should be successful with valid credentials");
-            ReportManager.logPass("Login successful with existing user: " + email);
-            log.info("🎉 Login test completed successfully with user: {}", email);
+            ReportManager.logPass("Login successful with unique user: " + testUser.email);
+            log.info("🎉 Login test completed successfully with user: {}", testUser.email);
 
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
@@ -64,12 +72,8 @@ public class LoginTests extends BaseTest {
             );
             ReportManager.logInfo("Attempted login with invalid email");
 
-            // TNC Store doesn't show error message for invalid email
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
-            boolean loginFailed = !authPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail for invalid email (should still show 'Tài khoản')");
-            ReportManager.logPass("Validation successful - invalid email rejected (still shows 'Tài khoản')");
+            Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed for invalid email");
+            ReportManager.logPass("Validation successful - invalid email rejected");
 
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
@@ -92,12 +96,8 @@ public class LoginTests extends BaseTest {
             );
             ReportManager.logInfo("Attempted login with incorrect password");
 
-            // TNC Store doesn't show error message for incorrect password
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
-            boolean loginFailed = !authPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail for incorrect password (should still show 'Tài khoản')");
-            ReportManager.logPass("Validation successful - incorrect password rejected (still shows 'Tài khoản')");
+            Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed for incorrect password");
+            ReportManager.logPass("Validation successful - incorrect password rejected");
 
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
@@ -114,18 +114,14 @@ public class LoginTests extends BaseTest {
         try {
             AuthenticationPage authPage = getAuthPage();
 
-            // Generate a new email that is guaranteed not to exist (do not register it)
+            // TẠO EMAIL KHÔNG TỒN TẠI
             AuthenticationTestData.TestUser nonExistentUser = AuthenticationTestData.createUniqueUser("NonExistent");
 
             authPage.performLogin(nonExistentUser.email, nonExistentUser.password);
             ReportManager.logInfo("Attempted login with non-existent account");
 
-            // For non-existent account, TNC Store doesn't show error message
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
-            boolean loginFailed = !authPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail for non-existent account (should still show 'Tài khoản')");
-            ReportManager.logPass("Validation successful - non-existent account rejected (still shows 'Tài khoản')");
+            Assert.assertTrue(authPage.isErrorMessageDisplayed(), "Error message should be displayed for non-existent account");
+            ReportManager.logPass("Validation successful - non-existent account rejected");
 
         } catch (Exception e) {
             ReportManager.logFail("Test failed: " + e.getMessage());
@@ -133,6 +129,8 @@ public class LoginTests extends BaseTest {
             throw e;
         }
     }
+<<<<<<< HEAD
+=======
 
     @Test(groups = {"authentication", "negative", "login"},
           description = "AUTH-LI-05: Login with empty email")
@@ -387,4 +385,5 @@ public class LoginTests extends BaseTest {
 //            throw e;
 //        }
 //    }
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
 }

@@ -14,7 +14,7 @@ public class RegisterTests extends BaseTest {
 
     private AuthenticationPage getAuthPage() {
         if (driver == null) {
-            lazyInitDriver();
+            throw new RuntimeException("Driver is null - BaseTest setup may have failed");
         }
         return new AuthenticationPage(driver);
     }

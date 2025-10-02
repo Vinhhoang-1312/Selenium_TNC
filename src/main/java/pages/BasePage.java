@@ -1,12 +1,7 @@
 package pages;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
@@ -21,28 +16,12 @@ public class BasePage {
     }
 
     protected void waitForPageLoad() {
-        wait.until(webDriver -> {
-            String readyState = (String) ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState");
-            return readyState != null && readyState.equals("complete");
-        });
-    }
-
-    protected void waitForElementToDisappear(By locator) {
         try {
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-        } catch (TimeoutException e) {
-            // Element might not exist at all, which is fine
-            System.out.println("Note: Loading element was not present");
+            Thread.sleep(2000); // Basic wait for page stability
+        } catch (InterruptedException e) {
+            // ...existing code...
         }
     }
-
-    protected void waitForElementToBeClickable(WebElement element) {
-        wait.until(ExpectedConditions.elementToBeClickable(element));
-    }
-
-    protected void waitForElementToBeVisible(By locator) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
+    // ...existing code...
 }
 

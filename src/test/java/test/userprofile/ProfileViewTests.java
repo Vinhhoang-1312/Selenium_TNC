@@ -12,14 +12,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ProfileViewTests extends BaseTest {
-    private UserProfilePage profilePage;
     private AuthenticationPage authPage;
+    private UserProfilePage profilePage;
+<<<<<<< HEAD
+=======
+    private AuthenticationPage authPage;
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
     private static final Logger log = LoggerFactory.getLogger(ProfileViewTests.class);
 
     @BeforeMethod
     public void setUpTest() {
-        profilePage = new UserProfilePage(driver);
         authPage = new AuthenticationPage(driver);
+        profilePage = new UserProfilePage(driver);
+<<<<<<< HEAD
+=======
+        authPage = new AuthenticationPage(driver);
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
         ReportManager.setModule("userprofile-view");
         log.info("ProfileViewTests setup completed");
     }

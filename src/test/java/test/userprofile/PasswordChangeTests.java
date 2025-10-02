@@ -14,13 +14,21 @@ import pages.UserProfilePage;
  * Replace placeholder logic with actual page object flows when implemented.
  */
 public class PasswordChangeTests extends BaseTest {
-    private UserProfilePage profilePage;
     private AuthenticationPage authPage;
+    private UserProfilePage profilePage;
+<<<<<<< HEAD
+=======
+    private AuthenticationPage authPage;
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
 
     @BeforeMethod
     public void setUp() {
-        profilePage = new UserProfilePage(driver);
         authPage = new AuthenticationPage(driver);
+        profilePage = new UserProfilePage(driver);
+<<<<<<< HEAD
+=======
+        authPage = new AuthenticationPage(driver);
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
         ReportManager.setModule("userprofile-password-change");
     }
 
@@ -40,3 +48,4 @@ public class PasswordChangeTests extends BaseTest {
         }
     }
 }
+
