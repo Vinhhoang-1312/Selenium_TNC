@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+<<<<<<< HEAD
 /**
  * AuthenticationPage - Handles login, registration and user verification
  * Updated: 2025-09-30 - Added proper login verification methods
@@ -19,6 +20,11 @@ public class AuthenticationPage extends BasePage {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
 
+=======
+public class AuthenticationPage extends BasePage {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
+
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
     public AuthenticationPage(WebDriver driver) {
         super(driver);
     }

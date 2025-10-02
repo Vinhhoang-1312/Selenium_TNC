@@ -16,11 +16,19 @@ import pages.UserProfilePage;
 public class ProfileUpdateTests extends BaseTest {
     private AuthenticationPage authPage;
     private UserProfilePage profilePage;
+<<<<<<< HEAD
+=======
+    private AuthenticationPage authPage;
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
 
     @BeforeMethod
     public void setUp() {
         authPage = new AuthenticationPage(driver);
         profilePage = new UserProfilePage(driver);
+<<<<<<< HEAD
+=======
+        authPage = new AuthenticationPage(driver);
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
         ReportManager.setModule("userprofile-update");
     }
 

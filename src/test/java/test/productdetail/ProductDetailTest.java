@@ -30,7 +30,7 @@ public class ProductDetailTest {
 
     @Test
     public void testAddToCart() {
-        driver.findElement(ProductDetailPage.addtoCartButton).click();
+        driver.findElement(ProductDetailPage.addToCartButton).click();
         WebElement successMessage = PageHelpers.waitForElementVisible(driver,ProductDetailPage.successNotification, 10);
 
         String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";

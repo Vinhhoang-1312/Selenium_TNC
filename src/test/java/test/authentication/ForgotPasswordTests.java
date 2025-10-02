@@ -1,10 +1,12 @@
 package test.authentication;
 
 import pages.AuthenticationPage;
+<<<<<<< HEAD
 import model.AuthenticationTestData;
+=======
+>>>>>>> 2b511788fd639212808e02d46f60d65effaea549
 import helpers.ReportManager;
 import helpers.BaseTest;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;
