@@ -1,24 +1,21 @@
 package helpers;
 
-import com.aventstack.extentreports.ExtentTest;
-import commons.DriverFactory;
-import helpers.*;
-import org.openqa.selenium.By;
+
 import config.TNCStoreConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.testng.annotations.*;
-import config.TNCStoreConfig;
-import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
 import java.time.Duration;
 import java.util.List;
@@ -102,7 +99,8 @@ public class BaseTest {
                         break;
                     case "chrome":
                     default:
-                        WebDriverManager.chromedriver().setup();
+//                        WebDriverManager.chromedriver().setup();
+                        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Browser Drivers\\chromedriver.exe");
                         driver = new ChromeDriver(buildChromeOptions());
                         break;
                 }
@@ -218,20 +216,26 @@ public class BaseTest {
         }
     }
     public void clickIfPresent(By locator) {
-        try {
-            waitForPageLoad();
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-
+        waitForPageLoad();
+        List<WebElement> elements = driver.findElements(locator);
+        if (!elements.isEmpty()) {
+            WebElement element = elements.get(0);
             if (element.isDisplayed() && element.isEnabled()) {
                 element.click();
                 System.out.println("Clicked on element: " + locator.toString());
             }
-        } catch (TimeoutException e) {
-            System.out.println("Element not found within timeout, skip clicking: " + locator.toString());
+        } else {
+            System.out.println("Element not present, skip clicking: " + locator.toString());
         }
     }
 
+    /**
+     * Dismisses known popups if present on the page.
+     */
+    public void dismissPopupsIfPresent() {
+        clickIfPresent(By.cssSelector(".widget-header--button-close"));
+        clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
+    }
 
     // Utility methods
     protected String getCurrentUrl() { return safeGetCurrentUrl(); }

@@ -12,8 +12,7 @@ public class IncreaseItemQuantityTest extends BaseTest {
     @Test
     public void testIncreaseItemQuantity() {
         HomePage homePage = new HomePage(driver);
-        clickIfPresent(By.cssSelector(".widget-header--button-close"));
-        clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
+        dismissPopupsIfPresent();
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickProduct();
 
@@ -24,10 +23,8 @@ public class IncreaseItemQuantityTest extends BaseTest {
         CartPage cartPage = new CartPage(driver);
         int initialQuantity = cartPage.getFirstItemQuantity();
         int newQuantity = initialQuantity + 1;
-//        cartPage.setFirstItemQuantity(newQuantity);
         cartPage.clickFirstPlusSign();
 
-        // Optionally, wait for cart update (could add explicit wait if needed)
         int updatedQuantity = cartPage.getFirstItemQuantity();
         Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be increased by 1");
     }
