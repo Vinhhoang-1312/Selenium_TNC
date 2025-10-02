@@ -64,9 +64,6 @@ public class LoginTests extends BaseTest {
             );
             ReportManager.logInfo("Attempted login with invalid email");
 
-            // TNC Store doesn't show error message for invalid email
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email (should still show 'Tài khoản')");
             ReportManager.logPass("Validation successful - invalid email rejected (still shows 'Tài khoản')");
@@ -92,9 +89,6 @@ public class LoginTests extends BaseTest {
             );
             ReportManager.logInfo("Attempted login with incorrect password");
 
-            // TNC Store doesn't show error message for incorrect password
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for incorrect password (should still show 'Tài khoản')");
             ReportManager.logPass("Validation successful - incorrect password rejected (still shows 'Tài khoản')");
@@ -120,9 +114,6 @@ public class LoginTests extends BaseTest {
             authPage.performLogin(nonExistentUser.email, nonExistentUser.password);
             ReportManager.logInfo("Attempted login with non-existent account");
 
-            // For non-existent account, TNC Store doesn't show error message
-            // Instead, it just keeps "Tài khoản" text (doesn't change to username)
-            // So we check that login was NOT successful (still shows "Tài khoản")
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for non-existent account (should still show 'Tài khoản')");
             ReportManager.logPass("Validation successful - non-existent account rejected (still shows 'Tài khoản')");
@@ -387,4 +378,19 @@ public class LoginTests extends BaseTest {
 //            throw e;
 //        }
 //    }
+
+    // --- Locators for LoginTests ---
+    /*
+    class LoginLocators {
+        static final String ACCOUNT_BUTTON = "//span[contains(text(),'Tài khoản')]";
+        static final String LOGIN_POPUP = "#js-form-holder";
+        static final String LOGIN_EMAIL_FIELD = "//input[@id='js-login-email']";
+        static final String LOGIN_PASSWORD_FIELD = "//input[@id='js-login-password']";
+        static final String LOGIN_BUTTON = "//a[@class='btn-submit']";
+        static final String ERROR_MESSAGE_GENERAL = "//div[contains(@class,'alert') or contains(@class,'error')]";
+        static final String SUCCESS_MESSAGE = "//div[contains(@class,'success')]";
+        static final String NOT_LOGGED_IN_TEXT = "//span[contains(text(),'Tài khoản')]";
+        static final String LOGGED_IN_USER_NAME = "//span[@class='hover-txt line-clamp-1']";
+    }
+    */
 }

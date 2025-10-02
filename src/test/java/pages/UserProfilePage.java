@@ -1,6 +1,6 @@
 package pages;
 
-import locators.authenticationLocators;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,47 +9,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserProfilePage extends BasePage {
-
     private static final Logger log = LoggerFactory.getLogger(UserProfilePage.class);
+
+    // Locators nội bộ
+    private static final By PROFILE_LINK = By.xpath("//a[contains(@href,'profile') or contains(@href,'account')]");
+    private static final By PROFILE_MENU_LINK = By.xpath("//a[contains(text(),'Thông tin cá nhân')]");
+    private static final By PROFILE_NAME_FIELD = By.cssSelector("#profile-name");
+    private static final By PROFILE_EMAIL_FIELD = By.cssSelector("#profile-email");
+    private static final By PROFILE_PHONE_FIELD = By.cssSelector("#profile-phone");
+    private static final By PROFILE_ADDRESS_FIELD = By.cssSelector("#profile-address");
+    private static final By SAVE_PROFILE_BUTTON = By.xpath("//button[contains(text(),'Lưu thông tin')]");
+    private static final By CURRENT_PASSWORD_FIELD = By.cssSelector("#current-password");
+    private static final By NEW_PASSWORD_FIELD = By.cssSelector("#new-password");
+    private static final By CONFIRM_PASSWORD_FIELD = By.cssSelector("#confirm-password");
+    private static final By CHANGE_PASSWORD_BUTTON = By.xpath("//button[contains(text(),'Đổi mật khẩu')]");
 
     public UserProfilePage(WebDriver driver) {
         super(driver);
     }
 
-    // Profile navigation elements using centralized locators
-    @FindBy(xpath = authenticationLocators.PROFILE_LINK)
+    // Profile navigation elements
+    @FindBy(xpath = "//a[contains(@href,'profile') or contains(@href,'account')]")
     private WebElement profileLink;
 
-    @FindBy(xpath = authenticationLocators.PROFILE_MENU_LINK)
+    @FindBy(xpath = "//a[contains(text(),'Thông tin cá nhân')]")
     private WebElement profileMenuLink;
 
     // Profile form elements
-    @FindBy(css = authenticationLocators.PROFILE_NAME_FIELD)
+    @FindBy(css = "#profile-name")
     private WebElement nameField;
 
-    @FindBy(css = authenticationLocators.PROFILE_EMAIL_FIELD)
+    @FindBy(css = "#profile-email")
     private WebElement emailField;
 
-    @FindBy(css = authenticationLocators.PROFILE_PHONE_FIELD)
+    @FindBy(css = "#profile-phone")
     private WebElement phoneField;
 
-    @FindBy(css = authenticationLocators.PROFILE_ADDRESS_FIELD)
+    @FindBy(css = "#profile-address")
     private WebElement addressField;
 
-    @FindBy(xpath = authenticationLocators.SAVE_PROFILE_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'Lưu thông tin')]")
     private WebElement saveProfileButton;
 
     // Password change elements
-    @FindBy(css = authenticationLocators.CURRENT_PASSWORD_FIELD)
+    @FindBy(css = "#current-password")
     private WebElement currentPasswordField;
 
-    @FindBy(css = authenticationLocators.NEW_PASSWORD_FIELD)
+    @FindBy(css = "#new-password")
     private WebElement newPasswordField;
 
-    @FindBy(css = authenticationLocators.CONFIRM_PASSWORD_FIELD)
+    @FindBy(css = "#confirm-password")
     private WebElement confirmPasswordField;
 
-    @FindBy(xpath = authenticationLocators.CHANGE_PASSWORD_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'Đổi mật khẩu')]")
     private WebElement changePasswordButton;
 
     // ========== NAVIGATION METHODS ==========

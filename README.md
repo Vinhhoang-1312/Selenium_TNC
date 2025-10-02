@@ -1,68 +1,145 @@
 # 🏪 TNC Store Automation Testing Framework
 
-## 📋 Project Overview
+## Project Overview
 Automation testing framework for TNC Store website using Selenium WebDriver, TestNG, and ExtentReports.
-**Enterprise-grade framework designed for team collaboration and scalable test automation.**
+Enterprise-grade framework for scalable, maintainable, and collaborative test automation.
 
-**Final project of nhomnhom team. Automation testing for https://www.tncstore.vn/**
+## Project Structure
 
-## 🏗️ UPDATED Project Structure & File Explanations
+```
+TNC_S/
+├── pom.xml
+├── README.md
+├── AUTOMATION_TESTING_BEST_PRACTICES.md
+├── *.bat (test run scripts)
+├── report/
+│   └── screenshots/
+├── test-output/
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       ├── commons/
+│   │       │   ├── DriverFactory.java
+│   │       │   └── Driver_Factory.java
+│   │       ├── config/
+│   │       │   └── TNCStoreConfig.java
+│   │       ├── helpers/
+│   │       │   └── PageHelpers.java
+│   │       ├── listener/
+│   │       │   ├── TestListener.java
+│   │       │   └── listener.java
+│   │       ├── locators/
+│   │       ├── pages/
+│   │       │   └── BasePage.java
+│   │       └── reports/
+│   │           └── report.java
+│   └── test/
+│       ├── java/
+│       │   ├── config/
+│       │   ├── helpers/
+│       │   │   ├── AuthenticationMethodVerificationHelper.java
+│       │   │   ├── BaseTest.java
+│       │   │   ├── ConfigReader.java
+│       │   │   ├── ExcelReader.java
+│       │   │   ├── ExtentManager.java
+│       │   │   ├── NetworkResponseHelper.java
+│       │   │   ├── PopupHandler.java
+│       │   │   ├── ReportManager.java
+│       │   │   ├── ScreenshotUtils.java
+│       │   │   ├── TestDataProvider.java
+│       │   │   └── WaitUtils.java
+│       │   ├── model/
+│       │   │   ├── AuthenticationTestData.java
+│       │   │   ├── CartTestData.java
+│       │   │   ├── ProductDetailTestData.java
+│       │   │   ├── SearchTestData.java
+│       │   │   └── Model.java
+│       │   ├── pages/
+│       │   │   ├── AuthenticationPage.java
+│       │   │   ├── HomePage.java
+│       │   │   └── ...
+│       │   └── test/
+│       │       ├── authentication/
+│       │       ├── userprofile/
+│       │       ├── cart/
+│       │       ├── search/
+│       │       ├── productdetail/
+│       │       └── checkout/
+│       └── resources/
+│           ├── config.properties
+│           ├── extent-config.css
+│           ├── extent-config.xml
+│           ├── testdata.json
+│           ├── data/
+│           │   ├── ... (test data files)
+│           ├── qa/
+│           └── testdata/
+│               └── ...
+└── target/
+```
 
-### 📁 **src/main/java/commons/** - REUSABLE Core Components Only
-```
-├── DriverFactory.java       # 🚗 WebDriver management (Chrome, Firefox, Edge)
-│                            # ✅ REUSABLE for any website/project
-└── listener/                # 📡 TestNG Listeners for test events
-    └── TestListener.java    # 👂 Global test execution listener (REUSABLE)
-```
+## Key Folders & Files
+- **commons/**: Core driver and listener utilities
+- **config/**: Project configuration (URLs, timeouts, etc.)
+- **helpers/**: Test utilities, base classes, reporting, waits, data providers
+- **listener/**: TestNG listeners for reporting and retry
+- **locators/**: (if used) Centralized element locators
+- **pages/**: Page Object Model classes (one class per page)
+- **model/**: Test data models (POJOs)
+- **test/**: Test classes, organized by feature/module
+- **resources/**: Config, test data, and reporting templates
+- **report/**: Test reports and screenshots
+- **test-output/**: TestNG output
+- **target/**: Build output
 
-### 📁 **src/test/java/config/** - TEST-SPECIFIC Configuration
-```
-└── TNCStoreConfig.java      # ⚙️ TNC Store specific config (URLs, timeouts)
-                             # 🎯 Only for tncstore.vn website
-```
+## Coding Conventions
 
-### 📁 **src/test/java/locators/** - TEST-SPECIFIC Web Elements
-```
-└── TNCStoreLocators.java    # 🎯 TNC Store web element locators
-                             # 🏪 Only for tncstore.vn website
-```
+### Naming
+- **Packages**: lowercase, meaningful (e.g., commons, helpers, pages)
+- **Classes**: PascalCase (e.g., LoginPage, CartTest)
+- **Methods**: camelCase, descriptive (e.g., clickLoginButton, enterEmail)
+- **Variables**: camelCase, concise (e.g., userName, expectedTitle)
+- **Constants**: SNAKE_CASE, all uppercase (e.g., BASE_URL, DEFAULT_TIMEOUT)
+- **Test Classes**: End with `Test` (e.g., LoginTest)
+- **Test Methods**: methodName_condition_expectedResult (e.g., login_withValidCredentials_shouldSucceed)
 
-### 📁 **src/test/java/helpers/** - Test Utilities & Base Classes (9 files)
-```
-├── BaseTest.java           # 🏗️ Base class cho tất cả test classes
-├── ConfigReader.java       # 📋 Đọc config từ properties files
-├── ExcelReader.java        # 📊 Đọc test data từ Excel files
-├── ExtentManager.java      # 📊 Quản lý ExtentReports initialization
-├── ReportManager.java      # 📋 Quản lý logging và reporting per module
-├── ScreenshotUtils.java    # 📸 Capture screenshots on test failures
-├── TestDataProvider.java  # 🎲 Provide test data cho TestNG
-├── TestDataReader.java     # 📖 Đọc test data từ multiple sources
-└── WaitUtils.java          # ⏰ Wait strategies (explicit, fluent waits)
-```
+### Page Object Model (POM)
+- One class per page in `pages/`
+- Shared locators in `BasePage.java`, page-specific locators in each page class
+- Action methods are atomic (one action per method)
+- No assertions in page classes; return data/state for assertions in test classes
 
-### 📁 **src/test/java/model/** - Test Data Models (4 files)
-```
-├── AuthenticationTestData.java  # 🔐 Login/Register test data model
-├── CartTestData.java           # 🛒 Shopping cart test data model
-├── ProductDetailTestData.java  # 📦 Product information test data
-└── SearchTestData.java         # 🔍 Search functionality test data
-```
+### Test Design
+- Tests are independent and can run standalone
+- No shared state between tests
+- Use `@BeforeMethod` and `@AfterMethod` for WebDriver setup/teardown
+- SmokeTests only verify framework basics (browser launch, login)
 
-### 📁 **src/test/java/pages/** - Page Object Model (3 files)
-```
-├── BasePage.java              # 🏗️ Base class cho tất cả page objects
-├── AuthenticationPage.java    # 🔐 Login/Register page interactions
-└── UserProfilePage.java       # 👤 User profile management page
-```
+### Test Data & Config
+- `config.properties`: Base URL, browser, timeout
+- `testdata.json`: Common test data
+- `data/`, `testdata/`: Multiple data sets (JSON/CSV/Excel)
+- No hardcoded test data in test scripts
 
-### 📁 **src/test/java/test/** - Test Classes Organized by Features
-```
-├── authentication/            # 🔐 Authentication Module Tests
-├── userprofile/              # 👤 User Profile Module Tests
-├── cart/                     # 🛒 Shopping Cart Module Tests
-├── search/                   # 🔍 Search Module Tests
-├── productdetail/            # 📦 Product Detail Module Tests
-└── checkout/                 # 💳 Checkout Module Tests
-```
+### Logging & Reporting
+- Use Log4j or SLF4J for logging
+- Custom reports in `report/`
+- Log format: `[TIMESTAMP] [LEVEL] [CLASS] - message`
+- Do not log sensitive info (e.g., passwords)
 
+### Code Style
+- Indentation: 4 spaces (no tabs)
+- Line length ≤ 120 characters
+- Braces `{}` on the same line: `if (isLoggedIn) { doSomething(); }`
+- Comments only when logic is not self-explanatory
+- Avoid magic numbers; use constants
+
+### Best Practices
+- Use assertions from TestNG/JUnit in test classes
+- Retry failed tests (listener in `listener/`)
+- Driver managed by DriverFactory (Singleton/ThreadLocal)
+- Parallel execution configured in TestNG XML
+- Code must be clean, DRY, and reusable
+- Don't have to write comment( especially Vietnamese) if the script easy to understand( prefer not to write any comment in code)
+- Make sure there is no error(problems alt+f6) in the whole project before closing conversation
+- Do not use && interminal , use ; instead
