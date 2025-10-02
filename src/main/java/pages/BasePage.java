@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import java.util.List;
 
 public class BasePage {
     protected WebDriver driver;
@@ -37,12 +38,23 @@ public class BasePage {
         }
     }
 
-    protected void waitForElementToBeClickable(WebElement element) {
+    public void waitForElementToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     protected void waitForElementToBeVisible(By locator) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    public WebElement waitForElementPresence(By locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public void waitForPresence(By locator) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitForAllElementsPresence(By locator) {
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 }
 
