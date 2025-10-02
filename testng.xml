@@ -10,47 +10,6 @@
 
     <test name="All Tests">
         <classes>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-            <class name="test.debug.DebugTest">
-                <methods>
-                    <include name="testDriverSetup"/>
-                </methods>
-            </class>
-
-            <!--class test cho product_detail-->
-            <class name="test.productdetail.ProductNameCorrectTest">
-                <methods><include name="testAddToCart"/>
-                    <include name="testScrollToBottomAndViewProductDetail"/>
-                </methods>
-            </class>
-
-            <!--class test cho search-->
-            <class name="test.search.SearchRepeatTest">
-                <methods>
-                    <include name="testSearchFunctionality"/>
-                    <include name="testSearchResults"/>
-                    <include name="testSearchForRTX2050"/>
-                    <include name="testSearchForRTX2050Repeat"/>
-                    <include name="testSearchPerformCorrect"/>
-                    <include name="testSearchReloadPage"/>
-                    <include name="testSearchWithNoKeyword"/>
-                </methods>
-            </class>
-
-
-            <class name="test.simple.SimpleDriverTest">
-                <methods><include name="testDriverWorks"/>
-                </methods>
-            </class>
-
-            <!-- REGISTER VÀ LOGIN (FIXED) -->
-=======
->>>>>>> 06212005e5b1461a05f8182d4b28cd380e97fde5
-            <class name="test.authentication.RegisterTests"/>
->>>>>>> 774d7f3ac7acf85174cc4134455ebe23c0614b6c
             <class name="test.authentication.LoginTests"/>
 <!--            <class name="test.authentication.RegisterTests"/>-->
             <class name="test.search.SearchTest"/>
