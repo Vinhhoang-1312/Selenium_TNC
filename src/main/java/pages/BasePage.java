@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import java.util.List;
 
 public class BasePage {
     protected WebDriver driver;
@@ -20,7 +21,7 @@ public class BasePage {
         PageFactory.initElements(driver, this);
     }
 
-    protected void waitForPageLoad() {
+    public void waitForPageLoad() {
         wait.until(webDriver -> {
             String readyState = (String) ((JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState");
@@ -28,7 +29,7 @@ public class BasePage {
         });
     }
 
-    protected void waitForElementToDisappear(By locator) {
+    public void waitForElementToDisappear(By locator) {
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
@@ -37,12 +38,27 @@ public class BasePage {
         }
     }
 
-    protected void waitForElementToBeClickable(WebElement element) {
+    public void waitForElementToBeClickable(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    protected void waitForElementToBeVisible(By locator) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    public WebElement waitForElementToBeClickable(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public WebElement waitForElementToBeVisible(By locator) {
+       return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    public WebElement waitForElementPresence(By locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public void waitForPresence(By locator) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitForAllElementsPresence(By locator) {
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 }
 

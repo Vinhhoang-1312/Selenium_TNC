@@ -1,11 +1,13 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 
 
 public class ProductDetailPage extends BasePage {
@@ -15,15 +17,17 @@ public class ProductDetailPage extends BasePage {
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
     private final By viewCartLink = By.xpath("//a[@class='btn-goCart']");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
-    public static By itemNameInMainPage = By.xpath("//div[@id=\"js-product-cate-79\"]//div[@class=\"owl-item active\"][2]//a[contains(@class,'product-name')]");
+    public static By itemNameInMainPage = By.xpath("//div[contains(@id,'79')]//div[@class='owl-item active'][2]//a[contains(@class,'product-name')]");
     public static By itemInMainPage = By.xpath("//div[contains(@id,'79')]//div[@class='owl-item active'][2]");
     public static By productName = By.xpath("//h1[@class='name']");
     public static By successNotification = By.xpath("//div[@class='content-container']");
     public static By originPrice = By.xpath("//div[@class='info-main-price']//del[@class='old-price']");
     public static By Price = By.xpath("//div[@class='info-main-price']//div[@class='price']");
     public static By SaleOff = By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
-    private final By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
-
+    public static By similarProduct = By.xpath("//div[contains(@class,'similar')]//div[@class='owl-item active'][2]");
+    public static By viewedProduct = By.xpath("//div[@class='product-history']//div[@class='product-list']");
+    public static By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
+    public static By decreaseQuantityButton = By.xpath("//a[@data-value='-1']");
 
     public ProductDetailPage(WebDriver driver) {
         super(driver);
@@ -76,5 +80,43 @@ public class ProductDetailPage extends BasePage {
         waitForElementToBeClickable(cartElement);
         cartElement.click();
         log.info("Successfully navigated to cart page");
+}
+
+    public void verifyAddToCartSuccessMessage() {
+        WebElement successMessage = waitForElementToBeVisible(successNotification);
+        String expectedMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
+        String actualMessage = successMessage.getText();
+        Assert.assertEquals(actualMessage, expectedMessage, "Failed to verify success message");
+    }
+
+    public static void verifyProductNameConsistency(WebDriver driver, BasePage base, String baseUrl) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        driver.get(baseUrl);
+
+        for (int i = 0; i < 10; i++) {
+            js.executeScript("window.scrollBy(0, 600);");
+            base.waitForPresence(By.cssSelector("body"));
+        }
+
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+
+        WebElement itemnameElement = base.waitForElementToBeVisible(itemNameInMainPage);
+        String productNameOnMainPage = itemnameElement.getText();
+        System.out.println("Tên sản phẩm trên trang chủ: " + productNameOnMainPage);
+
+        WebElement itemElement = driver.findElement(itemInMainPage);
+        itemElement.click();
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
+        WebElement productNameElement = base.waitForElementToBeVisible(productName);
+        String productNameOnDetailPage = productNameElement.getText();
+
+        Assert.assertEquals(productNameOnDetailPage, productNameOnMainPage, "Product names do not match!");
     }
 }
