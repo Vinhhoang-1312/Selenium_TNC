@@ -1,4 +1,4 @@
-    package pages;
+package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -13,6 +13,7 @@ public class CartPage extends BasePage {
 
     private final By quantityInputs = By.xpath("//input[contains(@class, 'js-buy-quantity')]");
     private final By firstPlusSign = By.xpath("(//a[@class='js-quantity-change'])[1]");
+    private final By firstMinusSign = By.xpath("(//a[@class='js-quantity-change'])[2]");
 
     public CartPage(WebDriver driver) {
         super(driver);
@@ -49,6 +50,13 @@ public class CartPage extends BasePage {
         plusSign.click();
     }
 
+    public void clickFirstMinusSign() {
+        waitForPageLoad();
+        WebElement minusSign = driver.findElement(firstMinusSign);
+        waitForElementToBeClickable(minusSign);
+        minusSign.click();
+    }
+
     public void setFirstItemQuantity(int quantity) {
         waitForPageLoad();
         waitForElementToBeVisible(quantityInputs);
@@ -67,5 +75,32 @@ public class CartPage extends BasePage {
             log.error("No items found in cart");
             throw new RuntimeException("No items found in cart - Please check if items were added correctly");
         }
+    }
+
+    public void checkItemQuantityIncrease() {
+        int initialQuantity = getFirstItemQuantity();
+        int newQuantity = initialQuantity + 1;
+        clickFirstPlusSign();
+        int updatedQuantity = getFirstItemQuantity();
+        org.testng.Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be increased by 1");
+    }
+
+    public void checkItemQuantityDecrease() {
+        int initialQuantity = getFirstItemQuantity();
+        int newQuantity = initialQuantity - 1;
+        clickFirstMinusSign();
+        int updatedQuantity = getFirstItemQuantity();
+        org.testng.Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be decreased by 1");
+    }
+
+    /**
+     * Returns the number of products currently in the cart.
+     * This is determined by counting the quantity input fields for each product row.
+     */
+    public int getCartSize() {
+        waitForPageLoad();
+        waitForElementToBeVisible(quantityInputs);
+        List<WebElement> inputs = driver.findElements(quantityInputs);
+        return inputs.size();
     }
 }

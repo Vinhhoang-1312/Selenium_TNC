@@ -4,13 +4,18 @@ import helpers.PopupHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.Duration;
+import java.util.List;
 
 public class AuthenticationPage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
@@ -217,6 +222,53 @@ public class AuthenticationPage extends BasePage {
                     Thread.currentThread().interrupt();
                 }
             }
+        }
+    }
+
+    public void clickIfPresent(By locator) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            if (element.isDisplayed() && element.isEnabled()) {
+                element.click();
+                log.debug("Clicked on element: {}", locator.toString());
+            }
+        } catch (TimeoutException e) {
+            log.debug("Element not found within timeout, skip clicking: {}", locator.toString());
+        }
+    }
+
+    private void dismissChatWidget() {
+        try {
+            log.info("Starting professional popup dismissal with clickIfPresent...");
+            clickIfPresent(By.xpath("//div[@class='widget-header--inner widget-header--inner--collapsed']//span[@class='widget-header--button-close-icon']"));
+            clickIfPresent(By.xpath("//div[@class='widget-preview--btn-close']"));
+            clickIfPresent(By.cssSelector(".widget-header--button-close"));
+            clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
+            forceHideBlockingElements();
+            log.info("Professional popup dismissal completed");
+        } catch (Exception e) {
+            log.warn("Error in popup dismissal: {}", e.getMessage());
+        }
+    }
+
+    private void forceHideBlockingElements() {
+        try {
+            log.debug("Force hiding known blocking elements...");
+            ((JavascriptExecutor) driver).executeScript(
+                "var blockingElements = document.querySelectorAll('.widget-preview--action-text');" +
+                "for(var i = 0; i < blockingElements.length; i++) {" +
+                "  blockingElements[i].style.display = 'none';" +
+                "  blockingElements[i].style.visibility = 'hidden';" +
+                "  blockingElements[i].style.opacity = '0';" +
+                "  blockingElements[i].style.zIndex = '-9999';" +
+                "  blockingElements[i].style.pointerEvents = 'none';" +
+                "}" +
+                "console.log('Forced hiding of blocking elements completed');"
+            );
+            log.debug("Force hiding completed");
+        } catch (Exception e) {
+            log.warn("Force hiding failed: {}", e.getMessage());
         }
     }
 
