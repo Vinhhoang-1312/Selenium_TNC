@@ -13,13 +13,13 @@
         <groups>
             <run>
                 <include name="authentication"/>
-                <include name="login"/>
-                <!-- <include name="signup"/> -->
+<!--                <include name="login"/>-->
+                 <include name="signup"/>
             </run>
         </groups>
         <classes>
-            <class name="test.authentication.LoginTests"/>
-            <!-- <class name="test.authentication.RegisterTests"/> -->
+<!--            <class name="test.authentication.LoginTests"/>-->
+             <class name="test.authentication.RegisterTests"/>
         </classes>
     </test>
 

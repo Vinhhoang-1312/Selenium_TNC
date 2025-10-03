@@ -120,3 +120,5 @@ public class ProductDetailPage extends BasePage {
         Assert.assertEquals(productNameOnDetailPage, productNameOnMainPage, "Product names do not match!");
     }
 }
+    }
+}
