@@ -72,9 +72,9 @@ public class ProductDetailPage extends BasePage {
 
         // Then wait for and click the view cart link
         waitForElementToBeVisible(viewCartLink);
-        WebElement cartElement = driver.findElement(viewCartLink);
-        waitForElementToBeClickable(cartElement);
-        cartElement.click();
+        WebElement viewcartElement = driver.findElement(viewCartLink);
+        waitForElementToBeClickable(viewcartElement);
+        viewcartElement.click();
         log.info("Successfully navigated to cart page");
     }
 }
