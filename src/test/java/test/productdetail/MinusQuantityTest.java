@@ -30,7 +30,7 @@ public class MinusQuantityTest {
 
     @Test
     public void testMinusQuantity_UsingAlert() {
-        By quantityLocator = ProductDetailPage.quantity;
+        By quantityLocator = ProductDetailPage.quantityInput;
         By decreaseQuantityButtonLocator = ProductDetailPage.decreaseQuantityButton;
 
         // Mở trang chi tiết sản phẩm

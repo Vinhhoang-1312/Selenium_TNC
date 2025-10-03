@@ -26,7 +26,7 @@ public class ProductDetailPage extends BasePage {
     public static By SaleOff = By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
     public static By similarProduct = By.xpath("//div[contains(@class,'similar')]//div[@class='owl-item active'][2]");
     public static By viewedProduct = By.xpath("//div[@class='product-history']//div[@class='product-list']");
-    public static By quantity = By.xpath("//input[@id='js-buy-quantity']");
+    public static By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
     public static By decreaseQuantityButton = By.xpath("//a[@data-value='-1']");
 
     public ProductDetailPage(WebDriver driver) {
