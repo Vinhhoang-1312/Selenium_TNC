@@ -12,19 +12,12 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import java.io.IOException;
 import java.time.Duration;
 
-/**
- * DriverFactory - Manage WebDriver instances (Thread-safe)
- * Supported browsers: Chrome, Firefox, Edge
- */
+
 public class DriverFactory {
 
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    /**
-     * Initialize WebDriver based on browser name
-     *
-     * @param browserName browser name (chrome, firefox, edge)
-     */
+
     public static void initializeDriver(String browserName) {
         if (isDriverInitialized()) {
             quitDriver(); // cleanup old driver
@@ -59,7 +52,6 @@ public class DriverFactory {
                 throw new IllegalArgumentException("❌ Unsupported browser: " + browserName);
         }
 
-        // Common driver setup
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
@@ -67,9 +59,7 @@ public class DriverFactory {
         System.out.println("✅ " + browserName + " driver initialized.");
     }
 
-    /**
-     * Get current WebDriver instance
-     */
+
     public static WebDriver getDriver() {
         WebDriver driver = driverThreadLocal.get();
         if (driver == null) {
@@ -78,9 +68,7 @@ public class DriverFactory {
         return driver;
     }
 
-    /**
-     * Quit WebDriver and cleanup ThreadLocal
-     */
+
     public static void quitDriver() {
         WebDriver driver = driverThreadLocal.get();
         if (driver != null) {
@@ -96,16 +84,12 @@ public class DriverFactory {
         }
     }
 
-    /**
-     * Check if WebDriver is already initialized
-     */
+
     public static boolean isDriverInitialized() {
         return driverThreadLocal.get() != null;
     }
 
-    /**
-     * Force kill browser processes (OS-specific)
-     */
+
     private static void forceKillBrowser() {
         String os = System.getProperty("os.name").toLowerCase();
         try {
@@ -130,9 +114,7 @@ public class DriverFactory {
         }
     }
 
-    /**
-     * Force cleanup (quit + kill processes)
-     */
+
     public static void forceCleanup() {
         quitDriver();
         forceKillBrowser();
