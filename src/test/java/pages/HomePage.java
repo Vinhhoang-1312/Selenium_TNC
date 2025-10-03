@@ -55,6 +55,18 @@ public class HomePage extends BasePage {
         }
     }
 
+    public static void clickSpecificItem(WebDriver driver, By itemLocator) {
+        WebElement itemElement = driver.findElement(itemLocator);
+        itemElement.click();
+
+        try {
+            Thread.sleep(4000); // Chờ trang chi tiết tải
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
     public void clickFirstNormalProduct() {
         List<WebElement> products = driver.findElements(By.cssSelector(".product-box"));
         for (WebElement product : products) {
