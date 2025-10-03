@@ -1,5 +1,6 @@
 package pages;
-
+import org.openqa.selenium.NoAlertPresentException;
+import  org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +15,8 @@ public class CartPage extends BasePage {
     private final By quantityInputs = By.xpath("//input[contains(@class, 'js-buy-quantity')]");
     private final By firstPlusSign = By.xpath("(//a[@class='js-quantity-change'])[1]");
     private final By firstMinusSign = By.xpath("(//a[@class='js-quantity-change'])[2]");
+    private final By checkoutButton = By.xpath("//a[@class='button-send-cart']");
+    private final By phoneErrorLocator = By.xpath("//div[contains(@class, 'error') and contains(text(), 'Số điện thoại không được để trống')]");
 
     public CartPage(WebDriver driver) {
         super(driver);
@@ -103,4 +106,40 @@ public class CartPage extends BasePage {
         List<WebElement> inputs = driver.findElements(quantityInputs);
         return inputs.size();
     }
+    public void proceedToCheckout() {
+        WebElement checkoutBtn = driver.findElement(checkoutButton);
+        waitForElementToBeClickable(checkoutBtn);
+        checkoutBtn.click();
+        log.info("Clicked on Proceed to Checkout button");
+    }
+
+    public void verifyMissingPhoneNumberError() {
+        // Chờ alert xuất hiện
+        Alert alert = waitForAlert();
+        String actualText = alert.getText();
+        org.testng.Assert.assertTrue(actualText.contains("Vui lòng kiểm tra lại thông tin đơn hàng"), "Error message for missing phone number should be displayed in alert");
+        log.info("Verified missing phone number error message in alert: {}", actualText);
+        alert.accept();
+    }
+
+    private Alert waitForAlert() {
+        int timeoutSeconds = 10;
+        for (int i = 0; i < timeoutSeconds * 2; i++) {
+            try {
+                return driver.switchTo().alert();
+            } catch (NoAlertPresentException e) {
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        throw new RuntimeException("Alert not present after waiting");
+    }
+
+    public void verifyCheckOut() {
+        waitForElementToBeVisible(checkoutButton);
+        WebElement checkoutBtn = driver.findElement(checkoutButton);
+        String actualText = checkoutBtn.getText();
+        org.testng.Assert.assertTrue(actualText.contains("Xác nhận mua hàng"), "The text 'Xác nhận mua hàng' must appear on the purchase confirmation page");
+        log.info("Verified checkout confirmation text: {}", actualText);
+    }
+
 }
