@@ -1,9 +1,6 @@
 package test.productdetail;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,8 +11,8 @@ import commons.Driver_Factory;
 import pages.ProductDetailPage;
 import pages.BasePage;
 
-public class AddToCartTest {
-    private static final Logger log = LoggerFactory.getLogger(AddToCartTest.class);
+public class AddToCartTestNoti {
+    private static final Logger log = LoggerFactory.getLogger(AddToCartTestNoti.class);
     private WebDriver driver;
     BasePage base;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
@@ -24,19 +21,15 @@ public class AddToCartTest {
     public void setUp() {
         // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
+        base = new BasePage(driver);
         driver.get(baseUrl);
     }
 
     @Test
     public void testAddToCart() {
-        By addtocartbuttonlocator = ProductDetailPage.addToCartButton;
-        By successNotilocator = ProductDetailPage.successNotification;
-
-        driver.findElement(addtocartbuttonlocator).click();
-        WebElement successMessage = base.waitForElementToBeVisible(successNotilocator);
-        String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
-        String actualSuccessMessage = successMessage.getText();
-        Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");
+        ProductDetailPage productDetailPage = new ProductDetailPage(driver);
+        productDetailPage.addToCart();
+       productDetailPage.verifyAddToCartSuccessMessage();
     }
 
     @AfterClass
