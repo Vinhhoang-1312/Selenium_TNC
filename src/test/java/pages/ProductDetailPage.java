@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 
 
 public class ProductDetailPage extends BasePage {
+    private final Actions actions;
     private static final Logger log = LoggerFactory.getLogger(ProductDetailPage.class);
     public static By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
     private final By cartIcon = By.xpath("//a[@id='js-header-cart']");
     private final By viewCartLink = By.xpath("//a[@class='btn-goCart']");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
-    private final Actions actions;
-    public static By itemnameInMainPage = By.xpath("//div[@id=\"js-product-cate-79\"]//div[@class=\"owl-item active\"][2]//a[contains(@class,'product-name')]");
+    public static By itemNameInMainPage = By.xpath("//div[@id=\"js-product-cate-79\"]//div[@class=\"owl-item active\"][2]//a[contains(@class,'product-name')]");
     public static By itemInMainPage = By.xpath("//div[contains(@id,'79')]//div[@class='owl-item active'][2]");
     public static By productName = By.xpath("//h1[@class='name']");
     public static By successNotification = By.xpath("//div[@class='content-container']");

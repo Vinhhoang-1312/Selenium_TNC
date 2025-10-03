@@ -1,17 +1,27 @@
 package helpers;
 
-
+import com.aventstack.extentreports.ExtentTest;
+import commons.DriverFactory;
+import helpers.*;
+import org.openqa.selenium.By;
 import config.TNCStoreConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.JavascriptExecutor;
+import org.testng.annotations.*;
+import config.TNCStoreConfig;
+import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -101,8 +111,7 @@ public class BaseTest {
                         break;
                     case "chrome":
                     default:
-//                        WebDriverManager.chromedriver().setup();
-                        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Browser Drivers\\chromedriver.exe");
+                        WebDriverManager.chromedriver().setup();
                         driver = new ChromeDriver(buildChromeOptions());
                         break;
                 }
@@ -122,13 +131,13 @@ public class BaseTest {
                 try {
                     driver.manage().window().maximize();
                 } catch (Exception e) {
-                    log.warn("⚠️ Could not maximize window: {}", e.getMessage());
+                    log.warn("Could not maximize browser window: {}", e.getMessage());
                 }
 
 //                log.info("📍 Current URL after init: {}", safeGetCurrentUrl());
 //                log.info("📝 Page title: {}", safeGetTitle());
 
-                return; // success
+                return;
             } catch (Exception e) {
 //                lastError = new RuntimeException("WebDriver init failure on attempt " + attempt + ": " + e.getMessage(), e);
                 log.error("❌ Driver initialization failed on attempt {}: {}", attempt, e.getMessage(), e);
@@ -248,5 +257,10 @@ public class BaseTest {
     // Utility methods
     protected String getCurrentUrl() { return safeGetCurrentUrl(); }
     protected String getPageTitle() { return safeGetTitle(); }
-    protected void refreshPage() { if (driver != null) driver.navigate().refresh(); }
+    protected void refreshPage() {
+        if (driver != null) {
+            driver.navigate().refresh();
+            // Remove browser zoom out after refresh (do not set zoom to 50%)
+        }
+    }
 }
