@@ -1,7 +1,6 @@
 package test.productdetail;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -12,18 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
-import helpers.PageHelpers;
 import pages.ProductDetailPage;
-
+import pages.BasePage;
 public class SalePriceCorrectTest {
     private static final Logger log = LoggerFactory.getLogger(SalePriceCorrectTest.class);
     private WebDriver driver;
+    private BasePage base;
     private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
     @BeforeClass
     public void setUp() {
         // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
+        base = new BasePage(driver);
         driver.get(baseUrl);
     }
 

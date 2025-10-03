@@ -8,26 +8,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
-import pages.BasePage;
 import pages.ProductDetailPage;
-public class CorrectProductNameTest {
-    private static final Logger log = LoggerFactory.getLogger(CorrectProductNameTest.class);
+import pages.BasePage;
+
+public class AddToCartTestNoti {
+    private static final Logger log = LoggerFactory.getLogger(AddToCartTestNoti.class);
     private WebDriver driver;
-    private BasePage base;
-    private String baseUrl = "https://www.tncstore.vn/";
+    BasePage base;
+    private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
 
     @BeforeClass
     public void setUp() {
+        // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
         base = new BasePage(driver);
         driver.get(baseUrl);
     }
 
     @Test
-    public void testProductNameCorrect() {
-        ProductDetailPage.verifyProductNameConsistency(driver, base, baseUrl);
+    public void testAddToCart() {
+        ProductDetailPage productDetailPage = new ProductDetailPage(driver);
+        productDetailPage.addToCart();
+       productDetailPage.verifyAddToCartSuccessMessage();
     }
-
 
     @AfterClass
     public void tearDown() {

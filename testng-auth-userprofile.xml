@@ -5,12 +5,15 @@
         <classes>
             <class name="test.authentication.RegisterTests"/>
             <class name="test.authentication.LoginTests"/>
+
+
         </classes>
     </test>
     <test name="UserProfile Tests">
         <classes>
             <class name="test.userprofile.UserProfileInfoTests"/>
         </classes>
+
     </test>
 </suite>
 

@@ -357,14 +357,6 @@ public class AuthenticationPage extends BasePage {
         return null;
     }
 
-    protected void waitForElementToBeVisible(By by) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-    }
-
-    protected void waitForElementToBeClickable(By by) {
-        wait.until(ExpectedConditions.elementToBeClickable(by));
-    }
-
     protected boolean isElementPresent(By by) {
         try {
             return !driver.findElements(by).isEmpty();

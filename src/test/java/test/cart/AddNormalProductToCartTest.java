@@ -2,6 +2,7 @@ package test.cart;
 
 import helpers.BaseTest;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
@@ -9,19 +10,28 @@ import pages.CartPage;
 import org.openqa.selenium.By;
 
 public class AddNormalProductToCartTest extends BaseTest {
+    private HomePage homePage;
+    private ProductDetailPage productDetailPage;
+    private CartPage cartPage;
+
+    @BeforeMethod
+    public void setupPages() {
+        homePage = new HomePage(driver);
+        productDetailPage = new ProductDetailPage(driver);
+        cartPage = new CartPage(driver);
+    }
+
     @Test
     public void testAddToCart() {
-        HomePage homePage = new HomePage(driver);
-        clickIfPresent(By.cssSelector(".widget-header--button-close"));
-        clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
-        homePage.searchProduct("PC Đồ Họa Render 3D - Ryzen 7 9800X3D/ 32GB/ RTX 5080");
+
+        dismissPopupsIfPresent();
+
+        homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(driver);
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(driver);
         int quantity = cartPage.getFirstItemQuantity();
         Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
     }

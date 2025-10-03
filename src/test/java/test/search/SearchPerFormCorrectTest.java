@@ -1,7 +1,6 @@
 package test.search;
 
 import commons.Driver_Factory;
-import helpers.PageHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import pages.BasePage;
 import pages.SearchPage;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
 public class SearchPerFormCorrectTest {
     private static final Logger log = LoggerFactory.getLogger(SearchPerFormCorrectTest.class);
     private WebDriver driver;
+    private BasePage base;
     private String baseUrl = "https://www.tncstore.vn/";
 
     @BeforeClass
@@ -39,7 +40,7 @@ public class SearchPerFormCorrectTest {
             e.printStackTrace();
         }
 
-        List<WebElement> suggestedItems = PageHelpers.waitForAllElementsPresence(driver, suggestionlistLocator, 4);
+        List<WebElement> suggestedItems = base.waitForAllElementsPresence(suggestionlistLocator);
         for (WebElement item : suggestedItems) {
             String itemName = item.getText().toLowerCase();
             System.out.println("Đang kiểm tra gợi ý: " + itemName);

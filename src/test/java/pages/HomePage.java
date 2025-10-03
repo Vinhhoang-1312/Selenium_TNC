@@ -29,7 +29,7 @@ public class HomePage extends BasePage {
 
     public void searchProduct(String productName) {
         // Wait for search box to be visible and interactive
-        waitForPageLoad();
+//        waitForPageLoad();
         waitForElementToBeVisible(searchBox);
         WebElement searchInput = driver.findElement(searchBox);
         searchInput.clear();

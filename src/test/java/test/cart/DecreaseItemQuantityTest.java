@@ -3,11 +3,11 @@ package test.cart;
 import helpers.BaseTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
-import pages.CartPage;
 
-public class IncreaseItemQuantityTest extends BaseTest {
+public class DecreaseItemQuantityTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
@@ -20,15 +20,15 @@ public class IncreaseItemQuantityTest extends BaseTest {
     }
 
     @Test
-    public void testIncreaseItemQuantity() {
+    public void testDecreaseItemQuantity() {
         dismissPopupsIfPresent();
 
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickProduct();
 
-        productDetailPage.addToCart();
+        productDetailPage.addToCart(2);
         productDetailPage.goToCart();
 
-        cartPage.checkItemQuantityIncrease();
+        cartPage.checkItemQuantityDecrease();
     }
 }
