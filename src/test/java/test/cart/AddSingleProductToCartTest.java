@@ -21,7 +21,7 @@ public class AddSingleProductToCartTest extends BaseTest {
     }
 
     @Test
-    public void testAddToCart() {
+    public void testAddSingleProductToCart() {
 
         dismissPopupsIfPresent();
 
