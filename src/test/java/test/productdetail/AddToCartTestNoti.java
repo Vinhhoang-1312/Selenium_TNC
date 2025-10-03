@@ -24,7 +24,6 @@ public class AddToCartTest {
     public void setUp() {
         // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
-
         driver.get(baseUrl);
     }
 
