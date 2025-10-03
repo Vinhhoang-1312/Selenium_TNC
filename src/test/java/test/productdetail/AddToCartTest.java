@@ -32,7 +32,7 @@ public class AddToCartTest {
         By successNotilocator = ProductDetailPage.successNotification;
 
         driver.findElement(addtocartbuttonlocator).click();
-        WebElement successMessage = PageHelpers.waitForElementVisible(driver,successNotilocator, 10);
+        WebElement successMessage = PageHelpers.waitForElementVisible(driver, successNotilocator, 10);
         String expectedSuccessMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
         String actualSuccessMessage = successMessage.getText();
         Assert.assertTrue(actualSuccessMessage.equals(expectedSuccessMessage), "Failed to verify success message");

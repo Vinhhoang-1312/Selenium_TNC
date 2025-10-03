@@ -21,7 +21,13 @@ import config.TNCStoreConfig;
 import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 
@@ -201,9 +207,16 @@ public class BaseTest {
         }
     }
 
+    public BaseTest() {
+        log.info("[DEBUG] BaseTest constructor called");
+        System.out.println("[DEBUG] BaseTest constructor called");
+    }
+
     @BeforeMethod(alwaysRun = true)
     @Parameters({"browser"})
     public void setUp(@Optional("chrome") String browser) {
+        log.info("[DEBUG] BaseTest setUp called");
+        System.out.println("[DEBUG] BaseTest setUp called");
         initializeDriver(browser);
     }
 
@@ -212,6 +225,22 @@ public class BaseTest {
         cleanupDriverQuietly();
         driver = null;
         driverInitializationAttempted = false;
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void captureScreenshotOnFailure(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE && driver != null) {
+            try {
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                String screenshotDir = "report/screenshots/";
+                Files.createDirectories(Paths.get(screenshotDir));
+                String filename = screenshotDir + result.getName() + "_fail_" + System.currentTimeMillis() + ".png";
+                Files.copy(src.toPath(), Paths.get(filename));
+                System.out.println("Screenshot saved: " + filename);
+            } catch (Exception e) {
+                System.err.println("Failed to capture screenshot: " + e.getMessage());
+            }
+        }
     }
 
     private void cleanupDriverQuietly() {
@@ -227,15 +256,27 @@ public class BaseTest {
     }
 
     private void pause(long millis) {
-        try { Thread.sleep(millis); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private String safeGetCurrentUrl() {
-        try { return driver != null ? driver.getCurrentUrl() : "(no driver)"; } catch (Exception e) { return "(unavailable)"; }
+        try {
+            return driver != null ? driver.getCurrentUrl() : "(no driver)";
+        } catch (Exception e) {
+            return "(unavailable)";
+        }
     }
 
     private String safeGetTitle() {
-        try { return driver != null ? driver.getTitle() : "(no driver)"; } catch (Exception e) { return "(unavailable)"; }
+        try {
+            return driver != null ? driver.getTitle() : "(no driver)";
+        } catch (Exception e) {
+            return "(unavailable)";
+        }
     }
 
     protected void sleep(int seconds) {
@@ -245,10 +286,12 @@ public class BaseTest {
             Thread.currentThread().interrupt();
         }
     }
+
     // Wait utility methods
     protected void waitForPageLoad() {
         WaitUtils.waitForPageLoad(driver);
     }
+
     protected void takeScreenshot(String testName) {
         // Simple implementation - can be enhanced later
         try {
@@ -257,6 +300,7 @@ public class BaseTest {
             log.warn("Could not take screenshot: {}", e.getMessage());
         }
     }
+
     public void clickIfPresent(By locator) {
         try {
             waitForPageLoad();
@@ -274,12 +318,17 @@ public class BaseTest {
 
 
     // Utility methods
-    protected String getCurrentUrl() { return safeGetCurrentUrl(); }
-    protected String getPageTitle() { return safeGetTitle(); }
+    protected String getCurrentUrl() {
+        return safeGetCurrentUrl();
+    }
+
+    protected String getPageTitle() {
+        return safeGetTitle();
+    }
+
     protected void refreshPage() {
         if (driver != null) {
             driver.navigate().refresh();
-            // Remove browser zoom out after refresh (do not set zoom to 50%)
         }
     }
 }

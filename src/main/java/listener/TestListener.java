@@ -8,6 +8,11 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.OutputType;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * TestNG Listener for handling test execution events
@@ -67,18 +72,30 @@ public class TestListener implements ITestListener, ISuiteListener {
     public void onTestFailure(ITestResult result) {
         String testName = result.getMethod().getMethodName();
         String errorMessage = result.getThrowable() != null ? result.getThrowable().getMessage() : "Unknown error";
-
         ExtentTest extentTest = test.get();
         if (extentTest != null) {
             extentTest.log(Status.FAIL, "❌ Test failed: " + testName);
             extentTest.log(Status.FAIL, "Error: " + errorMessage);
-
-            // Add stack trace
             if (result.getThrowable() != null) {
                 extentTest.log(Status.FAIL, result.getThrowable());
             }
+            // Chụp screenshot nếu có WebDriver
+            Object testInstance = result.getInstance();
+            try {
+                java.lang.reflect.Field driverField = testInstance.getClass().getSuperclass().getDeclaredField("driver");
+                driverField.setAccessible(true);
+                Object driverObj = driverField.get(testInstance);
+                if (driverObj instanceof TakesScreenshot) {
+                    TakesScreenshot ts = (TakesScreenshot) driverObj;
+                    byte[] screenshot = ts.getScreenshotAs(OutputType.BYTES);
+                    String screenshotPath = "report/screenshots/" + testName + "_" + System.currentTimeMillis() + ".png";
+                    Files.write(Paths.get(screenshotPath), screenshot);
+                    extentTest.addScreenCaptureFromPath(screenshotPath);
+                }
+            } catch (Exception ex) {
+                extentTest.log(Status.WARNING, "Không thể chụp screenshot: " + ex.getMessage());
+            }
         }
-
         System.out.println("❌ Test failed: " + testName);
         System.out.println("Error: " + errorMessage);
     }

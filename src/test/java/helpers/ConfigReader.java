@@ -3,6 +3,7 @@ package helpers;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,7 @@ public class ConfigReader {
 
     /**
      * Get property value
+     *
      * @param key Property key
      * @return Property value
      */
@@ -65,7 +67,8 @@ public class ConfigReader {
 
     /**
      * Get property value with default
-     * @param key Property key
+     *
+     * @param key          Property key
      * @param defaultValue Default value if key not found
      * @return Property value or default
      */
@@ -75,7 +78,8 @@ public class ConfigReader {
 
     /**
      * Get integer property
-     * @param key Property key
+     *
+     * @param key          Property key
      * @param defaultValue Default value
      * @return Integer value
      */
@@ -91,7 +95,8 @@ public class ConfigReader {
 
     /**
      * Get boolean property
-     * @param key Property key
+     *
+     * @param key          Property key
      * @param defaultValue Default value
      * @return Boolean value
      */

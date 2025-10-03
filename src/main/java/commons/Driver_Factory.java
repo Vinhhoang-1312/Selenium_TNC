@@ -5,21 +5,22 @@ import org.openqa.selenium.edge.EdgeDriver;
 
 public class Driver_Factory {
     private static WebDriver driver;
-    
 
-        public static WebDriver getDriver() {
-            if (driver == null) {
-                driver = new EdgeDriver();
-                driver.manage().window().maximize();
-            }
-            return driver;
+
+    public static WebDriver getDriver() {
+        if (driver == null) {
+            driver = new EdgeDriver();
+            driver.manage().window().maximize();
         }
-        public static void quitDriver() {
-            if (driver != null) {
-                driver.quit();
-                driver = null;
-            }
+        return driver;
+    }
+
+    public static void quitDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
         }
+    }
 
 
 }

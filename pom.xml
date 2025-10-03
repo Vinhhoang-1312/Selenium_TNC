@@ -71,6 +71,13 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.4</version>
         </dependency>
+
+        <!-- JSON dependency to resolve 'package org.json does not exist' issue -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -82,7 +89,9 @@
                 <executions>
                     <execution>
                         <id>enforce-java</id>
-                        <goals><goal>enforce</goal></goals>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
@@ -124,7 +133,9 @@
                 <version>2.12.0</version>
                 <configuration>
                     <reportVersion>2.24.0</reportVersion>
-                    <allureDownloadUrl>https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.zip</allureDownloadUrl>
+                    <allureDownloadUrl>
+                        https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.zip
+                    </allureDownloadUrl>
                 </configuration>
             </plugin>
         </plugins>
@@ -180,7 +191,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>testng.xml</suiteXmlFile>
+                                <suiteXmlFile>testng-userprofile.xml</suiteXmlFile>
                             </suiteXmlFiles>
                             <groups>userprofile</groups>
                         </configuration>

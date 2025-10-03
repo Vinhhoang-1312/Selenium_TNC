@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import commons.Driver_Factory;
 import helpers.PageHelpers;
 import pages.ProductDetailPage;
+
 public class CorrectProductNameTest {
     private static final Logger log = LoggerFactory.getLogger(CorrectProductNameTest.class);
     private WebDriver driver;
@@ -40,7 +41,7 @@ public class CorrectProductNameTest {
         }
 
         js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-        WebElement itemnameElement = PageHelpers.waitForElementVisible(driver,itemnameinmainpageLocator, 10);
+        WebElement itemnameElement = PageHelpers.waitForElementVisible(driver, itemnameinmainpageLocator, 10);
         String productNameOnMainPage = itemnameElement.getText();
         System.out.println("Tên sản phẩm trên trang chủ: " + productNameOnMainPage);
         WebElement itemElement = driver.findElement(iteminmainpageLocator);
@@ -53,7 +54,7 @@ public class CorrectProductNameTest {
             throw new RuntimeException(e);
         }
 
-        WebElement productNameElement = PageHelpers.waitForElementVisible(driver,productnameLocator, 10);
+        WebElement productNameElement = PageHelpers.waitForElementVisible(driver, productnameLocator, 10);
         String productNameOnDetailPage = productNameElement.getText();
         Assert.assertEquals(productNameOnDetailPage, productNameOnMainPage, "Product names do not match!");
 

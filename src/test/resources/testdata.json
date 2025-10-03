@@ -88,7 +88,12 @@
         "inStock": false
       }
     },
-    "quantities": [1, 5, 10, 999],
+    "quantities": [
+      1,
+      5,
+      10,
+      999
+    ],
     "reviews": {
       "rating": 5,
       "comment": "Sản phẩm tuyệt vời, chất lượng cao!"
@@ -102,8 +107,17 @@
       "percentage": 10
     },
     "quantities": {
-      "valid": [1, 2, 5, 10],
-      "invalid": [0, -1, 9999]
+      "valid": [
+        1,
+        2,
+        5,
+        10
+      ],
+      "invalid": [
+        0,
+        -1,
+        9999
+      ]
     }
   },
   "checkout": {

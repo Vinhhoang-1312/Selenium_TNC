@@ -10,7 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 /**
- *  Driver Factory - Quản lý WebDriver instances
+ * Driver Factory - Quản lý WebDriver instances
  * Supports: Chrome, Firefox, Edge
  */
 public class DriverFactory {
@@ -18,6 +18,7 @@ public class DriverFactory {
 
     /**
      * Initialize WebDriver based on browser type
+     *
      * @param browserName Browser name (chrome, firefox, edge)
      */
     public static void initializeDriver(String browserName) {
@@ -89,7 +90,6 @@ public class DriverFactory {
             System.out.println("📝 Setting driver in ThreadLocal...");
             driverThreadLocal.set(driver);
 
-            // Verify driver is set correctly
             WebDriver verifyDriver = driverThreadLocal.get();
             if (verifyDriver == null) {
                 throw new RuntimeException("❌ Failed to set driver in ThreadLocal");
@@ -103,7 +103,6 @@ public class DriverFactory {
             System.err.println("❌ Driver initialization failed: " + e.getMessage());
             e.printStackTrace();
 
-            // Cleanup on failure
             try {
                 quitDriver();
             } catch (Exception cleanupError) {
@@ -116,6 +115,7 @@ public class DriverFactory {
 
     /**
      * Get current WebDriver instance
+     *
      * @return WebDriver instance
      */
     public static WebDriver getDriver() {
