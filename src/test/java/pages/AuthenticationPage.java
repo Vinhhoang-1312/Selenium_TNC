@@ -1,5 +1,6 @@
 package pages;
 
+//import locators.TNCStoreLocators;
 import locators.TNCStoreLocators;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;

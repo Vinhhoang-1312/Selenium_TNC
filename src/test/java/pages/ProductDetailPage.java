@@ -22,6 +22,7 @@ public class ProductDetailPage extends BasePage {
     public static By originPrice = By.xpath("//div[@class='info-main-price']//del[@class='old-price']");
     public static By Price = By.xpath("//div[@class='info-main-price']//div[@class='price']");
     public static By SaleOff = By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
+    private final By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
 
 
     public ProductDetailPage(WebDriver driver) {
@@ -39,8 +40,29 @@ public class ProductDetailPage extends BasePage {
         log.info("Successfully added product to cart");
     }
 
+    public void addToCart(int quantity) {
+//        waitForPageLoad();
+        waitForElementToDisappear(loadingSpinner);
+        try {
+            WebElement qtyInput = driver.findElement(quantityInput);
+            waitForElementToBeVisible(quantityInput);
+            waitForElementToBeClickable(qtyInput);
+            qtyInput.click();
+            qtyInput.clear();
+            qtyInput.sendKeys(String.valueOf(quantity));
+            log.info("Set product quantity to: {}", quantity);
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            log.info("Quantity input not found, defaulting to add one item");
+        }
+        waitForElementToBeVisible(addToCartButton);
+        WebElement addToCartElement = driver.findElement(addToCartButton);
+        waitForElementToBeClickable(addToCartElement);
+        addToCartElement.click();
+        log.info("Successfully added"+quantity+"product to cart");
+    }
+
     public void goToCart() {
-        waitForPageLoad();
+//        waitForPageLoad();
 
         // First hover over the cart icon
         WebElement cartIconElement = driver.findElement(cartIcon);
