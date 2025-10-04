@@ -28,7 +28,13 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org.testng.ITestResult;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 
@@ -36,7 +42,7 @@ public class BaseTest {
     protected WebDriver driver;
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     private boolean driverInitializationAttempted = false;
-    private static final int MAX_INIT_RETRIES = 1;
+    private static final int MAX_INIT_RETRIES = 2;
 
     /**
      * Decide if headless mode should be enabled based on system properties or environment variables.
@@ -120,12 +126,10 @@ public class BaseTest {
                     throw new RuntimeException("Driver instance was not created (returned null)");
                 }
 
-//                log.info("✅ Driver created: {}", driver.getClass().getSimpleName());
 
                 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
                 driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
 
-//                log.info("🌐 Navigating to base URL: {}", TNCStoreConfig.BASE_URL);
                 driver.get(TNCStoreConfig.BASE_URL);
 
                 try {
@@ -134,12 +138,8 @@ public class BaseTest {
                     log.warn("Could not maximize browser window: {}", e.getMessage());
                 }
 
-//                log.info("📍 Current URL after init: {}", safeGetCurrentUrl());
-//                log.info("📝 Page title: {}", safeGetTitle());
-
                 return;
             } catch (Exception e) {
-//                lastError = new RuntimeException("WebDriver init failure on attempt " + attempt + ": " + e.getMessage(), e);
                 log.error("❌ Driver initialization failed on attempt {}: {}", attempt, e.getMessage(), e);
                 cleanupDriverQuietly();
                 driver = null;
@@ -160,7 +160,6 @@ public class BaseTest {
      */
     public void lazyInitDriver() {
         if (driver == null) {
-//            log.warn("🚧 Driver null detected in test context — attempting lazy initialization (default: chrome)...");
             try {
                 initializeDriver("chrome");
             } catch (RuntimeException e) {
@@ -183,10 +182,26 @@ public class BaseTest {
         driverInitializationAttempted = false;
     }
 
+    @AfterMethod(alwaysRun = true)
+    public void captureScreenshotOnFailure(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE && driver != null) {
+            try {
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                String screenshotDir = "report/screenshots/";
+                Files.createDirectories(Paths.get(screenshotDir));
+                String filename = screenshotDir + result.getName() + "_fail_" + System.currentTimeMillis() + ".png";
+                Files.copy(src.toPath(), Paths.get(filename));
+                System.out.println("Screenshot saved: " + filename);
+            } catch (Exception e) {
+                System.err.println("Failed to capture screenshot: " + e.getMessage());
+            }
+        }
+    }
+
     private void cleanupDriverQuietly() {
         if (driver != null) {
             try {
-//                log.info("🧹 Quitting WebDriver...");
+                log.info("🧹 Quitting WebDriver...");
                 driver.quit();
                 log.info("✅ WebDriver quit successfully");
             } catch (Exception e) {
@@ -196,15 +211,27 @@ public class BaseTest {
     }
 
     private void pause(long millis) {
-        try { Thread.sleep(millis); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private String safeGetCurrentUrl() {
-        try { return driver != null ? driver.getCurrentUrl() : "(no driver)"; } catch (Exception e) { return "(unavailable)"; }
+        try {
+            return driver != null ? driver.getCurrentUrl() : "(no driver)";
+        } catch (Exception e) {
+            return "(unavailable)";
+        }
     }
 
     private String safeGetTitle() {
-        try { return driver != null ? driver.getTitle() : "(no driver)"; } catch (Exception e) { return "(unavailable)"; }
+        try {
+            return driver != null ? driver.getTitle() : "(no driver)";
+        } catch (Exception e) {
+            return "(unavailable)";
+        }
     }
 
     protected void sleep(int seconds) {
@@ -214,10 +241,12 @@ public class BaseTest {
             Thread.currentThread().interrupt();
         }
     }
+
     // Wait utility methods
     protected void waitForPageLoad() {
         WaitUtils.waitForPageLoad(driver);
     }
+
     protected void takeScreenshot(String testName) {
         // Simple implementation - can be enhanced later
         try {
@@ -255,12 +284,17 @@ public class BaseTest {
     }
 
     // Utility methods
-    protected String getCurrentUrl() { return safeGetCurrentUrl(); }
-    protected String getPageTitle() { return safeGetTitle(); }
+    protected String getCurrentUrl() {
+        return safeGetCurrentUrl();
+    }
+
+    protected String getPageTitle() {
+        return safeGetTitle();
+    }
+
     protected void refreshPage() {
         if (driver != null) {
             driver.navigate().refresh();
-            // Remove browser zoom out after refresh (do not set zoom to 50%)
         }
     }
 }

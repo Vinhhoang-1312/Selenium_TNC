@@ -1,6 +1,7 @@
 # 🏪 TNC Store Automation Testing Framework
 
 ## Project Overview
+
 Automation testing framework for TNC Store website using Selenium WebDriver, TestNG, and ExtentReports.
 Enterprise-grade framework for scalable, maintainable, and collaborative test automation.
 
@@ -79,6 +80,7 @@ TNC_S/
 ```
 
 ## Key Folders & Files
+
 - **commons/**: Core driver and listener utilities
 - **config/**: Project configuration (URLs, timeouts, etc.)
 - **helpers/**: Test utilities, base classes, reporting, waits, data providers
@@ -95,6 +97,7 @@ TNC_S/
 ## Coding Conventions
 
 ### Naming
+
 - **Packages**: lowercase, meaningful (e.g., commons, helpers, pages)
 - **Classes**: PascalCase (e.g., LoginPage, CartTest)
 - **Methods**: camelCase, descriptive (e.g., clickLoginButton, enterEmail)
@@ -104,30 +107,35 @@ TNC_S/
 - **Test Methods**: methodName_condition_expectedResult (e.g., login_withValidCredentials_shouldSucceed)
 
 ### Page Object Model (POM)
+
 - One class per page in `pages/`
 - Shared locators in `BasePage.java`, page-specific locators in each page class
 - Action methods are atomic (one action per method)
 - No assertions in page classes; return data/state for assertions in test classes
 
 ### Test Design
+
 - Tests are independent and can run standalone
 - No shared state between tests
 - Use `@BeforeMethod` and `@AfterMethod` for WebDriver setup/teardown
 - SmokeTests only verify framework basics (browser launch, login)
 
 ### Test Data & Config
+
 - `config.properties`: Base URL, browser, timeout
 - `testdata.json`: Common test data
 - `data/`, `testdata/`: Multiple data sets (JSON/CSV/Excel)
 - No hardcoded test data in test scripts
 
 ### Logging & Reporting
+
 - Use Log4j or SLF4J for logging
 - Custom reports in `report/`
 - Log format: `[TIMESTAMP] [LEVEL] [CLASS] - message`
 - Do not log sensitive info (e.g., passwords)
 
 ### Code Style
+
 - Indentation: 4 spaces (no tabs)
 - Line length ≤ 120 characters
 - Braces `{}` on the same line: `if (isLoggedIn) { doSomething(); }`
@@ -135,11 +143,13 @@ TNC_S/
 - Avoid magic numbers; use constants
 
 ### Best Practices
+
 - Use assertions from TestNG/JUnit in test classes
 - Retry failed tests (listener in `listener/`)
 - Driver managed by DriverFactory (Singleton/ThreadLocal)
 - Parallel execution configured in TestNG XML
 - Code must be clean, DRY, and reusable
-- Don't have to write comment( especially Vietnamese) if the script easy to understand( prefer not to write any comment in code)
+- Don't have to write comment( especially Vietnamese) if the script easy to understand( prefer not to write any comment
+  in code)
 - Make sure there is no error(problems alt+f6) in the whole project before closing conversation
 - Do not use && interminal , use ; instead

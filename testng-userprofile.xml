@@ -8,9 +8,7 @@
             </run>
         </groups>
         <classes>
-            <!-- Thay thế đường dẫn class bên dưới bằng class test thực tế của bạn -->
-            <class name="tests.UserProfileTest"/>
+            <class name="test.userprofile.UserProfileInfoTests"/>
         </classes>
     </test>
 </suite>
-
