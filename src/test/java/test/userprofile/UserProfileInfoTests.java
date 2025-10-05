@@ -45,7 +45,7 @@ public class UserProfileInfoTests extends BaseTest {
         HomePage homePage = new HomePage(driver);
         homePage.logIn();
         homePage.goToProfilePage();
-        log.info("[TEST] Bắt đầu testUpdateFullname - chờ trường fullname xuất hiện...");
+        log.info("[TEST] Starting testUpdateFullname - waiting for fullname field to appear...");
         UserProfilePage profilePage = new UserProfilePage(driver);
         try {
             String oldValue = profilePage.getFullname();
@@ -55,7 +55,7 @@ public class UserProfileInfoTests extends BaseTest {
             String after = profilePage.getFullname();
             Assert.assertEquals(after, newValue);
         } catch (Exception e) {
-            log.error("[TEST] Không tìm thấy trường fullname hoặc lỗi thao tác: {}", e.getMessage(), e);
+            log.error("[TEST] Could not find fullname field or encountered an error: {}", e.getMessage(), e);
             throw e;
         }
     }

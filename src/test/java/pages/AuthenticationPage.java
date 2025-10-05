@@ -285,8 +285,40 @@ public class AuthenticationPage extends BasePage {
     public boolean registerAndAssertSuccess(AuthenticationTestData.TestUser user) {
         goToRegisterPage();
         performRegistration(user.name, user.email, user.password);
-        String accountText = getLoggedInUserNameRobust();
-        return !accountText.equals("Tài khoản") && !accountText.isEmpty();
+        // Explicitly perform login after registration using provided xpaths
+        org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthenticationPage.class);
+        try {
+            log.info("Attempting to log in with email: {}", user.email);
+            org.openqa.selenium.By emailBy = org.openqa.selenium.By.xpath("//input[@id='js-login-email']");
+            org.openqa.selenium.By passwordBy = org.openqa.selenium.By.xpath("//input[@id='js-login-password']");
+            org.openqa.selenium.By loginBtnBy = org.openqa.selenium.By.xpath("//span[contains(text(),'Đăng nhập')]");
+
+            helpers.WaitUtils.waitForElementVisible(driver, emailBy, 10);
+            org.openqa.selenium.WebElement emailField = driver.findElement(emailBy);
+            emailField.clear();
+            emailField.sendKeys(user.email);
+            log.info("Entered email: {}", user.email);
+
+            helpers.WaitUtils.waitForElementVisible(driver, passwordBy, 10);
+            org.openqa.selenium.WebElement passwordField = driver.findElement(passwordBy);
+            passwordField.clear();
+            passwordField.sendKeys(user.password);
+            log.info("Entered password for user: {}", user.email);
+
+            helpers.WaitUtils.waitForElementClickable(driver, loginBtnBy, 10);
+            org.openqa.selenium.WebElement loginBtn = driver.findElement(loginBtnBy);
+            loginBtn.click();
+            log.info("Clicked login button for user: {}", user.email);
+
+            // Wait for login to complete and check if user is logged in
+            Thread.sleep(2000); // Optionally replace with a more robust wait for a logged-in indicator
+            String accountText = getLoggedInUserNameRobust();
+            log.info("Account text after login: {}", accountText);
+            return !accountText.equals("Tài khoản") && !accountText.isEmpty();
+        } catch (Exception e) {
+            log.error("Login after registration failed for user: {}", user.email, e);
+            return false;
+        }
     }
 
     public boolean registerAndCheckPopupError(String name, String email, String password, String expectedError) {

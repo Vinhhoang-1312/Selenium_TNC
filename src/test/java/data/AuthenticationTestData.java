@@ -14,7 +14,7 @@ public class AuthenticationTestData {
     public static final String VALID_EMAIL_3 = "mike@test.com";
     public static final String VALID_PASSWORD_3 = "SecurePass789";
 
-    public static final String EXISTING_EMAIL = "existing@tncstore.vn";
+    public static final String EXISTING_EMAIL = "john@test.com";
     public static final String EXISTING_EMAIL_2 = "admin@tncstore.vn";
     public static final String EXISTING_EMAIL_3 = "test@tncstore.vn";
 
