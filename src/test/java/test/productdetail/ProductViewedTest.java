@@ -30,21 +30,17 @@ public class ProductViewedTest {
         driver.get(baseUrl);
     }
 
-    @Test//kiểm thử sản phẩm có lưu tại sản phẩm đã xem hay không
+    @Test
     public void testViewedProduct() {
         By similarProductLocator = ProductDetailPage.similarProduct;
         By productNameLocator = ProductDetailPage.productName;
         By viewedProductLocator = ProductDetailPage.viewedProduct;
-        // Bước 1: Truy cập sản phẩm ban đầu
-        driver.get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
         String initialTitle = base.waitForElementToBeVisible(productNameLocator).getText();
         System.out.println(initialTitle);
 
-        // Bước 2: Click vào một sản phẩm khác
         WebElement otherProduct = base.waitForElementToBeClickable(similarProductLocator);
         otherProduct.click();
 
-        // Bước 3: Kiểm tra danh sách sản phẩm đã xem
         WebElement viewedSection = base.waitForElementToBeVisible(viewedProductLocator);
 
         List<WebElement> viewedTitles = viewedSection.findElements(By.cssSelector("a.product-name"));
