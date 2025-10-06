@@ -31,6 +31,8 @@ import org.testng.annotations.Parameters;
 import org.testng.ITestResult;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import io.qameta.allure.testng.AllureTestNg;
+import org.testng.annotations.Listeners;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -38,6 +40,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 
+@Listeners({AllureTestNg.class})
 public class BaseTest {
     protected WebDriver driver;
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);

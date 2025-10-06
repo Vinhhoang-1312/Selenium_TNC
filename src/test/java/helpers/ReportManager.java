@@ -104,8 +104,13 @@ public class ReportManager {
 
     public static void initReports() {
         if (extent == null) {
-            // Create main report in root target folder for easy access
-            String reportPath = "target/TNC_Store_Test_Report.html";
+            // Ensure report/results directory exists
+            java.io.File resultsDir = new java.io.File("report/results");
+            if (!resultsDir.exists()) {
+                resultsDir.mkdirs();
+            }
+            // Create main report in report/results folder
+            String reportPath = "report/results/TNC_Store_Test_Report.html";
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
 
             // Enhanced report configuration for PM viewing
