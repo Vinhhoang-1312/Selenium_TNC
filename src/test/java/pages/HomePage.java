@@ -19,7 +19,7 @@ public class HomePage extends BasePage {
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
-    private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
+    private final By loadingSpinner = By.xpath("//div[contains(@class, 'success-form')]");
     private final PopupHandler popupHandler;
 
     public HomePage(WebDriver driver) {
@@ -33,15 +33,13 @@ public class HomePage extends BasePage {
         searchInput.clear();
         searchInput.sendKeys(productName);
 
-        List<WebElement> searchButtons = driver.findElements(searchButton);
-        if (!searchButtons.isEmpty()) {
-            WebElement searchBtn = searchButtons.get(0);
-            waitForElementToBeClickable(searchBtn);
-            searchBtn.click();
+        if (!driver.findElements(loadingSpinner).isEmpty()) {
+            waitForElementToDisappear(loadingSpinner);
         }
+        WebElement searchBtn = driver.findElement(searchButton);
+        waitForElementToBeClickable(searchBtn);
+        searchBtn.click();
 
-        // Wait for loading to complete
-        waitForElementToDisappear(loadingSpinner);
         log.info("Successfully searched for product: {}", productName);
     }
 
