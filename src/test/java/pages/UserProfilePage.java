@@ -139,11 +139,7 @@ public class UserProfilePage extends BasePage {
             saveBtn.click();
         } catch (org.openqa.selenium.ElementClickInterceptedException e) {
             ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false);", saveBtn);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
+            wait.until(ExpectedConditions.elementToBeClickable(saveBtn));
             try {
                 saveBtn.click();
             } catch (Exception ex) {
