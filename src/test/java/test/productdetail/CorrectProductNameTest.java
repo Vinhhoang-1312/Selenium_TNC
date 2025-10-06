@@ -1,5 +1,6 @@
 package test.productdetail;
 
+import commons.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -7,7 +8,6 @@ import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import commons.Driver_Factory;
 import pages.BasePage;
 import pages.ProductDetailPage;
 public class CorrectProductNameTest {
@@ -18,7 +18,7 @@ public class CorrectProductNameTest {
 
     @BeforeClass
     public void setUp() {
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
         base = new BasePage(driver);
         driver.get(baseUrl);
     }
@@ -31,6 +31,6 @@ public class CorrectProductNameTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }

@@ -1,12 +1,8 @@
 package helpers;
 
-import com.aventstack.extentreports.ExtentTest;
-import commons.DriverFactory;
-import helpers.*;
 import org.openqa.selenium.By;
 import config.TNCStoreConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,13 +11,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.JavascriptExecutor;
-import org.testng.annotations.*;
-import config.TNCStoreConfig;
-import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -36,7 +25,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.List;
 
 public class BaseTest {
     protected WebDriver driver;
