@@ -110,8 +110,12 @@ public class BaseTest {
                         driver = new EdgeDriver(buildEdgeOptions());
                         break;
                     case "chrome":
+                        System.setProperty("webdriver.chrome.driver", "C:/Program Files/Browser Drivers/chromedriver.exe");
+                        driver = new ChromeDriver(buildChromeOptions());
+                        break;
                     default:
-                        WebDriverManager.chromedriver().setup();
+//                        WebDriverManager.chromedriver().setup();
+                        System.setProperty("webdriver.chrome.driver", "C:/Program Files/Browser Drivers/chromedriver.exe");
                         driver = new ChromeDriver(buildChromeOptions());
                         break;
                 }

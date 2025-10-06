@@ -20,7 +20,7 @@ public class CheckOutMissingPhoneNumberTest extends BaseTest {
     }
 
     @Test
-    public void testCheckoutWithMissingPhoneNumber() {
+    public void testCheckoutMissingPhoneNumber() {
         dismissPopupsIfPresent();
 
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
