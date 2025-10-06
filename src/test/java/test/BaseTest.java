@@ -1,29 +1,17 @@
 package test;
 
+
 import commons.DriverFactory;
-import helpers.WaitUtils;
 import org.openqa.selenium.By;
-import config.TNCStoreConfig;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
-import org.testng.ITestResult;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Driver;
 import java.time.Duration;
 
 public class BaseTest {
@@ -33,7 +21,7 @@ public class BaseTest {
     @BeforeClass
     public void setDriver(){
         driver= DriverFactory.getDriver();
-        driver.get(TNCStoreConfig.BASE_URL);
+        driver.get("https://www.tncstore.vn/");
     }
 
     @AfterClass
