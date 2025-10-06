@@ -4,7 +4,7 @@ target/
 !**/src/test/**/target/
 report/Allure/*
 report/Extent/*
-.allure/
+.allure/allure-2.24.0
 .allure
 /.allure
 ### IntelliJ IDEA ###
