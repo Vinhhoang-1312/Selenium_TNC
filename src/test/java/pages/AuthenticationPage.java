@@ -282,6 +282,7 @@ public class AuthenticationPage extends BasePage {
         return "";
     }
 
+
     public boolean registerAndAssertSuccess(AuthenticationTestData.TestUser user) {
         goToRegisterPage();
         performRegistration(user.name, user.email, user.password);
@@ -357,6 +358,7 @@ public class AuthenticationPage extends BasePage {
         return null;
     }
 
+>>>>>>> main-develop
     protected boolean isElementPresent(By by) {
         try {
             return !driver.findElements(by).isEmpty();
