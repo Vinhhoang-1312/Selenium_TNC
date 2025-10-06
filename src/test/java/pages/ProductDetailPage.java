@@ -64,15 +64,11 @@ public class ProductDetailPage extends BasePage {
     }
 
     public void goToCart() {
-//        waitForPageLoad();
-
-        // First hover over the cart icon
         WebElement cartIconElement = driver.findElement(cartIcon);
         waitForElementToBeVisible(cartIcon);
         actions.moveToElement(cartIconElement).perform();
         log.info("Successfully hovered over cart icon");
 
-        // Then wait for and click the view cart link
         waitForElementToBeVisible(viewCartLink);
         WebElement cartElement = driver.findElement(viewCartLink);
         waitForElementToBeClickable(cartElement);
