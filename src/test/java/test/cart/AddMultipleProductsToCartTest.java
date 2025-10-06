@@ -1,16 +1,13 @@
 package test.cart;
 
-import commons.DriverFactory;
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
-import pages.CartPage;
 import test.BaseTest;
 
-public class AddMultipleProductToCartTest extends BaseTest {
+public class AddMultipleProductsToCartTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
