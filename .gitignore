@@ -7,6 +7,8 @@ report/Extent/*
 .allure/allure-2.24.0
 .allure
 /.allure
+allure-results/
+allure-report/
 ### IntelliJ IDEA ###
 /.idea
 .idea/modules.xml
