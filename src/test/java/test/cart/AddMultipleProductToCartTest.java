@@ -1,12 +1,14 @@
 package test.cart;
 
-import helpers.BaseTest;
+import commons.DriverFactory;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
+import test.BaseTest;
 
 public class AddMultipleProductToCartTest extends BaseTest {
     private HomePage homePage;
@@ -34,8 +36,7 @@ public class AddMultipleProductToCartTest extends BaseTest {
 
         productDetailPage.goToCart();
 
-        int cartSize = cartPage.getCartSize(); // Assumes getCartSize() returns number of items in cart
-        Assert.assertEquals(cartSize, 2, "Cart should contain 2 products");
+        cartPage.checkCartSize();
     }
 }
 

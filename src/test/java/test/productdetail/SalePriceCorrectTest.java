@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import commons.DriverFactory;
 import pages.ProductDetailPage;
 import pages.BasePage;
+
 public class SalePriceCorrectTest {
     private static final Logger log = LoggerFactory.getLogger(SalePriceCorrectTest.class);
     private WebDriver driver;
