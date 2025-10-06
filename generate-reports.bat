@@ -30,7 +30,7 @@ echo [INFO] Generating Allure report (site)...
 call mvn allure:report
 
 echo [INFO] Copying generated HTML pages (Allure) into target\allure-results...
-#if target site exists, copy only html files to target/allure-results
+REM if target site exists, copy only html files to target/allure-results
 if exist "target\site\allure-maven-plugin" (
     xcopy /Y "target\site\allure-maven-plugin\*.html" "target\allure-results\" >nul
     echo [SUCCESS] HTML pages copied to target\allure-results\
