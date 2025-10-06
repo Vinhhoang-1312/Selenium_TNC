@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-10-06T15:33:00 ICT" name="UserProfile Suite" finished-at="2025-10-06T15:35:33 ICT" duration-ms="152167">
+    <groups>
+      <group name="userprofile">
+        <method signature="UserProfileInfoTests.testUpdateFullname()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" name="testUpdateFullname" class="test.userprofile.UserProfileInfoTests"/>
+        <method signature="UserProfileInfoTests.testUpdatePhoneSuccess()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" name="testUpdatePhoneSuccess" class="test.userprofile.UserProfileInfoTests"/>
+      </group> <!-- userprofile -->
+    </groups>
+    <test started-at="2025-10-06T15:33:00 ICT" name="UserProfile Tests" finished-at="2025-10-06T15:35:33 ICT" duration-ms="152167">
+      <class name="test.userprofile.UserProfileInfoTests">
+        <test-method is-config="true" signature="setUp(java.lang.String)[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:33:00 ICT" name="setUp" finished-at="2025-10-06T15:34:35 ICT" duration-ms="95004" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="testUpdateFullname()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:34:36 ICT" name="testUpdateFullname" finished-at="2025-10-06T15:34:46 ICT" duration-ms="10721" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testUpdateFullname -->
+        <test-method is-config="true" signature="captureScreenshotOnFailure(org.testng.ITestResult)[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:34:46 ICT" name="captureScreenshotOnFailure" finished-at="2025-10-06T15:34:46 ICT" duration-ms="1" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=testUpdateFullname status=SUCCESS method=UserProfileInfoTests.testUpdateFullname()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- captureScreenshotOnFailure -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:34:46 ICT" name="tearDown" finished-at="2025-10-06T15:34:47 ICT" duration-ms="284" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method is-config="true" signature="setUp(java.lang.String)[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:34:47 ICT" name="setUp" finished-at="2025-10-06T15:35:22 ICT" duration-ms="35368" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[chrome]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="testUpdatePhoneSuccess()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:35:22 ICT" name="testUpdatePhoneSuccess" finished-at="2025-10-06T15:35:32 ICT" duration-ms="10277" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testUpdatePhoneSuccess -->
+        <test-method is-config="true" signature="captureScreenshotOnFailure(org.testng.ITestResult)[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:35:32 ICT" name="captureScreenshotOnFailure" finished-at="2025-10-06T15:35:32 ICT" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=testUpdatePhoneSuccess status=SUCCESS method=UserProfileInfoTests.testUpdatePhoneSuccess()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- captureScreenshotOnFailure -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:test.userprofile.UserProfileInfoTests@7fd50002]" started-at="2025-10-06T15:35:32 ICT" name="tearDown" finished-at="2025-10-06T15:35:33 ICT" duration-ms="300" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- test.userprofile.UserProfileInfoTests -->
+    </test> <!-- UserProfile Tests -->
+  </suite> <!-- UserProfile Suite -->
+</testng-results>
