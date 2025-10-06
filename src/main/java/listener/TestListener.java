@@ -4,6 +4,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.ISuite;
@@ -34,6 +35,7 @@ public class TestListener implements ITestListener, ISuiteListener {
             sparkReporter.config().setReportName("Test Execution Results");
 
             extent = new ExtentReports();
+            sparkReporter.config().setTheme(Theme.DARK);
             extent.attachReporter(sparkReporter);
             extent.setSystemInfo("Environment", "QA");
             extent.setSystemInfo("Tester", "Automation Team");
@@ -82,7 +84,7 @@ public class TestListener implements ITestListener, ISuiteListener {
             // Chụp screenshot nếu có WebDriver
             Object testInstance = result.getInstance();
             try {
-                java.lang.reflect.Field driverField = testInstance.getClass().getSuperclass().getDeclaredField("driver");
+                java.lang.reflect.Field driverField = testInstance.getClass().getDeclaredField("driver");
                 driverField.setAccessible(true);
                 Object driverObj = driverField.get(testInstance);
                 if (driverObj instanceof TakesScreenshot) {
