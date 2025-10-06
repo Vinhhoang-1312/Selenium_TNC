@@ -5,12 +5,12 @@ target/
 report/Allure/*
 report/Extent/*
 .allure/allure-2.24.0
-.allure
-/.allure
+.allure/
+/.allure/
 allure-results/
 allure-report/
 ### IntelliJ IDEA ###
-/.idea
+/.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
