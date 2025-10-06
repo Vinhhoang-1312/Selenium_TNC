@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import commons.Driver_Factory;
+import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.BasePage;
 
@@ -18,7 +19,7 @@ public class MinusQuantityTest {
     private static final Logger log = LoggerFactory.getLogger(MinusQuantityTest.class);
     private WebDriver driver;
     BasePage base;
-    private String baseUrl = "https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html";
+    private String baseUrl = "https://www.tncstore.vn/";
 
     @BeforeClass
     public void setUp() {
@@ -32,22 +33,14 @@ public class MinusQuantityTest {
     public void testMinusQuantity_UsingAlert() {
         By quantityLocator = ProductDetailPage.quantityInput;
         By decreaseQuantityButtonLocator = ProductDetailPage.decreaseQuantityButton;
+        By itemInMainPageLocator = ProductDetailPage.SecondLaptopInMainPage;
 
-        // Mở trang chi tiết sản phẩm
-        driver.get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
-
-        // Chờ nút giảm số lượng hiển thị
+        HomePage.clickSpecificItem(driver,itemInMainPageLocator);
         WebElement minusButton = base.waitForElementToBeVisible(decreaseQuantityButtonLocator);
-
-        // Đảm bảo số lượng đang là 1
         WebElement quantityInput = driver.findElement(quantityLocator);
         quantityInput.clear();
         quantityInput.sendKeys("1");
-
-        // Click nút giảm
         minusButton.click();
-
-        // Chuyển sang alert và kiểm tra nội dung
         String expectedAlertText = "Quý khách cần chọn số lượng sản phẩm lớn hơn 0";
         String actualAlertText = driver.switchTo().alert().getText().trim();
 
