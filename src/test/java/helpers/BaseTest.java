@@ -1,7 +1,7 @@
 package helpers;
 
 import com.aventstack.extentreports.ExtentTest;
-import commons.DriverFactory;
+import commons.Driver_Factory;
 import helpers.*;
 import org.openqa.selenium.By;
 import config.TNCStoreConfig;
@@ -33,6 +33,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import io.qameta.allure.testng.AllureTestNg;
 import org.testng.annotations.Listeners;
+import listener.TestListener;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -40,7 +41,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 
-@Listeners({AllureTestNg.class})
+@Listeners({AllureTestNg.class, TestListener.class})
 public class BaseTest {
     protected WebDriver driver;
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
@@ -175,7 +176,13 @@ public class BaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters({"browser"})
     public void setUp(@Optional("chrome") String browser) {
+        System.setProperty("webdriver.chrome.pageLoadTimeout", "120");
+        System.setProperty("webdriver.chrome.timeout", "120");
         initializeDriver(browser);
+        if (driver != null) {
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
+        }
     }
 
     @AfterMethod(alwaysRun = true)
@@ -189,14 +196,18 @@ public class BaseTest {
     public void captureScreenshotOnFailure(ITestResult result) {
         if (result.getStatus() == ITestResult.FAILURE && driver != null) {
             try {
-                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 String screenshotDir = "report/screenshots/";
                 Files.createDirectories(Paths.get(screenshotDir));
+
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 String filename = screenshotDir + result.getName() + "_fail_" + System.currentTimeMillis() + ".png";
                 Files.copy(src.toPath(), Paths.get(filename));
                 System.out.println("Screenshot saved: " + filename);
+
+                log.info("📸 Screenshot captured for failed test: {}", filename);
             } catch (Exception e) {
                 System.err.println("Failed to capture screenshot: " + e.getMessage());
+                log.error("❌ Screenshot capture failed: {}", e.getMessage());
             }
         }
     }

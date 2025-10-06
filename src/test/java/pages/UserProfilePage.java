@@ -21,9 +21,8 @@ public class UserProfilePage extends BasePage {
     private final By confirmPasswordField = By.cssSelector("#confirm-password");
     private final By changePasswordButton = By.xpath("//button[contains(text(),'Đổi mật khẩu')]");
 
-    // ========== TNC_S PROFILE FIELD SELECTORS ==========
     private final By fullnameInput = By.id("fullname");
-    private final By phoneInput = By.id("phone");
+    private final By phoneInput = By.id("mobile");
     private final By addressInput = By.id("address");
     private final By saveButton = By.cssSelector("button.btn-submit");
 
@@ -31,7 +30,6 @@ public class UserProfilePage extends BasePage {
         super(driver);
     }
 
-    // ========== NAVIGATION METHODS ==========
     public void navigateToProfile() {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(profileLink));
@@ -43,7 +41,6 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    // ========== PROFILE UPDATE METHODS ==========
     public void updateProfile(String name, String phone, String address) {
         try {
             if (name != null && !name.isEmpty()) {
@@ -69,7 +66,6 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    // ========== PASSWORD CHANGE METHODS ==========
     public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(currentPasswordField));
@@ -89,7 +85,6 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    // ========== VALIDATION METHODS ==========
     public boolean isProfilePageLoaded() {
         try {
             return wait.until(ExpectedConditions.visibilityOfElementLocated(nameField)).isDisplayed();
@@ -130,7 +125,6 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    // ========== TNC_S PROFILE FIELD METHODS ==========
     public void updateFullname(String newFullname) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(fullnameInput)).clear();
         driver.findElement(fullnameInput).sendKeys(newFullname);
@@ -140,7 +134,24 @@ public class UserProfilePage extends BasePage {
     public void updatePhone(String newPhone) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(phoneInput)).clear();
         driver.findElement(phoneInput).sendKeys(newPhone);
-        driver.findElement(saveButton).click();
+        org.openqa.selenium.WebElement saveBtn = driver.findElement(saveButton);
+        try {
+            saveBtn.click();
+        } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false);", saveBtn);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+            try {
+                saveBtn.click();
+            } catch (Exception ex) {
+                ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
+            }
+        } catch (Exception e) {
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
+        }
     }
 
     public void updateAddress(String newAddress) {

@@ -390,7 +390,6 @@ public class AuthenticationPage extends BasePage {
         return null;
     }
 
->>>>>>> main-develop
     protected boolean isElementPresent(By by) {
         try {
             return !driver.findElements(by).isEmpty();

@@ -23,7 +23,6 @@ public class MinusQuantityTest {
 
     @BeforeClass
     public void setUp() {
-        // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
         base = new BasePage(driver);
         driver.get(baseUrl);
@@ -46,7 +45,6 @@ public class MinusQuantityTest {
 
         Assert.assertEquals(actualAlertText, expectedAlertText, "Nội dung alert không đúng!");
 
-        // Đóng alert (bấm OK)
         driver.switchTo().alert().accept();
     }
 

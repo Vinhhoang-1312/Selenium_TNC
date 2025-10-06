@@ -19,7 +19,6 @@ public class AddToCartTestNoti {
 
     @BeforeClass
     public void setUp() {
-        // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
         driver = Driver_Factory.getDriver();
         base = new BasePage(driver);
         driver.get(baseUrl);

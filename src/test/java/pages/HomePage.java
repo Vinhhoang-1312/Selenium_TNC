@@ -68,7 +68,7 @@ public class HomePage extends BasePage {
         itemElement.click();
 
         try {
-            Thread.sleep(4000); // Chờ trang chi tiết tải
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
