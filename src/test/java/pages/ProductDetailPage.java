@@ -70,9 +70,9 @@ public class ProductDetailPage extends BasePage {
         log.info("Successfully hovered over cart icon");
 
         waitForElementToBeVisible(viewCartLink);
-        WebElement cartElement = driver.findElement(viewCartLink);
-        waitForElementToBeClickable(cartElement);
-        cartElement.click();
+        WebElement viewcartElement = driver.findElement(viewCartLink);
+        waitForElementToBeClickable(viewcartElement);
+        viewcartElement.click();
         log.info("Successfully navigated to cart page");
 }
 

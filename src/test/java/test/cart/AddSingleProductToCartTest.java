@@ -1,13 +1,13 @@
 package test.cart;
 
+import test.BaseTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
-import test.BaseTest;
+import pages.CartPage;
 
-public class DecreaseItemQuantityTest extends BaseTest {
+public class AddSingleProductToCartTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
@@ -20,15 +20,16 @@ public class DecreaseItemQuantityTest extends BaseTest {
     }
 
     @Test
-    public void testDecreaseItemQuantity() {
+    public void testAddSingleProductToCart() {
+
         dismissPopupsIfPresent();
 
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickProduct();
 
-        productDetailPage.addToCart(2);
+        productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        cartPage.checkItemQuantityDecrease();
+        cartPage.checkCartSize();
     }
 }

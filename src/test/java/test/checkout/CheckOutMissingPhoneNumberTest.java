@@ -1,16 +1,13 @@
-package test.cart;
+package test.checkout;
 
-import commons.DriverFactory;
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
+import test.BaseTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
-import pages.CartPage;
-import test.BaseTest;
 
-public class AddNormalProductToCartTest extends BaseTest {
+public class CheckOutMissingPhoneNumberTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
@@ -23,8 +20,7 @@ public class AddNormalProductToCartTest extends BaseTest {
     }
 
     @Test
-    public void testAddToCart() {
-
+    public void testCheckoutMissingPhoneNumber() {
         dismissPopupsIfPresent();
 
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
@@ -33,6 +29,7 @@ public class AddNormalProductToCartTest extends BaseTest {
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        cartPage.checkFirstItemQuantity();
+        cartPage.proceedToCheckout();
+        cartPage.verifyMissingPhoneNumberError();
     }
 }

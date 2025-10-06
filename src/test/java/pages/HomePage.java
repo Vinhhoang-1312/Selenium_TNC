@@ -1,6 +1,7 @@
 package pages;
 
 import data.AuthenticationTestData;
+import helpers.PopupHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,14 +9,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import helpers.PopupHandler;
 
 import java.time.Duration;
 import java.util.List;
 
 public class HomePage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(HomePage.class);
-
+    private final By successForm = By.cssSelector(".success-form");
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
@@ -44,7 +44,6 @@ public class HomePage extends BasePage {
     }
 
     public void clickProduct() {
-        // Wait for products to be visible after search
         waitForElementToBeVisible(productTitleLinks);
         List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 

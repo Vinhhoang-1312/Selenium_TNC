@@ -27,7 +27,7 @@ public class AddMultipleProductsToCartTest extends BaseTest {
         homePage.clickProduct();
         productDetailPage.addToCart();
 
-        homePage.searchProduct("PC Đồ Họa AI - Ryzen 9 9950X/ 64GB/ RTX 5090");
+        homePage.searchProduct("Card Màn Hình Asus Prime GeForce RTX 5070 Ti 16GB GDDR7 (PRIME-RTX5070TI-16G)");
         homePage.clickProduct();
         productDetailPage.addToCart();
 

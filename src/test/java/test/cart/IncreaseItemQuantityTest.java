@@ -1,7 +1,5 @@
 package test.cart;
 
-import commons.DriverFactory;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
