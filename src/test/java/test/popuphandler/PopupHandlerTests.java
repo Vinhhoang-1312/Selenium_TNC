@@ -1,7 +1,7 @@
 package test.popuphandler;
 
 import helpers.PopupHandler;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;

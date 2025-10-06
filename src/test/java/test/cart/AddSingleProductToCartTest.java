@@ -1,15 +1,13 @@
 package test.cart;
 
-import helpers.BaseTest;
-import org.testng.Assert;
+import test.BaseTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
-import org.openqa.selenium.By;
 
-public class AddNormalProductToCartTest extends BaseTest {
+public class AddSingleProductToCartTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
@@ -22,7 +20,7 @@ public class AddNormalProductToCartTest extends BaseTest {
     }
 
     @Test
-    public void testAddToCart() {
+    public void testAddSingleProductToCart() {
 
         dismissPopupsIfPresent();
 
@@ -32,7 +30,6 @@ public class AddNormalProductToCartTest extends BaseTest {
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        int quantity = cartPage.getFirstItemQuantity();
-        Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
+        cartPage.checkCartSize();
     }
 }

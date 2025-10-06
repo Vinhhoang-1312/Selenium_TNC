@@ -124,7 +124,6 @@ public class RegisterTests extends BaseTest {
             Assert.assertTrue(foundError, "Phải hiển thị hoặc log lỗi khi đăng ký với mật khẩu yếu");
             // ReportManager.logPass("Đúng thông báo lỗi khi đăng ký với mật khẩu yếu");
         } catch (Exception e) {
-            // ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("Register with weak password test failed: ", e);
             throw e;
         }

@@ -34,7 +34,6 @@ public class ProductDetailPage extends BasePage {
     }
 
     public void addToCart() {
-        waitForPageLoad();
         waitForElementToDisappear(loadingSpinner);
         waitForElementToBeVisible(addToCartButton);
         WebElement addToCartElement = driver.findElement(addToCartButton);
@@ -65,19 +64,15 @@ public class ProductDetailPage extends BasePage {
     }
 
     public void goToCart() {
-//        waitForPageLoad();
-
-        // First hover over the cart icon
         WebElement cartIconElement = driver.findElement(cartIcon);
         waitForElementToBeVisible(cartIcon);
         actions.moveToElement(cartIconElement).perform();
         log.info("Successfully hovered over cart icon");
 
-        // Then wait for and click the view cart link
         waitForElementToBeVisible(viewCartLink);
-        WebElement cartElement = driver.findElement(viewCartLink);
-        waitForElementToBeClickable(cartElement);
-        cartElement.click();
+        WebElement viewcartElement = driver.findElement(viewCartLink);
+        waitForElementToBeClickable(viewcartElement);
+        viewcartElement.click();
         log.info("Successfully navigated to cart page");
 }
 

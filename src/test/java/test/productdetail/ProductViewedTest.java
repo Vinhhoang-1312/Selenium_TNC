@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import commons.Driver_Factory;
+import commons.DriverFactory;
 import pages.ProductDetailPage;
 import pages.BasePage;
 
@@ -24,8 +24,8 @@ public class ProductViewedTest {
 
     @BeforeClass
     public void setUp() {
-        // Lấy driver từ Driver_Factory, sẽ khởi tạo mới nếu cần
-        driver = Driver_Factory.getDriver();
+        // Lấy driver từ DriverFactory, sẽ khởi tạo mới nếu cần
+        driver = DriverFactory.getDriver();
         base = new BasePage(driver);
         driver.get(baseUrl);
     }
@@ -56,7 +56,7 @@ public class ProductViewedTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 
 }

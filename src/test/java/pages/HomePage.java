@@ -1,6 +1,7 @@
 package pages;
 
 import data.AuthenticationTestData;
+import helpers.PopupHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,18 +9,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import helpers.PopupHandler;
 
 import java.time.Duration;
 import java.util.List;
 
 public class HomePage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(HomePage.class);
-
+    private final By successForm = By.cssSelector(".success-form");
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
-    private final By searchButton = By.xpath("//span[contains(text(),'Tìm kiếm')]");
+    private final By searchButton = By.xpath("//button[@class='submit-search']");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
-    private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
+    private final By loadingSpinner = By.xpath("//div[contains(@class, 'success-form')]");
     private final PopupHandler popupHandler;
 
     public HomePage(WebDriver driver) {
@@ -28,26 +28,22 @@ public class HomePage extends BasePage {
     }
 
     public void searchProduct(String productName) {
-        // Wait for search box to be visible and interactive
-//        waitForPageLoad();
         waitForElementToBeVisible(searchBox);
         WebElement searchInput = driver.findElement(searchBox);
         searchInput.clear();
         searchInput.sendKeys(productName);
 
-        // Click search button if it exists
-        List<WebElement> searchButtons = driver.findElements(searchButton);
-        if (!searchButtons.isEmpty()) {
-            searchButtons.get(0).click();
+        if (!driver.findElements(loadingSpinner).isEmpty()) {
+            waitForElementToDisappear(loadingSpinner);
         }
+        WebElement searchBtn = driver.findElement(searchButton);
+        waitForElementToBeClickable(searchBtn);
+        searchBtn.click();
 
-        // Wait for loading to complete
-        waitForElementToDisappear(loadingSpinner);
         log.info("Successfully searched for product: {}", productName);
     }
 
     public void clickProduct() {
-        // Wait for products to be visible after search
         waitForElementToBeVisible(productTitleLinks);
         List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 

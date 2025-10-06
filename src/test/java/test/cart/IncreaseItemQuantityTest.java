@@ -1,11 +1,11 @@
 package test.cart;
 
-import helpers.BaseTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
+import test.BaseTest;
 
 public class IncreaseItemQuantityTest extends BaseTest {
     private HomePage homePage;

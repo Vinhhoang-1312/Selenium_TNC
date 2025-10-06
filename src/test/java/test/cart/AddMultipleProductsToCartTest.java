@@ -7,7 +7,7 @@ import pages.HomePage;
 import pages.ProductDetailPage;
 import test.BaseTest;
 
-public class DecreaseItemQuantityTest extends BaseTest {
+public class AddMultipleProductsToCartTest extends BaseTest {
     private HomePage homePage;
     private ProductDetailPage productDetailPage;
     private CartPage cartPage;
@@ -20,15 +20,20 @@ public class DecreaseItemQuantityTest extends BaseTest {
     }
 
     @Test
-    public void testDecreaseItemQuantity() {
+    public void testAddMultipleProductsToCart() {
         dismissPopupsIfPresent();
 
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickProduct();
+        productDetailPage.addToCart();
 
-        productDetailPage.addToCart(2);
+        homePage.searchProduct("Card Màn Hình Asus Prime GeForce RTX 5070 Ti 16GB GDDR7 (PRIME-RTX5070TI-16G)");
+        homePage.clickProduct();
+        productDetailPage.addToCart();
+
         productDetailPage.goToCart();
 
-        cartPage.checkItemQuantityDecrease();
+        cartPage.checkCartSize();
     }
 }
+
