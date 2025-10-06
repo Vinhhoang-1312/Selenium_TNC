@@ -1,10 +1,7 @@
 package test.search;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
+import commons.DriverFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -12,7 +9,6 @@ import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import commons.Driver_Factory;
 import pages.SearchPage;
 
 public class SearchWithSpecCharTest {
@@ -23,7 +19,7 @@ public class SearchWithSpecCharTest {
     @BeforeClass
     public void setUp() {
 
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
         driver.get(baseUrl);
     }
 
@@ -37,6 +33,6 @@ public class SearchWithSpecCharTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }

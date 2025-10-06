@@ -1,6 +1,6 @@
 package test.search;
 
-import commons.Driver_Factory;
+import commons.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -23,8 +23,8 @@ public class SearchPerFormCorrectTest {
 
     @BeforeClass
     public void setUp() {
-
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
+        base = new BasePage(driver);
         driver.get(baseUrl);
     }
 
@@ -50,6 +50,6 @@ public class SearchPerFormCorrectTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }

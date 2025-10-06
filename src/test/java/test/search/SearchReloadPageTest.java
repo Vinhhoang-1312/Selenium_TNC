@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import commons.Driver_Factory;
+import commons.DriverFactory;
 import pages.SearchPage;
 
 public class SearchReloadPageTest {
@@ -21,7 +21,7 @@ public class SearchReloadPageTest {
     @BeforeClass
     public void setUp() {
 
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
         driver.get(baseUrl);
     }
 
@@ -37,6 +37,6 @@ public class SearchReloadPageTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }

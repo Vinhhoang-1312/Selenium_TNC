@@ -1,6 +1,7 @@
 package test.search;
 
-import commons.Driver_Factory;
+import commons.DriverFactory;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -19,21 +20,31 @@ public class SearchRepeatTest {
     @BeforeClass
     public void setUp() {
 
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
         driver.get(baseUrl);
     }
 
     @Test(invocationCount = 5)
     public void testSearchRepeat() {
-        driver.findElement(SearchPage.searchInput).sendKeys("rtx 2050");
-        driver.findElement(SearchPage.searchButton).click();
+        By searchInputLocator = SearchPage.searchInput;
+        By searchButtonLocator = SearchPage.searchButton;
+
+        WebElement searchInput = driver.findElement(searchInputLocator);
+        String currentKeyword = searchInput.getAttribute("value");
+
+        if (currentKeyword == null || currentKeyword.isEmpty()) {
+            searchInput.sendKeys("rtx & 20500");
+        }
+        driver.findElement(searchButtonLocator).click();
+
         String result = driver.findElement(SearchPage.noproductNoti).getText();
         Assert.assertEquals(result, "Ôi! Rất tiếc không tìm thấy sản phẩm nào...!");
+
         driver.navigate().refresh();
     }
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }

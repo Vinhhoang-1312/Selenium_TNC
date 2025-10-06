@@ -1,6 +1,6 @@
 package test.search;
 
-import commons.Driver_Factory;
+import commons.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class SearchWithNoKeywordTest {
     @BeforeClass
     public void setUp() {
 
-        driver = Driver_Factory.getDriver();
+        driver = DriverFactory.getDriver();
         driver.get(baseUrl);
     }
 
@@ -43,6 +43,6 @@ public class SearchWithNoKeywordTest {
 
     @AfterClass
     public void tearDown() {
-        Driver_Factory.quitDriver();
+        DriverFactory.quitDriver();
     }
 }
