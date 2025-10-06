@@ -5,6 +5,7 @@ target/
 report/Allure/*
 report/Extent/*
 .allure/
+.allure
 ### IntelliJ IDEA ###
 /.idea
 .idea/modules.xml
