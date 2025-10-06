@@ -1,11 +1,13 @@
 package test.cart;
 
-import helpers.BaseTest;
+import commons.DriverFactory;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
+import test.BaseTest;
 
 public class DecreaseItemQuantityTest extends BaseTest {
     private HomePage homePage;

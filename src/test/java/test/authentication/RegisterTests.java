@@ -3,7 +3,7 @@ package test.authentication;
 import pages.AuthenticationPage;
 import data.AuthenticationTestData;
 import helpers.ReportManager;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ public class RegisterTests extends BaseTest {
 
     private AuthenticationPage getAuthPage() {
         if (driver == null) {
-            lazyInitDriver();
+
         }
         return new AuthenticationPage(driver);
     }

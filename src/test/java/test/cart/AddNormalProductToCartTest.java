@@ -1,13 +1,14 @@
 package test.cart;
 
-import helpers.BaseTest;
+import commons.DriverFactory;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
-import org.openqa.selenium.By;
+import test.BaseTest;
 
 public class AddNormalProductToCartTest extends BaseTest {
     private HomePage homePage;
@@ -32,7 +33,6 @@ public class AddNormalProductToCartTest extends BaseTest {
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        int quantity = cartPage.getFirstItemQuantity();
-        Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
+        cartPage.checkFirstItemQuantity();
     }
 }

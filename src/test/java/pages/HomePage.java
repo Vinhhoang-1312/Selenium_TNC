@@ -17,7 +17,7 @@ public class HomePage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(HomePage.class);
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
-    private final By searchButton = By.xpath("//span[contains(text(),'Tìm kiếm')]");
+    private final By searchButton = By.xpath("//button[@class='submit-search']");
     private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
     private final PopupHandler popupHandler;
@@ -28,17 +28,16 @@ public class HomePage extends BasePage {
     }
 
     public void searchProduct(String productName) {
-        // Wait for search box to be visible and interactive
-//        waitForPageLoad();
         waitForElementToBeVisible(searchBox);
         WebElement searchInput = driver.findElement(searchBox);
         searchInput.clear();
         searchInput.sendKeys(productName);
 
-        // Click search button if it exists
         List<WebElement> searchButtons = driver.findElements(searchButton);
         if (!searchButtons.isEmpty()) {
-            searchButtons.get(0).click();
+            WebElement searchBtn = searchButtons.get(0);
+            waitForElementToBeClickable(searchBtn);
+            searchBtn.click();
         }
 
         // Wait for loading to complete

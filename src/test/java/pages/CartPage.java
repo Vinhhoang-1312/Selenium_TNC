@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 
 import java.util.List;
 
@@ -78,12 +79,25 @@ public class CartPage extends BasePage {
         }
     }
 
+    public void checkFirstItemQuantity() {
+        int quantity = getFirstItemQuantity();
+        Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
+        log.info("Verified first item quantity is 1");
+    }
+
+    public void checkCartSize() {
+        int cartSize = getCartSize();
+        Assert.assertEquals(cartSize, 2, "Cart should contain 2 products");
+        log.info("Verified multiple products added to cart successfully, cart size: {}", cartSize);
+    }
+
+
     public void checkItemQuantityIncrease() {
         int initialQuantity = getFirstItemQuantity();
         int newQuantity = initialQuantity + 1;
         clickFirstPlusSign();
         int updatedQuantity = getFirstItemQuantity();
-        org.testng.Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be increased by 1");
+        Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be increased by 1");
     }
 
     public void checkItemQuantityDecrease() {
@@ -91,7 +105,7 @@ public class CartPage extends BasePage {
         int newQuantity = initialQuantity - 1;
         clickFirstMinusSign();
         int updatedQuantity = getFirstItemQuantity();
-        org.testng.Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be decreased by 1");
+        Assert.assertEquals(updatedQuantity, newQuantity, "Item quantity should be decreased by 1");
     }
 
     /**

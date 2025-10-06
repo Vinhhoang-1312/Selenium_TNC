@@ -3,7 +3,7 @@ package test.authentication;
 import pages.AuthenticationPage;
 import data.AuthenticationTestData;
 import helpers.ReportManager;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;
@@ -13,9 +13,6 @@ public class LoginTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
 
     private AuthenticationPage getAuthPage() {
-        if (driver == null) {
-            lazyInitDriver();
-        }
         if (driver == null) {
             throw new RuntimeException("Driver is null - BaseTest setup may have failed");
         }

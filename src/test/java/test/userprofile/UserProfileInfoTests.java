@@ -1,17 +1,14 @@
 package test.userprofile;
 
-import helpers.ReportManager;
-import data.AuthenticationTestData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import pages.AuthenticationPage;
 import pages.HomePage;
 import pages.UserProfilePage;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

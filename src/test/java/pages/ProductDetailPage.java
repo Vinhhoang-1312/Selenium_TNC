@@ -34,7 +34,6 @@ public class ProductDetailPage extends BasePage {
     }
 
     public void addToCart() {
-        waitForPageLoad();
         waitForElementToDisappear(loadingSpinner);
         waitForElementToBeVisible(addToCartButton);
         WebElement addToCartElement = driver.findElement(addToCartButton);
