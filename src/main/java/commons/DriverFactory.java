@@ -63,8 +63,7 @@ public class DriverFactory {
     public static WebDriver getDriver() {
         WebDriver driver = driverThreadLocal.get();
         if (driver == null) {
-//            throw new IllegalStateException("❌ WebDriver is not initialized. Call initializeDriver() first.");
-            driver = new EdgeDriver();
+            throw new IllegalStateException("❌ WebDriver is not initialized. Call initializeDriver() first.");
         }
         return driver;
     }

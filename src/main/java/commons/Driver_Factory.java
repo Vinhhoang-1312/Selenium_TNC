@@ -7,6 +7,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Driver_Factory {
     private static WebDriver driver;
+
     public static WebDriver getDriver() {
         if (driver == null) {
             try {
@@ -29,12 +30,11 @@ public class Driver_Factory {
         }
         return driver;
     }
+
     public static void quitDriver() {
         if (driver != null) {
             driver.quit();
             driver = null;
         }
     }
-
-
 }

@@ -1,6 +1,7 @@
 package helpers;
 
 import org.testng.annotations.DataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,37 +79,37 @@ public class TestDataProvider {
 
     // Fallback data methods
     private static Object[][] getAuthenticationFallbackData() {
-        return new Object[][] {
-            {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john5@test.com", "password", "Abc12345")},
-            {"AUTH-SU-02", Map.of("name", "Jane Smith", "email", "jane@test.com", "password", "Pass123456")},
-            {"AUTH-LI-01", Map.of("email", "john5@test.com", "password", "Abc12345")},
-            {"AUTH-LI-02", Map.of("email", "invalid@test.com", "password", "WrongPass123")}
+        return new Object[][]{
+                {"AUTH-SU-01", Map.of("name", "John Doe", "email", "john5@test.com", "password", "Abc12345")},
+                {"AUTH-SU-02", Map.of("name", "Jane Smith", "email", "jane@test.com", "password", "Pass123456")},
+                {"AUTH-LI-01", Map.of("email", "john5@test.com", "password", "Abc12345")},
+                {"AUTH-LI-02", Map.of("email", "invalid@test.com", "password", "WrongPass123")}
         };
     }
 
     private static Object[][] getCartFallbackData() {
-        return new Object[][] {
-            {"CART-001", Map.of("productUrl", "/san-pham/laptop-gaming-asus", "quantity", "1")},
-            {"CART-002", Map.of("productUrl", "/san-pham/pc-gaming-rtx-4070", "quantity", "2")},
-            {"CART-003", Map.of("productUrl", "/san-pham/gaming-chair", "quantity", "5")}
+        return new Object[][]{
+                {"CART-001", Map.of("productUrl", "/san-pham/laptop-gaming-asus", "quantity", "1")},
+                {"CART-002", Map.of("productUrl", "/san-pham/pc-gaming-rtx-4070", "quantity", "2")},
+                {"CART-003", Map.of("productUrl", "/san-pham/gaming-chair", "quantity", "5")}
         };
     }
 
     private static Object[][] getSearchFallbackData() {
-        return new Object[][] {
-            {"SRH-001", Map.of("keyword", "Rtx 2050", "expectedResults", "true")},
-            {"SRH-002", Map.of("keyword", "abcxyz123", "expectedResults", "false")},
-            {"SRH-003", Map.of("keyword", "màn hình máy tính", "expectedResults", "true")},
-            {"SRH-004", Map.of("keyword", "rtx & 2050", "expectedResults", "false")}
+        return new Object[][]{
+                {"SRH-001", Map.of("keyword", "Rtx 2050", "expectedResults", "true")},
+                {"SRH-002", Map.of("keyword", "abcxyz123", "expectedResults", "false")},
+                {"SRH-003", Map.of("keyword", "màn hình máy tính", "expectedResults", "true")},
+                {"SRH-004", Map.of("keyword", "rtx & 2050", "expectedResults", "false")}
         };
     }
 
     private static Object[][] getProductDetailFallbackData() {
-        return new Object[][] {
-            {"DTL-001", Map.of("productUrl", "/san-pham/laptop-gaming-asus")},
-            {"DTL-002", Map.of("productUrl", "/san-pham/pc-gaming-rtx-4070")},
-            {"DTL-003", Map.of("productUrl", "/san-pham/gaming-chair")},
-            {"DTL-004", Map.of("productUrl", "/san-pham/monitor-gaming")}
+        return new Object[][]{
+                {"DTL-001", Map.of("productUrl", "/san-pham/laptop-gaming-asus")},
+                {"DTL-002", Map.of("productUrl", "/san-pham/pc-gaming-rtx-4070")},
+                {"DTL-003", Map.of("productUrl", "/san-pham/gaming-chair")},
+                {"DTL-004", Map.of("productUrl", "/san-pham/monitor-gaming")}
         };
     }
 

@@ -1,7 +1,7 @@
 package test.authentication;
 
 import pages.AuthenticationPage;
-import model.AuthenticationTestData;
+import data.AuthenticationTestData;
 import helpers.ReportManager;
 import helpers.BaseTest;
 import org.testng.Assert;
@@ -14,7 +14,6 @@ public class LoginTests extends BaseTest {
 
     private AuthenticationPage getAuthPage() {
         if (driver == null) {
-            // Attempt lazy initialization before failing
             lazyInitDriver();
         }
         if (driver == null) {
@@ -24,21 +23,17 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "smoke", "login"},
-          description = "AUTH-LI-01: Login with valid credentials")
+            description = "AUTH-LI-01: Login with valid credentials")
     public void testLoginWithValidCredentials() {
         ReportManager.startTest("AUTH-LI-01: Login with valid credentials");
 
         try {
             AuthenticationPage authPage = getAuthPage();
-
-            // Use existing account - no pre-registration required
             String email = AuthenticationTestData.VALID_EMAIL;
             String password = AuthenticationTestData.VALID_PASSWORD;
             log.info("🔑 Attempting login with existing user: {}", email);
-
             authPage.performLogin(email, password);
             ReportManager.logInfo("Performed login with existing credentials");
-
             Assert.assertTrue(authPage.isLoginSuccessful(), "Login should be successful with valid credentials");
             ReportManager.logPass("Login successful with existing user: " + email);
             log.info("🎉 Login test completed successfully with user: {}", email);
@@ -51,7 +46,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-02: Login with invalid email")
+            description = "AUTH-LI-02: Login with invalid email")
     public void testLoginWithInvalidEmail() {
         ReportManager.startTest("AUTH-LI-02: Login with invalid email");
 
@@ -59,11 +54,10 @@ public class LoginTests extends BaseTest {
             AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(
-                AuthenticationTestData.INVALID_EMAIL_1,
-                AuthenticationTestData.VALID_PASSWORD
+                    AuthenticationTestData.INVALID_EMAIL_1,
+                    AuthenticationTestData.VALID_PASSWORD
             );
             ReportManager.logInfo("Attempted login with invalid email");
-
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email (should still show 'Tài khoản')");
             ReportManager.logPass("Validation successful - invalid email rejected (still shows 'Tài khoản')");
@@ -76,7 +70,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-03: Login with incorrect password")
+            description = "AUTH-LI-03: Login with incorrect password")
     public void testLoginWithIncorrectPassword() {
         ReportManager.startTest("AUTH-LI-03: Login with incorrect password");
 
@@ -84,8 +78,8 @@ public class LoginTests extends BaseTest {
             AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(
-                AuthenticationTestData.VALID_EMAIL,
-                AuthenticationTestData.INVALID_PASSWORD
+                    AuthenticationTestData.VALID_EMAIL,
+                    AuthenticationTestData.INVALID_PASSWORD
             );
             ReportManager.logInfo("Attempted login with incorrect password");
 
@@ -101,7 +95,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-04: Login with non-existent account")
+            description = "AUTH-LI-04: Login with non-existent account")
     public void testLoginWithNonExistentAccount() {
         ReportManager.startTest("AUTH-LI-04: Login with non-existent account");
 
@@ -126,7 +120,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-05: Login with empty email")
+            description = "AUTH-LI-05: Login with empty email")
     public void testLoginWithEmptyEmail() {
         ReportManager.startTest("AUTH-LI-05: Login with empty email");
 
@@ -148,7 +142,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-06: Login with empty password")
+            description = "AUTH-LI-06: Login with empty password")
     public void testLoginWithEmptyPassword() {
         ReportManager.startTest("AUTH-LI-06: Login with empty password");
 
@@ -170,7 +164,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-07: Login with both fields empty")
+            description = "AUTH-LI-07: Login with both fields empty")
     public void testLoginWithBothFieldsEmpty() {
         ReportManager.startTest("AUTH-LI-07: Login with both fields empty");
 

@@ -3,6 +3,7 @@
 ## 📊 Cách tạo Excel files:
 
 ### 1. authentication_testdata.xlsx
+
 ```
 TestCaseID    | name      | email           | password    | expectedResult
 AUTH-SU-01    | John Doe  | john@test.com   | Abc12345    | success
@@ -12,6 +13,7 @@ AUTH-FP-01    |           | john@test.com   |             | reset_email_sent
 ```
 
 ### 2. cart_testdata.xlsx
+
 ```
 TestCaseID | productUrl               | quantity | action     | expectedResult
 TC001      | /san-pham/laptop-gaming  | 1        | add        | added_to_cart
@@ -22,6 +24,7 @@ TC005      | /san-pham/laptop-gaming  | 1        | checkout   | redirect_checkou
 ```
 
 ### 3. search_testdata.xlsx
+
 ```
 TestCaseID | keyword              | times | expectedResult
 SRH-001    | Rtx 2050            | 1     | results_found
@@ -32,6 +35,7 @@ SRH-005    | Rtx 2050            | 10    | continuous_success
 ```
 
 ### 4. productdetail_testdata.xlsx
+
 ```
 TestCaseID | action           | expectedResult
 DTL-001    | access           | detail_page_loaded
