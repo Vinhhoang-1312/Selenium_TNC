@@ -10,9 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 
 import java.time.Duration;
 
@@ -20,7 +18,7 @@ public class BaseTest {
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeClass()
     public void setDriver(){
         try {
             driver = DriverFactory.getDriver();
@@ -35,7 +33,7 @@ public class BaseTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterClass()
     public void tearDown() {
         try {
             DriverFactory.quitDriver();
