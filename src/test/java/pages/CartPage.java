@@ -19,7 +19,7 @@ public class CartPage extends BasePage {
     private final By makePaymentButton = By.xpath("//a[@class='button-send-cart']");
     private final By confirmPurchaseButton = By.xpath("//button[span[text()='Xác nhận mua hàng']]");
     private final By missingPhoneErrorLocator = By.xpath("(//div[@class='note-error'])[2]");
-
+    private final By FirstProductName = By.xpath("//div[@class='name-price']/child::a");
     public CartPage(WebDriver driver) {
         super(driver);
     }
