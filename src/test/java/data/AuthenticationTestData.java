@@ -63,7 +63,7 @@ public class AuthenticationTestData {
         }
     }
     public static TestUser createUniqueUser(String prefix) {
-        String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("ddHHmmss"));
         String uniqueName = prefix + "_User_" + timestamp;
         String uniqueEmail = prefix.toLowerCase() + "_" + timestamp + "@test.com";
         String password = "Test123456";

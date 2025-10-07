@@ -78,7 +78,7 @@ public class ProductDetailPage extends BasePage {
 
     public void verifyAddToCartSuccessMessage() {
         WebElement successMessage = waitForElementToBeVisible(successNotification);
-        String expectedMessage = "Thêm sản phẩm vào giỏ hàng thành công !";
+        String expectedMessage = "Thêm sản phẩm vào giỏ hàng thành côngg !";
         String actualMessage = successMessage.getText();
         Assert.assertEquals(actualMessage, expectedMessage, "Failed to verify success message");
     }
