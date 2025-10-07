@@ -54,6 +54,7 @@ public class LoginTests extends BaseTest {
             );
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email (should still show 'Tài khoản')");
+
         } catch (Exception e) {
             log.error("❌ Invalid email test failed: ", e);
             throw e;
