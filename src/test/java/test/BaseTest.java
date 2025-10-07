@@ -1,68 +1,41 @@
 package test;
 
-
-import commons.DriverFactory;
-import org.openqa.selenium.By;
+import commons.DriverFactory2;
+import helpers.PopupHandler;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-
-import java.time.Duration;
+import org.testng.annotations.BeforeMethod;
+import pages.CartPage;
+import pages.HomePage;
+import pages.ProductDetailPage;
 
 public class BaseTest {
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
+    protected HomePage homePage;
+    protected ProductDetailPage productDetailPage;
+    protected CartPage cartPage;
+    protected PopupHandler popupHandler;
 
-    @BeforeClass()
+    @BeforeClass
     public void setDriver(){
-        try {
-            driver = DriverFactory.getDriver();
-            if (driver == null) {
-                throw new RuntimeException("DriverFactory returned null driver");
-            }
-            driver.get("https://www.tncstore.vn/");
-            log.info("Driver initialized successfully for test class: {}", this.getClass().getSimpleName());
-        } catch (Exception e) {
-            log.error("Failed to initialize driver in BaseTest setup", e);
-            throw new RuntimeException("Driver initialization failed", e);
-        }
+        driver= DriverFactory2.getDriver();
+        driver.get("https://www.tncstore.vn/");
     }
 
-    @AfterClass()
+    @BeforeMethod
+    public void setupPages() {
+        homePage = new pages.HomePage(driver);
+        productDetailPage = new pages.ProductDetailPage(driver);
+        cartPage = new pages.CartPage(driver);
+        popupHandler = new PopupHandler(driver);
+    }
+
+    @AfterClass
     public void tearDown() {
-        try {
-            DriverFactory.quitDriver();
-            driver = null;
-            log.info("Driver quit successfully for test class: {}", this.getClass().getSimpleName());
-        } catch (Exception e) {
-            log.error("Error during driver teardown", e);
-        }
-    }
-
-    public boolean clickIfPresent(By locator) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-            WebElement element = wait.until(
-                    ExpectedConditions.elementToBeClickable(locator)
-            );
-
-            element.click();
-            log.info("Clicked on element: {}", locator);
-            return true;
-        } catch (Exception e) {
-            log.info("Element not present or not clickable, skipping: {}. Reason: {}",
-                    locator, e.getMessage());
-            return false;
-        }
-    }
-
-    public void dismissPopupsIfPresent() {
-        clickIfPresent(By.cssSelector(".widget-header--button-close"));
-        clickIfPresent(By.cssSelector(".widget-preview--btn-close"));
+        DriverFactory2.quitDriver();
     }
 }
