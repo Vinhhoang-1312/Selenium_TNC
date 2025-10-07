@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite Parallel Test - Cart Module"
+       parallel="classes"
+       thread-count="5"
+       verbose="1">
+
+    <test name="Parallel Cart Tests">
+        <packages>
+            <package name="test.cart"/>
+            <package name="test.checkout"/>
+        </packages>
+    </test>
+
+</suite>

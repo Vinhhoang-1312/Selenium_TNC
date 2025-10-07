@@ -18,13 +18,14 @@ public class BaseTest {
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
 
-    @BeforeClass
-    public void setDriver(){
-        driver= DriverFactory.getDriver();
+
+    @BeforeClass(alwaysRun = true)
+    public void setup() {
+        driver = DriverFactory.getDriver();
         driver.get("https://www.tncstore.vn/");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
         DriverFactory.quitDriver();
     }
