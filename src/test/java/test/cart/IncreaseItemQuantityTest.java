@@ -1,29 +1,14 @@
 package test.cart;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.HomePage;
-import pages.ProductDetailPage;
-import pages.CartPage;
 import test.BaseTest;
 
 public class IncreaseItemQuantityTest extends BaseTest {
-    private HomePage homePage;
-    private ProductDetailPage productDetailPage;
-    private CartPage cartPage;
-
-    @BeforeMethod
-    public void setupPages() {
-        homePage = new HomePage(driver);
-        productDetailPage = new ProductDetailPage(driver);
-        cartPage = new CartPage(driver);
-    }
-
     @Test
     public void testIncreaseItemQuantity() {
-        dismissPopupsIfPresent();
+        popupHandler.dismissAllPopups();
 
-        homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
+        homePage.searchProduct("Màn Hình Gaming Dell Alienware AW2721D IPS/ QHD/ 240Hz");
         homePage.clickProduct();
 
         productDetailPage.addToCart();

@@ -38,4 +38,8 @@ public class BaseTest {
     public void tearDown() {
         DriverFactory2.quitDriver();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 14631add2abc3dd545ea791cbb55b5334ca87349

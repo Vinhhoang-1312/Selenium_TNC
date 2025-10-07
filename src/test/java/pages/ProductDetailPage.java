@@ -36,9 +36,7 @@ public class ProductDetailPage extends BasePage {
     public void addToCart() {
         waitForElementToDisappear(loadingSpinner);
         waitForElementToBeVisible(addToCartButton);
-        WebElement addToCartElement = driver.findElement(addToCartButton);
-        waitForElementToBeClickable(addToCartElement);
-        addToCartElement.click();
+        waitForElementToBeClickable(addToCartButton).click();
         log.info("Successfully added product to cart");
     }
 
@@ -48,7 +46,7 @@ public class ProductDetailPage extends BasePage {
         try {
             WebElement qtyInput = driver.findElement(quantityInput);
             waitForElementToBeVisible(quantityInput);
-            waitForElementToBeClickable(qtyInput);
+            waitForElementToBeClickable(quantityInput);
             qtyInput.click();
             qtyInput.clear();
             qtyInput.sendKeys(String.valueOf(quantity));
@@ -57,9 +55,7 @@ public class ProductDetailPage extends BasePage {
             log.info("Quantity input not found, defaulting to add one item");
         }
         waitForElementToBeVisible(addToCartButton);
-        WebElement addToCartElement = driver.findElement(addToCartButton);
-        waitForElementToBeClickable(addToCartElement);
-        addToCartElement.click();
+        waitForElementToBeClickable(addToCartButton).click();
         log.info("Successfully added"+quantity+"product to cart");
     }
 
@@ -70,9 +66,7 @@ public class ProductDetailPage extends BasePage {
         log.info("Successfully hovered over cart icon");
 
         waitForElementToBeVisible(viewCartLink);
-        WebElement viewcartElement = driver.findElement(viewCartLink);
-        waitForElementToBeClickable(viewcartElement);
-        viewcartElement.click();
+        waitForElementToBeClickable(viewCartLink).click();
         log.info("Successfully navigated to cart page");
 }
 
