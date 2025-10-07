@@ -1,57 +1,31 @@
-package helpers;
+package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * Handles popup dismissal and click interception issues
- */
-public class PopupHandler {
-    private static final Logger logger = LoggerFactory.getLogger(PopupHandler.class);
-    private final WebDriver driver;
+public class UtilsPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(UtilsPage.class);
 
     private static final By POPUP_CLOSE_BTN_1 = By.xpath("//div[@class='widget-header--inner widget-header--inner--collapsed']//span[@class='widget-header--button-close-icon']");
     private static final By POPUP_CLOSE_BTN_2 = By.xpath("//div[@class='widget-preview--btn-close']");
     private static final By POPUP_CLOSE_BTN_1_CSS = By.cssSelector("div.widget-header--inner.widget-header--inner--collapsed span.widget-header--button-close-icon");
     private static final By POPUP_CLOSE_BTN_2_CSS = By.cssSelector(".widget-preview--btn-close");
 
-    public PopupHandler(WebDriver driver) {
-        this.driver = driver;
+    public UtilsPage(WebDriver driver) {
+        super(driver);
     }
 
-    /**
-     * Attempts to dismiss all known popups on the page
-     */
-    public void dismissAllPopups() {
+    public void handlePopup() {
         tryClosePopup(POPUP_CLOSE_BTN_1);
         tryClosePopup(POPUP_CLOSE_BTN_2);
         tryClosePopup(POPUP_CLOSE_BTN_1_CSS);
         tryClosePopup(POPUP_CLOSE_BTN_2_CSS);
-    }
-
-    /**
-     * Clicks an element with automatic popup handling if click is intercepted
-     */
-    public void clickWithPopupHandling(WebElement element) {
-        try {
-            element.click();
-        } catch (ElementClickInterceptedException e) {
-            logger.warn("Click intercepted, attempting to close popups...");
-            dismissAllPopups();
-            try {
-                element.click();
-            } catch (Exception ex) {
-                logger.error("Click failed after popup handling.", ex);
-                throw ex;
-            }
-        }
     }
 
     private void tryClosePopup(By by) {
@@ -64,14 +38,9 @@ public class PopupHandler {
                 }
             }
         } catch (NoSuchElementException ignore) {
-            // No popup found, continue
         } catch (Exception e) {
             logger.warn("Failed to close popup with selector: {}", by, e);
         }
-    }
-
-    public void waitForOverlaysToDisappear() {
-        // Future implementation for waiting overlays
     }
 }
 
