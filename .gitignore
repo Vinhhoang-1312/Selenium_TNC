@@ -10,9 +10,8 @@ report/Extent/*
 /.allure/
 allure-results/
 allure-report/
-### IntelliJ IDEA ###
 .idea/
-
+.lib/
 *.log
 *.iws
 *.iml
