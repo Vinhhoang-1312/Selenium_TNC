@@ -11,11 +11,11 @@ public class DriverFactory {
     public static WebDriver getDriver() {
         if (driver == null) {
             try {
-                driver = new EdgeDriver();
+                driver = new ChromeDriver();
             } catch (Exception e1) {
-                System.out.println("Không thể khởi tạo EdgeDriver, thử ChromeDriver...");
+                System.out.println("Không thể khởi tạo ChromeDriver, thử EdgeDriver...");
                 try {
-                    driver = new ChromeDriver();
+                    driver = new EdgeDriver();
                 } catch (Exception e2) {
                     System.out.println("Không thể khởi tạo ChromeDriver, thử FirefoxDriver...");
                     try {
