@@ -10,7 +10,7 @@ import org.testng.annotations.*;
 import pages.AuthenticationPage;
 import pages.HomePage;
 import pages.UserProfilePage;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

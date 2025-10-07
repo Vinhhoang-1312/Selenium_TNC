@@ -18,10 +18,8 @@ public class AuthenticationPage extends BasePage {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationPage.class);
     private final PopupHandler popupHandler;
 
-    // More robust locators based on page structure provided by user
     private final By accountButton = By.xpath("//a[contains(@class,'item') and contains(@class,'account')]//span[contains(@class,'hover-txt')]");
     private final By loginPopup = By.cssSelector("#js-form-holder");
-    // Explicit link inside login popup that opens registration form
     private final By createAccountLink = By.xpath("//*[@id='js-form-login']/div[2]/div[4]/a");
     private final By loginEmailField = By.xpath("//input[@id='js-login-email']");
     private final By loginPasswordField = By.xpath("//input[@id='js-login-password']");
@@ -95,7 +93,7 @@ public class AuthenticationPage extends BasePage {
         try {
             openLoginPopup();
             boolean clickSuccessful = false;
-            int maxAttempts = 3;
+            int maxAttempts = 2;
             for (int attempt = 1; attempt <= maxAttempts; attempt++) {
                 try {
                     popupHandler.dismissAllPopups();
@@ -144,7 +142,7 @@ public class AuthenticationPage extends BasePage {
     public void performRegistration(String name, String email, String password) {
         try {
             // Ensure the registration form is visible/open before filling fields
-            goToRegisterPage();
+//            goToRegisterPage();
             waitForElementToBeVisible(registerNameField);
             waitForElementToBeClickable(registerNameField);
             WebElement nameField = driver.findElement(registerNameField);
@@ -284,7 +282,7 @@ public class AuthenticationPage extends BasePage {
 
 
     public boolean registerAndAssertSuccess(AuthenticationTestData.TestUser user) {
-        goToRegisterPage();
+//        goToRegisterPage();
         performRegistration(user.name, user.email, user.password);
         // Explicitly perform login after registration using provided xpaths
         org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthenticationPage.class);

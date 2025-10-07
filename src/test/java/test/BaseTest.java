@@ -18,31 +18,43 @@ public class BaseTest {
     private static final Logger log = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setDriver(){
-        driver= DriverFactory.getDriver();
-        driver.get("https://www.tncstore.vn/");
+        try {
+            driver = DriverFactory.getDriver();
+            if (driver == null) {
+                throw new RuntimeException("DriverFactory returned null driver");
+            }
+            driver.get("https://www.tncstore.vn/");
+            log.info("Driver initialized successfully for test class: {}", this.getClass().getSimpleName());
+        } catch (Exception e) {
+            log.error("Failed to initialize driver in BaseTest setup", e);
+            throw new RuntimeException("Driver initialization failed", e);
+        }
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
-        DriverFactory.quitDriver();
+        try {
+            DriverFactory.quitDriver();
+            driver = null;
+            log.info("Driver quit successfully for test class: {}", this.getClass().getSimpleName());
+        } catch (Exception e) {
+            log.error("Error during driver teardown", e);
+        }
     }
 
     public boolean clickIfPresent(By locator) {
         try {
-            // Chờ tối đa 2 giây để tìm phần tử hiển thị và có thể nhấp
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
             WebElement element = wait.until(
                     ExpectedConditions.elementToBeClickable(locator)
             );
 
-            // Nhấp vào phần tử
             element.click();
             log.info("Clicked on element: {}", locator);
             return true;
         } catch (Exception e) {
-            // Chỉ bắt các ngoại lệ liên quan
             log.info("Element not present or not clickable, skipping: {}. Reason: {}",
                     locator, e.getMessage());
             return false;

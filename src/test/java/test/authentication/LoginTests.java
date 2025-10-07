@@ -2,7 +2,7 @@ package test.authentication;
 
 import pages.AuthenticationPage;
 import data.AuthenticationTestData;
-import helpers.BaseTest;
+import test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.slf4j.Logger;
@@ -12,9 +12,6 @@ public class LoginTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
 
     private AuthenticationPage getAuthPage() {
-        if (driver == null) {
-            lazyInitDriver();
-        }
         if (driver == null) {
             throw new RuntimeException("Driver is null - BaseTest setup may have failed");
         }
@@ -48,9 +45,6 @@ public class LoginTests extends BaseTest {
     @Test(groups = {"authentication", "negative", "login"},
             description = "AUTH-LI-02: Login with invalid email")
     public void testLoginWithInvalidEmail() {
-        // REMOVE or COMMENT OUT ALL usages of ReportManager in this file to avoid ExtentReports conflict
-//        ReportManager.startTest("AUTH-LI-02: Login with invalid email");
-
         try {
             AuthenticationPage authPage = getAuthPage();
 
@@ -58,13 +52,9 @@ public class LoginTests extends BaseTest {
                     AuthenticationTestData.INVALID_EMAIL_1,
                     AuthenticationTestData.VALID_PASSWORD
             );
-//            ReportManager.logInfo("Attempted login with invalid email");
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email (should still show 'Tài khoản')");
-//            ReportManager.logPass("Validation successful - invalid email rejected (still shows 'Tài khoản')");
-
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Invalid email test failed: ", e);
             throw e;
         }
@@ -73,9 +63,6 @@ public class LoginTests extends BaseTest {
     @Test(groups = {"authentication", "negative", "login"},
             description = "AUTH-LI-03: Login with incorrect password")
     public void testLoginWithIncorrectPassword() {
-        // REMOVE or COMMENT OUT ALL usages of ReportManager in this file to avoid ExtentReports conflict
-//        ReportManager.startTest("AUTH-LI-03: Login with incorrect password");
-
         try {
             AuthenticationPage authPage = getAuthPage();
 
@@ -83,14 +70,9 @@ public class LoginTests extends BaseTest {
                     AuthenticationTestData.VALID_EMAIL,
                     AuthenticationTestData.INVALID_PASSWORD
             );
-//            ReportManager.logInfo("Attempted login with incorrect password");
-
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for incorrect password (should still show 'Tài khoản')");
-//            ReportManager.logPass("Validation successful - incorrect password rejected (still shows 'Tài khoản')");
-
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Incorrect password test failed: ", e);
             throw e;
         }
@@ -104,19 +86,12 @@ public class LoginTests extends BaseTest {
 
         try {
             AuthenticationPage authPage = getAuthPage();
-
-            // Generate a new email that is guaranteed not to exist (do not register it)
             AuthenticationTestData.TestUser nonExistentUser = AuthenticationTestData.createUniqueUser("NonExistent");
-
             authPage.performLogin(nonExistentUser.email, nonExistentUser.password);
-//            ReportManager.logInfo("Attempted login with non-existent account");
-
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for non-existent account (should still show 'Tài khoản')");
-//            ReportManager.logPass("Validation successful - non-existent account rejected (still shows 'Tài khoản')");
 
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Non-existent account test failed: ", e);
             throw e;
         }
@@ -125,21 +100,14 @@ public class LoginTests extends BaseTest {
     @Test(groups = {"authentication", "negative", "login"},
             description = "AUTH-LI-05: Login with empty email")
     public void testLoginWithEmptyEmail() {
-        // REMOVE or COMMENT OUT ALL usages of ReportManager in this file to avoid ExtentReports conflict
-//        ReportManager.startTest("AUTH-LI-05: Login with empty email");
-
         try {
             AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin("", AuthenticationTestData.VALID_PASSWORD);
-//            ReportManager.logInfo("Attempted login with empty email");
 
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty email");
-//            ReportManager.logPass("Validation successful - empty email rejected");
-
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Empty email test failed: ", e);
             throw e;
         }
@@ -148,21 +116,15 @@ public class LoginTests extends BaseTest {
     @Test(groups = {"authentication", "negative", "login"},
             description = "AUTH-LI-06: Login with empty password")
     public void testLoginWithEmptyPassword() {
-        // REMOVE or COMMENT OUT ALL usages of ReportManager in this file to avoid ExtentReports conflict
-//        ReportManager.startTest("AUTH-LI-06: Login with empty password");
-
         try {
             AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin(AuthenticationTestData.VALID_EMAIL, "");
-//            ReportManager.logInfo("Attempted login with empty password");
 
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty password");
-//            ReportManager.logPass("Validation successful - empty password rejected");
 
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Empty password test failed: ", e);
             throw e;
         }
@@ -171,21 +133,14 @@ public class LoginTests extends BaseTest {
     @Test(groups = {"authentication", "negative", "login"},
             description = "AUTH-LI-07: Login with both fields empty")
     public void testLoginWithBothFieldsEmpty() {
-        // REMOVE or COMMENT OUT ALL usages of ReportManager in this file to avoid ExtentReports conflict
-//        ReportManager.startTest("AUTH-LI-07: Login with both fields empty");
 
         try {
             AuthenticationPage authPage = getAuthPage();
 
             authPage.performLogin("", "");
-//            ReportManager.logInfo("Attempted login with both fields empty");
-
             boolean loginFailed = !authPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with both fields empty");
-//            ReportManager.logPass("Validation successful - both empty fields rejected");
-
         } catch (Exception e) {
-//            ReportManager.logFail("Test failed: " + e.getMessage());
             log.error("❌ Both fields empty test failed: ", e);
             throw e;
         }

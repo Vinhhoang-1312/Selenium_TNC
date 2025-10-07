@@ -14,7 +14,7 @@
             <run>
                 <include name="authentication"/>
                 <include name="login"/>
-<!--                <include name="signup"/>-->
+                <include name="signup"/>
             </run>
         </groups>
         <classes>

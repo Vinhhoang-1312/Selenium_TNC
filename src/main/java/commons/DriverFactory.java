@@ -6,9 +6,10 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class DriverFactory {
-    private static WebDriver driver;
+    private static ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
+        WebDriver driver = driverThreadLocal.get();
         if (driver == null) {
             try {
                 driver = new EdgeDriver();
@@ -27,14 +28,21 @@ public class DriverFactory {
                 }
             }
             driver.manage().window().maximize();
+            driverThreadLocal.set(driver);
         }
         return driver;
     }
 
     public static void quitDriver() {
+        WebDriver driver = driverThreadLocal.get();
         if (driver != null) {
-            driver.quit();
-            driver = null;
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                System.err.println("Error quitting driver: " + e.getMessage());
+            } finally {
+                driverThreadLocal.remove();
+            }
         }
     }
 }
