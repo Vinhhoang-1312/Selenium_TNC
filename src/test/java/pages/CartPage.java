@@ -57,19 +57,15 @@ public class CartPage extends BasePage {
 
     public void clickFirstPlusSign() {
         waitForPageLoad();
-        WebElement plusSign = driver.findElement(firstPlusSign);
-        waitForElementToBeClickable(plusSign);
-        plusSign.click();
+        waitForElementToBeClickable(firstPlusSign).click();
     }
 
     public void clickFirstMinusSign() {
         waitForPageLoad();
-        WebElement minusSign = driver.findElement(firstMinusSign);
-        waitForElementToBeClickable(minusSign);
-        minusSign.click();
+        waitForElementToBeClickable(firstMinusSign).click();
     }
 
-    public void checkFirstItemQuantity() {
+    public void verifyFirstItemQuantity() {
         int quantity = getFirstItemQuantity();
         Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
         log.info("Verified first item quantity is 1");
@@ -92,18 +88,13 @@ public class CartPage extends BasePage {
     }
 
     public void proceedToCheckout() {
-        WebElement checkoutBtn = driver.findElement(makePaymentButton);
-        waitForElementToBeClickable(checkoutBtn);
-        checkoutBtn.click();
+        waitForElementToBeClickable(makePaymentButton).click();
         log.info("Clicked on Proceed to Checkout button");
     }
 
     public void clickOnConfirmPurchase(){
         waitForElementToBeVisible(confirmPurchaseButton);
-        WebElement confirmPurchaseBtn = driver.findElement(confirmPurchaseButton);
-        waitForElementToBeClickable(confirmPurchaseBtn);
-
-        confirmPurchaseBtn.click();
+        waitForElementToBeClickable(confirmPurchaseButton).click();
         log.info("Clicked on confirm purchase");
     }
 
@@ -129,7 +120,7 @@ public class CartPage extends BasePage {
         }
     }
 
-    public void checkCartSize() {
+    public void verifyMultipleProducts() {
         int cartSize = getCartSize();
         Assert.assertEquals(cartSize, 2, "Cart should contain 2 products");
         log.info("Verified multiple products added to cart successfully, cart size: {}", cartSize);
