@@ -37,7 +37,6 @@ public class HomePage extends BasePage {
             waitForElementToDisappear(loadingSpinner);
         }
         waitForElementToBeClickable(searchButton).click();
-
         log.info("Successfully searched for product: {}", productName);
     }
 

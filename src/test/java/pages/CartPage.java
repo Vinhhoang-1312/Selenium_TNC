@@ -65,7 +65,7 @@ public class CartPage extends BasePage {
         waitForElementToBeClickable(firstMinusSign).click();
     }
 
-    public void checkFirstItemQuantity() {
+    public void verifyFirstItemQuantity() {
         int quantity = getFirstItemQuantity();
         Assert.assertEquals(quantity, 1, "Item should be added to cart with quantity 1");
         log.info("Verified first item quantity is 1");
@@ -120,7 +120,7 @@ public class CartPage extends BasePage {
         }
     }
 
-    public void checkCartSize() {
+    public void verifyMultipleProducts() {
         int cartSize = getCartSize();
         Assert.assertEquals(cartSize, 2, "Cart should contain 2 products");
         log.info("Verified multiple products added to cart successfully, cart size: {}", cartSize);
