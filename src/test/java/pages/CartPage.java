@@ -57,16 +57,12 @@ public class CartPage extends BasePage {
 
     public void clickFirstPlusSign() {
         waitForPageLoad();
-        WebElement plusSign = driver.findElement(firstPlusSign);
-        waitForElementToBeClickable(plusSign);
-        plusSign.click();
+        waitForElementToBeClickable(firstPlusSign).click();
     }
 
     public void clickFirstMinusSign() {
         waitForPageLoad();
-        WebElement minusSign = driver.findElement(firstMinusSign);
-        waitForElementToBeClickable(minusSign);
-        minusSign.click();
+        waitForElementToBeClickable(firstMinusSign).click();
     }
 
     public void checkFirstItemQuantity() {
@@ -92,18 +88,13 @@ public class CartPage extends BasePage {
     }
 
     public void proceedToCheckout() {
-        WebElement checkoutBtn = driver.findElement(makePaymentButton);
-        waitForElementToBeClickable(checkoutBtn);
-        checkoutBtn.click();
+        waitForElementToBeClickable(makePaymentButton).click();
         log.info("Clicked on Proceed to Checkout button");
     }
 
     public void clickOnConfirmPurchase(){
         waitForElementToBeVisible(confirmPurchaseButton);
-        WebElement confirmPurchaseBtn = driver.findElement(confirmPurchaseButton);
-        waitForElementToBeClickable(confirmPurchaseBtn);
-
-        confirmPurchaseBtn.click();
+        waitForElementToBeClickable(confirmPurchaseButton).click();
         log.info("Clicked on confirm purchase");
     }
 
