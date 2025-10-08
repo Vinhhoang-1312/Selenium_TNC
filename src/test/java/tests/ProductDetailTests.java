@@ -45,7 +45,6 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that success notification is displayed after adding product to cart")
     public void testAddProductToCartShowsNotification() {
-        By successNotificationLocator = By.id("successNotification");
         Allure.step("Search and select a product");
         HomePage homePage = new HomePage(getDriver());
         homePage.searchProduct("laptop");
