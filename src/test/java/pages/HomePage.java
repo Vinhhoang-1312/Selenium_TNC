@@ -25,6 +25,14 @@ public class HomePage extends BasePage {
             waitForElementToDisappear(loadingSpinner);
         }
         click(searchButton);
+
+        // Wait for search results to load
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         logger.info("Successfully searched for product: {}", productName);
     }
 
@@ -47,5 +55,21 @@ public class HomePage extends BasePage {
             logger.error("No products found on the page");
             throw new RuntimeException("No products found on homepage");
         }
+    }
+
+    /**
+     * Navigate back to previous page with wait for page to stabilize
+     */
+    public void navigateBack() {
+        driver.navigate().back();
+
+        // Wait for page to load after navigation
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        logger.info("Navigated back to previous page");
     }
 }

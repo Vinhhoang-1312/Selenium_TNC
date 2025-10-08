@@ -25,27 +25,31 @@ public class E2ETests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify complete user journey from registration to cart verification")
     public void testRegisterLoginSearchAddToCart() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        RegisterPage registerPage;
+        HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+        PopupHandler popupHandler = new PopupHandler(getDriver());
+
         try {
             // Create unique user
             TestUser user = TestUser.createUniqueUser("E2EUser");
             logger.info("Starting E2E test with user: {}", user.email);
             Allure.parameter("Test User Email", user.email);
 
-            PopupHandler popupHandler = new PopupHandler(getDriver());
             popupHandler.dismissAllPopups();
 
             // Register
             Allure.step("Step 1: Register new user - " + user.email);
-            LoginPage loginPage = new LoginPage(getDriver());
-            RegisterPage registerPage = loginPage.navigateToRegister();
+            registerPage = loginPage.navigateToRegister();
             registerPage.performRegister(user.name, user.email, user.password);
-            customWait(2000);
             logger.info("Registration completed for: {}", user.email);
 
             // Login
             Allure.step("Step 2: Login with newly created user");
             getDriver().get(baseUrl);
-            customWait(1000);
             popupHandler.dismissAllPopups();
             loginPage.performLogin(user.email, user.password);
             Assert.assertTrue(loginPage.isLoginSuccessful(), "User should be able to login with newly created credentials");
@@ -53,22 +57,18 @@ public class E2ETests extends BaseTest {
 
             // Search
             Allure.step("Step 3: Search for product");
-            HomePage homePage = new HomePage(getDriver());
             homePage.searchProduct("laptop");
             homePage.clickFirstProduct();
             logger.info("Product search and selection completed");
 
             // Add to cart
             Allure.step("Step 4: Add product to cart");
-            ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
             productDetailPage.addToCart();
-            customWait(2000);
             logger.info("Product added to cart");
 
             // Verify cart
             Allure.step("Step 5: Verify cart contains product");
             productDetailPage.goToCart();
-            CartPage cartPage = new CartPage(getDriver());
             int cartSize = cartPage.getCartSize();
             logger.info("Cart size after add: {}", cartSize);
             Allure.parameter("Cart Size", cartSize);

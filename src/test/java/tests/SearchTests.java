@@ -25,10 +25,11 @@ public class SearchTests extends BaseTest {
     public void testSearchWithValidKeyword() {
         Allure.step("Search for 'laptop'");
         HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
+
         homePage.searchProduct("laptop");
 
         Allure.step("Verify search results are displayed");
-        SearchPage searchPage = new SearchPage(getDriver());
         Assert.assertTrue(searchPage.hasResults(), "Search should return results for valid keyword");
         int resultCount = searchPage.getProductCount();
         Allure.parameter("Results Count", resultCount);

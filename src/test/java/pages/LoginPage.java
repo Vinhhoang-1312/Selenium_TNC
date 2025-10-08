@@ -77,56 +77,6 @@ public class LoginPage extends BasePage {
         }
     }
 
-    public String getLoggedInUserName() {
-        try {
-            if (isDisplayed(loggedInUserName)) {
-                return waitAndFind(loggedInUserName).getText().trim();
-            }
-        } catch (Exception e) {
-            logger.warn("Could not get logged in user name", e);
-        }
-        return "";
-    }
-
-    public boolean isUserLoggedIn() {
-        return isLoginSuccessful();
-    }
-
-    public void logout() {
-        try {
-            if (isDisplayed(logoutLink)) {
-                click(logoutLink);
-                logger.info("User logged out successfully");
-            }
-        } catch (Exception e) {
-            logger.warn("Logout failed or user not logged in");
-        }
-    }
-
-    public String getEmailError() {
-        try {
-            return waitAndGetText(emailErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getPasswordError() {
-        try {
-            return waitAndGetText(passwordErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getGeneralError() {
-        try {
-            return waitAndGetText(generalErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     public RegisterPage navigateToRegister() {
         try {
             openLoginPopup();

@@ -20,13 +20,15 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that product details page displays product name and information correctly")
     public void testVerifyProductDetailsDisplayed() {
-        Allure.step("Search and select a product");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
+        Allure.step("Search and select a product");
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
         Allure.step("Verify product name is displayed");
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         String productName = productDetailPage.getProductName();
 
         Assert.assertFalse(productName.isEmpty(), "Product name should be displayed");
@@ -40,13 +42,15 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that success notification is displayed after adding product to cart")
     public void testAddProductToCartShowsNotification() {
-        Allure.step("Search and select a product");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
+        Allure.step("Search and select a product");
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
         Allure.step("Add product to cart");
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
 
         Allure.step("Verify success notification is displayed");
@@ -61,10 +65,11 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that sale price is calculated correctly based on original price and discount percentage")
     public void testSalePriceCorrect() {
+        // Initialize page objects
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
         Allure.step("Navigate to specific product page");
         getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
-
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
 
         Allure.step("Get original price");
         double originalPrice = productDetailPage.getOriginalPrice();
