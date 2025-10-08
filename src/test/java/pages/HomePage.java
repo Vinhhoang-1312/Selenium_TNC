@@ -22,15 +22,21 @@ public class HomePage extends BasePage {
 
     public void searchProduct(String productName) {
         waitForElementToBeVisible(searchBox);
-        WebElement searchInput = driver.findElement(searchBox);
-        searchInput.clear();
-        searchInput.sendKeys(productName);
+        clearAndType(searchBox, productName);
 
         if (!driver.findElements(loadingSpinner).isEmpty()) {
             waitForElementToDisappear(loadingSpinner);
         }
         waitForElementToBeClickable(searchButton).click();
         logger.info("Successfully searched for product: {}", productName);
+    }
+
+    /**
+     * Types the search text into the search box without submitting (useful for suggestions)
+     */
+    public void typeSearch(String productName) {
+        waitForElementToBeVisible(searchBox);
+        clearAndType(searchBox, productName);
     }
 
     public void clickFirstProduct() {

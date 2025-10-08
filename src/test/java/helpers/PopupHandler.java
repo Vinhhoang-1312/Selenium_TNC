@@ -1,13 +1,17 @@
 package helpers;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -34,6 +38,17 @@ public class PopupHandler {
         tryClosePopup(POPUP_CLOSE_BTN_2);
         tryClosePopup(POPUP_CLOSE_BTN_1_CSS);
         tryClosePopup(POPUP_CLOSE_BTN_2_CSS);
+    }
+
+    /**
+     * Convenience static helper to dismiss all popups without creating a PopupHandler in-line.
+     */
+    public static void dismissAll(WebDriver driver) {
+        try {
+            new PopupHandler(driver).dismissAllPopups();
+        } catch (Exception e) {
+            logger.warn("Failed to dismiss popups via static helper", e);
+        }
     }
 
     /**
@@ -70,8 +85,107 @@ public class PopupHandler {
         }
     }
 
+    /**
+     * Waits for JavaScript alert to be present and returns it
+     * @param timeoutSeconds timeout in seconds
+     * @return Alert object if present, null otherwise
+     */
+    public Alert waitForAlert(int timeoutSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+            return wait.until(ExpectedConditions.alertIsPresent());
+        } catch (Exception e) {
+            logger.warn("No alert present after waiting {} seconds", timeoutSeconds);
+            return null;
+        }
+    }
+
+    /**
+     * Gets the text from JavaScript alert
+     * @param timeoutSeconds timeout in seconds
+     * @return alert text or null if no alert
+     */
+    public String getAlertText(int timeoutSeconds) {
+        try {
+            Alert alert = waitForAlert(timeoutSeconds);
+            if (alert != null) {
+                String text = alert.getText();
+                logger.info("Alert text: {}", text);
+                return text;
+            }
+        } catch (Exception e) {
+            logger.error("Failed to get alert text", e);
+        }
+        return null;
+    }
+
+    /**
+     * Accepts (clicks OK on) JavaScript alert
+     * @param timeoutSeconds timeout in seconds
+     */
+    public void acceptAlert(int timeoutSeconds) {
+        try {
+            Alert alert = waitForAlert(timeoutSeconds);
+            if (alert != null) {
+                alert.accept();
+                logger.info("Alert accepted");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to accept alert", e);
+        }
+    }
+
+    /**
+     * Dismisses (clicks Cancel on) JavaScript alert
+     * @param timeoutSeconds timeout in seconds
+     */
+    public void dismissAlert(int timeoutSeconds) {
+        try {
+            Alert alert = waitForAlert(timeoutSeconds);
+            if (alert != null) {
+                alert.dismiss();
+                logger.info("Alert dismissed");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to dismiss alert", e);
+        }
+    }
+
+    /**
+     * Gets alert text and accepts it in one call
+     * @param timeoutSeconds timeout in seconds
+     * @return alert text or null if no alert
+     */
+    public String getAlertTextAndAccept(int timeoutSeconds) {
+        try {
+            Alert alert = waitForAlert(timeoutSeconds);
+            if (alert != null) {
+                String text = alert.getText();
+                logger.info("Alert text: {}", text);
+                alert.accept();
+                logger.info("Alert accepted");
+                return text;
+            }
+        } catch (Exception e) {
+            logger.error("Failed to get alert text and accept", e);
+        }
+        return null;
+    }
+
+    /**
+     * Checks if alert is present without waiting
+     * @return true if alert is present, false otherwise
+     */
+    public boolean isAlertPresent() {
+        try {
+            driver.switchTo().alert();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void waitForOverlaysToDisappear() {
         // Future implementation for waiting overlays
     }
 }
-

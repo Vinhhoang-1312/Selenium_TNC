@@ -1,20 +1,23 @@
 package pages;
 
+import helpers.PopupHandler;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.FluentWait;
 
 import java.time.Duration;
 import java.util.List;
+import utils.WaitUtils;
 
 public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
+    protected final PopupHandler popupHandler;
 
     protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.popupHandler = new PopupHandler(driver);
     }
 
     protected WebElement waitAndFind(By locator) {
@@ -35,7 +38,7 @@ public abstract class BasePage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         } catch (ElementNotInteractableException e) {
-            customWait(200);
+            WaitUtils.sleep(200);
             click(locator);
         }
     }
@@ -87,11 +90,7 @@ public abstract class BasePage {
     }
 
     public void customWait(int milliseconds) {
-        new FluentWait<>(driver)
-                .withTimeout(Duration.ofMillis(milliseconds))
-                .pollingEvery(Duration.ofMillis(100))
-                .ignoring(Exception.class)
-                .until(driver -> true);
+        WaitUtils.sleep(milliseconds);
     }
 
     public void waitForElementToDisappear(By locator) {
@@ -124,5 +123,36 @@ public abstract class BasePage {
     public List<WebElement> waitForAllElementsPresence(By locator) {
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
-}
 
+    /**
+     * Clicks an element with retry and popup handling (DRY for all pages)
+     */
+    protected void clickElementWithRetry(By by, String elementName) {
+        int maxAttempts = 3;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                popupHandler.dismissAllPopups();
+                wait.until(ExpectedConditions.elementToBeClickable(by));
+                driver.findElement(by).click();
+                return;
+            } catch (ElementClickInterceptedException e) {
+                try {
+                    popupHandler.dismissAllPopups();
+                    WebElement el = driver.findElement(by);
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", el);
+                    return;
+                } catch (Exception jsError) {
+                    if (attempt == maxAttempts) {
+                        throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
+                    }
+                    WaitUtils.sleep(2000);
+                }
+            } catch (Exception e) {
+                if (attempt == maxAttempts) {
+                    throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
+                }
+                WaitUtils.sleep(2000);
+            }
+        }
+    }
+}

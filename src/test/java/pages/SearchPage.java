@@ -121,4 +121,19 @@ public class SearchPage extends BasePage {
     public By getSuggestionListLocator() {
         return suggestionList;
     }
+
+    /**
+     * Gets all suggestion items as WebElements with visible wait
+     * This method encapsulates the direct WebDriver access pattern
+     */
+    public List<WebElement> getSuggestionItemsWithWait() {
+        try {
+            waitForElementToBeVisible(suggestionList);
+            customWait(1000);
+            return driver.findElements(By.xpath("//div[@class='content-suggestions']//a"));
+        } catch (Exception e) {
+            logger.warn("No suggestion items found after wait", e);
+            return List.of();
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package pages;
 
-import helpers.PopupHandler;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 public class LoginPage extends BasePage {
     private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);
-    private final PopupHandler popupHandler;
 
     private final By accountButton = By.xpath("//a[contains(@class,'item') and contains(@class,'account')]//span[contains(@class,'hover-txt')]");
     private final By loginPopup = By.cssSelector("#js-form-holder");
@@ -27,14 +25,13 @@ public class LoginPage extends BasePage {
 
     public LoginPage(WebDriver driver) {
         super(driver);
-        this.popupHandler = new PopupHandler(driver);
     }
 
     /**
      * Opens login popup with retry mechanism and popup handling
      */
     public void openLoginPopup() {
-        int maxAttempts = 3;
+        int maxAttempts = 2;
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
                 popupHandler.dismissAllPopups();
@@ -45,14 +42,14 @@ public class LoginPage extends BasePage {
                     WebElement btn = driver.findElement(accountButton);
                     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
                 }
-                Thread.sleep(500);
+                customWait(500);
                 waitForElementToBeVisible(loginPopup);
                 return;
             } catch (Exception e) {
                 if (attempt < maxAttempts) {
                     try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ie) {
+                        customWait(1000);
+                    } catch (Exception ie) {
                         Thread.currentThread().interrupt();
                     }
                 } else {
@@ -65,17 +62,13 @@ public class LoginPage extends BasePage {
 
     public LoginPage setEmail(String email) {
         waitForElementToBeClickable(loginEmailField);
-        WebElement emailField = driver.findElement(loginEmailField);
-        emailField.clear();
-        emailField.sendKeys(email);
+        clearAndType(loginEmailField, email);
         return this;
     }
 
     public LoginPage setPassword(String password) {
         waitForElementToBeClickable(loginPasswordField);
-        WebElement passwordField = driver.findElement(loginPasswordField);
-        passwordField.clear();
-        passwordField.sendKeys(password);
+        clearAndType(loginPasswordField, password);
         return this;
     }
 
@@ -90,46 +83,6 @@ public class LoginPage extends BasePage {
         } catch (Exception e) {
             logger.error("Cannot perform login", e);
             throw new RuntimeException("Cannot perform login", e);
-        }
-    }
-
-    /**
-     * Click element with retry and popup handling
-     */
-    private void clickElementWithRetry(By by, String elementName) {
-        int maxAttempts = 3;
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                popupHandler.dismissAllPopups();
-                waitForElementToBeClickable(by);
-                driver.findElement(by).click();
-                return;
-            } catch (ElementClickInterceptedException e) {
-                try {
-                    popupHandler.dismissAllPopups();
-                    WebElement el = driver.findElement(by);
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", el);
-                    return;
-                } catch (Exception jsError) {
-                    if (attempt == maxAttempts) {
-                        throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
-                    }
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            } catch (Exception e) {
-                if (attempt == maxAttempts) {
-                    throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
-                }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            }
         }
     }
 
@@ -204,63 +157,10 @@ public class LoginPage extends BasePage {
     public RegisterPage navigateToRegister() {
         try {
             openLoginPopup();
-            boolean clickSuccessful = false;
-            int maxAttempts = 2;
-
-            // Strategy 1: Normal click
-            for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-                try {
-                    popupHandler.dismissAllPopups();
-                    waitForElementToBeClickable(createAccountLink);
-                    driver.findElement(createAccountLink).click();
-                    Thread.sleep(1000);
-                    if (isDisplayed(By.xpath("//input[@id='js-popup-register-name']"))) {
-                        clickSuccessful = true;
-                        break;
-                    }
-                } catch (Exception e) {
-                    if (attempt < maxAttempts) {
-                        Thread.sleep(2000);
-                    }
-                }
-            }
-
-            // Strategy 2: JavaScript click
-            if (!clickSuccessful) {
-                try {
-                    popupHandler.dismissAllPopups();
-                    WebElement link = driver.findElement(createAccountLink);
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", link);
-                    Thread.sleep(1000);
-                    if (isDisplayed(By.xpath("//input[@id='js-popup-register-name']"))) {
-                        clickSuccessful = true;
-                    }
-                } catch (Exception e) {
-                    logger.warn("JavaScript click failed", e);
-                }
-            }
-
-            // Strategy 3: Direct JavaScript function call
-            if (!clickSuccessful) {
-                try {
-                    popupHandler.dismissAllPopups();
-                    ((JavascriptExecutor) driver).executeScript("_showCustomerForm('register');");
-                    Thread.sleep(1000);
-                    if (isDisplayed(By.xpath("//input[@id='js-popup-register-name']"))) {
-                        clickSuccessful = true;
-                    }
-                } catch (Exception e) {
-                    logger.warn("Direct JS function call failed", e);
-                }
-            }
-
-            if (!clickSuccessful) {
-                throw new RuntimeException("Could not open registration form after trying all strategies");
-            }
-
+            clickElementWithRetry(createAccountLink, "create account link");
             return new RegisterPage(driver);
         } catch (Exception e) {
-            logger.error("Cannot navigate to register page", e);
+            logger.error("Failed to navigate to register page", e);
             throw new RuntimeException("Cannot navigate to register page", e);
         }
     }

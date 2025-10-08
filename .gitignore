@@ -16,7 +16,7 @@ lib/
 *.iws
 *.iml
 *.ipr
-
+.mvn
 ### Eclipse ###
 .apt_generated
 .classpath

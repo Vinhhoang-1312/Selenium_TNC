@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Authentication Failures",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(login|register|authentication|credential).*"
+  },
+  {
+    "name": "Element Not Found",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(NoSuchElementException|ElementNotFound|element not found).*"
+  },
+  {
+    "name": "Timeout Issues",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(TimeoutException|timeout|timed out).*"
+  },
+  {
+    "name": "Element Click Intercepted",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(ElementClickInterceptedException|click intercepted).*"
+  },
+  {
+    "name": "Assertion Failures",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(AssertionError|assertion failed|expected).*"
+  },
+  {
+    "name": "Cart & Checkout Issues",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(cart|checkout|quantity|payment).*"
+  },
+  {
+    "name": "Search Issues",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(search|suggestion|product not found).*"
+  },
+  {
+    "name": "Product Defects",
+    "matchedStatuses": ["failed"]
+  }
+]
+
