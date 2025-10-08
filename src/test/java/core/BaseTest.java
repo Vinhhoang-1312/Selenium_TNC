@@ -46,14 +46,12 @@ public abstract class BaseTest {
             }
         } catch (AssertionError e) {
             logger.error("Soft assertion failures detected: {}", e.getMessage());
-            if (result.isSuccess()) {
+            if (result.getStatus() == ITestResult.SUCCESS) {
                 result.setStatus(ITestResult.FAILURE);
                 result.setThrowable(e);
             }
-            throw e;
         } finally {
-            // Capture screenshot for ANY failure (not just soft assert failures)
-            if (!result.isSuccess()) {
+           if (result.getStatus() == ITestResult.FAILURE) {
                 TestUtilities.captureScreenshotOnFailure(result, result.getMethod().getMethodName());
             }
 
@@ -63,6 +61,7 @@ public abstract class BaseTest {
                     getDriver().quit();
                 }
             } finally {
+                // Clean up thread-local variables
                 DriverHelper.quitDriverThreadLocal();
                 DriverHelper.quitSoftAssertThreadLocal();
             }

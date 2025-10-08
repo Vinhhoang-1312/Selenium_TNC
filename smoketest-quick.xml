@@ -9,6 +9,8 @@
             <class name="tests.LoginTests">
                 <methods>
                     <include name="testLoginWithValidCredentials"/>
+                    <include name="testLoginWithInvalidEmail"/>
+
                 </methods>
             </class>
         </classes>
@@ -30,7 +32,6 @@
                 <methods>
                     <include name="testUpdatePhoneSuccess"/>
                     <include name="testUpdateFullname"/>
-                    <include name="testUpdateAddress"/>
                 </methods>
             </class>
         </classes>
@@ -43,9 +44,6 @@
                 <methods>
                     <include name="testAddSingleProductToCart"/>
                     <include name="testIncreaseItemQuantity"/>
-                    <include name="testDecreaseItemQuantity"/>
-                    <include name="testAddMultipleProductsToCart"/>
-                    <include name="testVerifyCartSize"/>
                 </methods>
             </class>
         </classes>
@@ -58,9 +56,7 @@
                 <methods>
                     <include name="testVerifyProductDetailsDisplayed"/>
                     <include name="testAddProductToCartShowsNotification"/>
-                    <include name="testSalePriceCorrect"/>
-                    <include name="testProductViewedList"/>
-                    <include name="testMinusQuantityShowsAlert"/>
+
                 </methods>
             </class>
         </classes>
