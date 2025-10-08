@@ -24,6 +24,16 @@
             </class>
         </classes>
     </test>
+    <!-- Test UserProfile -->
+    <test name="Search Smoke Test">
+        <classes>
+            <class name="tests.UserProfileTests">
+                <methods>
+                    <include name="testUpdatePhoneSuccess"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
     <!-- Test Search -->
     <test name="Search Smoke Test">

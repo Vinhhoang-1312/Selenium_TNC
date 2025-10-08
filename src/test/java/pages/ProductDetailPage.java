@@ -37,14 +37,7 @@ public class ProductDetailPage extends BasePage {
             waitForElementToBeVisible(addToCartButton);
             clickElementWithRetry(addToCartButton, "add to cart");
             popupHandler.acceptAlert(3);
-
-            // Wait for cart update to complete
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
+            waitForPageStability();
             logger.info("Successfully added product to cart");
         });
     }
@@ -55,14 +48,7 @@ public class ProductDetailPage extends BasePage {
             waitForElementToBeVisible(addToCartButton);
             clickElementWithRetry(addToCartButton, "add to cart");
             popupHandler.acceptAlert(3);
-
-            // Wait for cart update to complete
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
+            waitForPageStability();
             logger.info("Successfully added {} product(s) to cart", quantity);
         });
     }
