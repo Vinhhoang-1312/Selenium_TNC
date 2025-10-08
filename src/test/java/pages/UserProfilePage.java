@@ -1,9 +1,7 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,20 +43,17 @@ public class UserProfilePage extends BasePage {
         try {
             if (name != null && !name.isEmpty()) {
                 waitForElementToBeClickable(nameField);
-                driver.findElement(nameField).clear();
-                driver.findElement(nameField).sendKeys(name);
+                clearAndType(nameField, name);
             }
             if (phone != null && !phone.isEmpty()) {
                 waitForElementToBeClickable(phoneField);
-                driver.findElement(phoneField).clear();
-                driver.findElement(phoneField).sendKeys(phone);
+                clearAndType(phoneField, phone);
             }
             if (address != null && !address.isEmpty()) {
                 waitForElementToBeClickable(addressField);
-                driver.findElement(addressField).clear();
-                driver.findElement(addressField).sendKeys(address);
+                clearAndType(addressField, address);
             }
-            driver.findElement(saveProfileButton).click();
+            clickElementWithRetry(saveProfileButton, "save profile");
             logger.info("Profile updated successfully");
         } catch (Exception e) {
             logger.error("Failed to update profile: {}", e.getMessage());
@@ -72,18 +67,15 @@ public class UserProfilePage extends BasePage {
     public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
         try {
             waitForElementToBeClickable(currentPasswordField);
-            driver.findElement(currentPasswordField).clear();
-            driver.findElement(currentPasswordField).sendKeys(currentPassword);
+            clearAndType(currentPasswordField, currentPassword);
 
             waitForElementToBeClickable(newPasswordField);
-            driver.findElement(newPasswordField).clear();
-            driver.findElement(newPasswordField).sendKeys(newPassword);
+            clearAndType(newPasswordField, newPassword);
 
             waitForElementToBeClickable(confirmPasswordField);
-            driver.findElement(confirmPasswordField).clear();
-            driver.findElement(confirmPasswordField).sendKeys(confirmPassword);
+            clearAndType(confirmPasswordField, confirmPassword);
 
-            driver.findElement(changePasswordButton).click();
+            clickElementWithRetry(changePasswordButton, "change password");
             logger.info("Password change request submitted");
         } catch (Exception e) {
             logger.error("Failed to change password: {}", e.getMessage());
@@ -94,24 +86,9 @@ public class UserProfilePage extends BasePage {
     public void updatePhone(String phone) {
         try {
             waitForElementToBeClickable(phoneInput);
-            driver.findElement(phoneInput).clear();
-            driver.findElement(phoneInput).sendKeys(phone);
+            clearAndType(phoneInput, phone);
 
-            WebElement saveBtn = driver.findElement(saveButton);
-            try {
-                saveBtn.click();
-            } catch (org.openqa.selenium.ElementClickInterceptedException e) {
-                // Handle click interception with scroll and retry
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false);", saveBtn);
-                waitForElementToBeClickable(saveButton);
-                try {
-                    saveBtn.click();
-                } catch (Exception ex) {
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
-                }
-            } catch (Exception e) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveBtn);
-            }
+            clickElementWithRetry(saveButton, "save button");
             logger.info("Phone updated to: {}", phone);
         } catch (Exception e) {
             logger.error("Failed to update phone: {}", e.getMessage());
@@ -122,9 +99,8 @@ public class UserProfilePage extends BasePage {
     public void updateFullname(String fullname) {
         try {
             waitForElementToBeClickable(fullnameInput);
-            driver.findElement(fullnameInput).clear();
-            driver.findElement(fullnameInput).sendKeys(fullname);
-            driver.findElement(saveButton).click();
+            clearAndType(fullnameInput, fullname);
+            clickElementWithRetry(saveButton, "save button");
             logger.info("Fullname updated to: {}", fullname);
         } catch (Exception e) {
             logger.error("Failed to update fullname: {}", e.getMessage());
@@ -135,9 +111,8 @@ public class UserProfilePage extends BasePage {
     public void updateAddress(String address) {
         try {
             waitForElementToBeClickable(addressInput);
-            driver.findElement(addressInput).clear();
-            driver.findElement(addressInput).sendKeys(address);
-            driver.findElement(saveButton).click();
+            clearAndType(addressInput, address);
+            clickElementWithRetry(saveButton, "save button");
             logger.info("Address updated to: {}", address);
         } catch (Exception e) {
             logger.error("Failed to update address: {}", e.getMessage());
@@ -186,26 +161,15 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    public String getProfilePhone() {
-        try {
-            return driver.findElement(phoneField).getAttribute("value");
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getProfileAddress() {
-        try {
-            return driver.findElement(addressField).getAttribute("value");
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
+    /**
+     * Checks if profile page loaded successfully
+     */
     public boolean isProfilePageLoaded() {
         try {
-            return waitForElementToBeVisible(nameField).isDisplayed();
+            waitForElementToBeVisible(nameField);
+            return isDisplayed(nameField) || isDisplayed(phoneInput) || isDisplayed(fullnameInput);
         } catch (Exception e) {
+            logger.warn("Profile page did not load successfully", e);
             return false;
         }
     }

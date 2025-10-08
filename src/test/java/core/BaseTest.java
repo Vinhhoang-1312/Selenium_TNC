@@ -8,8 +8,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
-import pages.UtilsPage;
+import helpers.PopupHandler;
 import utils.DriverHelper;
+import utils.WaitUtils;
 
 import static utils.ConfigReader.getProperty;
 
@@ -23,7 +24,7 @@ public abstract class BaseTest {
     public void setUp(String browser) {
         DriverHelper.setDriverThreadLocal(DriverFactory.initDriver(browser));
         navigateToBaseUrl();
-        new UtilsPage(getDriver()).handlePopup();
+        new PopupHandler(getDriver()).dismissAllPopups();
         DriverHelper.setSoftAssertThreadLocal(new SoftAssert());
     }
 
@@ -65,11 +66,6 @@ public abstract class BaseTest {
      * @param milliseconds time to wait in milliseconds
      */
     protected void customWait(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            logger.error("Thread interrupted during wait", e);
-        }
+        WaitUtils.sleep(milliseconds);
     }
 }

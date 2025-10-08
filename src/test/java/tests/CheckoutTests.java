@@ -1,7 +1,7 @@
 package tests;
 
 import core.BaseTest;
-import helpers.PopupHandler;
+import io.qameta.allure.*;
 import listeners.BaseListener;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -12,15 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Listeners({BaseListener.class})
+@Epic("E-Commerce")
+@Feature("Checkout Process")
 public class CheckoutTests extends BaseTest {
     private static final Logger log = LoggerFactory.getLogger(CheckoutTests.class);
 
     @Test(groups = {"checkout"},
             description = "CHECKOUT-01: Verify error when phone number is missing")
+    @Story("Checkout Validation")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that checkout process shows error when mandatory phone number field is missing")
     public void testCheckoutMissingPhoneNumber() {
-        PopupHandler popupHandler = new PopupHandler(getDriver());
-        popupHandler.dismissAllPopups();
-
         HomePage homePage = new HomePage(getDriver());
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickFirstProduct();
@@ -36,4 +38,3 @@ public class CheckoutTests extends BaseTest {
         log.info("Missing phone number error verified during checkout");
     }
 }
-

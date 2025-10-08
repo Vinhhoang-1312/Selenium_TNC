@@ -19,6 +19,14 @@ public class ProductDetailPage extends BasePage {
     private final By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
     private final By productName = By.xpath("//h1[@class='name']");
     private final By successNotification = By.xpath("//div[@class='content-container']");
+    private final By decreaseButton = By.cssSelector(".qty-down");
+    private final By originalPriceLocator = By.cssSelector(".product-price-original");
+    private final By salePriceLocator = By.cssSelector(".product-price");
+    private final By discountPercentLocator = By.cssSelector(".product-price-sale");
+    private final By productNameH1 = By.cssSelector("h1.product-name");
+    private final By similarProducts = By.cssSelector(".product-similar .product-item:first-child a");
+    private final By viewedProductsSection = By.cssSelector(".product-viewed");
+    private final By viewedProductNames = By.cssSelector("a.product-name");
 
     public ProductDetailPage(WebDriver driver) {
         super(driver);
@@ -28,26 +36,32 @@ public class ProductDetailPage extends BasePage {
     public void addToCart() {
         waitForElementToDisappear(loadingSpinner);
         waitForElementToBeVisible(addToCartButton);
-        waitForElementToBeClickable(addToCartButton).click();
+        clickElementWithRetry(addToCartButton, "add to cart");
         logger.info("Successfully added product to cart");
     }
 
     public void addToCart(int quantity) {
-        waitForElementToDisappear(loadingSpinner);
-        try {
-            WebElement qtyInput = driver.findElement(quantityInput);
-            waitForElementToBeVisible(quantityInput);
-            waitForElementToBeClickable(quantityInput);
-            qtyInput.click();
-            qtyInput.clear();
-            qtyInput.sendKeys(String.valueOf(quantity));
-            logger.info("Set product quantity to: {}", quantity);
-        } catch (org.openqa.selenium.NoSuchElementException e) {
-            logger.info("Quantity input not found, defaulting to add one item");
-        }
+        setQuantity(quantity);
         waitForElementToBeVisible(addToCartButton);
-        waitForElementToBeClickable(addToCartButton).click();
+        clickElementWithRetry(addToCartButton, "add to cart");
         logger.info("Successfully added {} product(s) to cart", quantity);
+    }
+
+    public void setQuantity(int quantity) {
+        waitForElementToBeVisible(quantityInput);
+        clearAndType(quantityInput, String.valueOf(quantity));
+        logger.info("Set product quantity to: {}", quantity);
+    }
+
+    public void clickDecreaseButton() {
+        try {
+            waitForElementToBeClickable(decreaseButton).click();
+            logger.info("Clicked decrease quantity button");
+        } catch (Exception e) {
+            logger.warn("Failed to click decrease button normally, attempting JS click", e);
+            WebElement btn = driver.findElement(decreaseButton);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        }
     }
 
     public void goToCart() {
@@ -57,7 +71,7 @@ public class ProductDetailPage extends BasePage {
         logger.info("Successfully hovered over cart icon");
 
         waitForElementToBeVisible(viewCartLink);
-        waitForElementToBeClickable(viewCartLink).click();
+        clickElementWithRetry(viewCartLink, "view cart link");
         logger.info("Successfully navigated to cart page");
     }
 
@@ -68,5 +82,118 @@ public class ProductDetailPage extends BasePage {
     public boolean isSuccessNotificationDisplayed() {
         return isDisplayed(successNotification);
     }
-}
 
+    /**
+     * Gets original price as double
+     */
+    public double getOriginalPrice() {
+        String priceText = waitAndGetText(originalPriceLocator).replaceAll("[^0-9]", "");
+        return Double.parseDouble(priceText);
+    }
+
+    /**
+     * Gets sale price as double
+     */
+    public double getSalePrice() {
+        String priceText = waitAndGetText(salePriceLocator).replaceAll("[^0-9]", "");
+        return Double.parseDouble(priceText);
+    }
+
+    /**
+     * Gets discount percentage as double
+     */
+    public double getDiscountPercent() {
+        String discountText = waitAndGetText(discountPercentLocator).replaceAll("[^0-9]", "");
+        return Double.parseDouble(discountText);
+    }
+
+    /**
+     * Calculates expected sale price based on original price and discount
+     */
+    public double calculateExpectedSalePrice() {
+        double originalPrice = getOriginalPrice();
+        double discountPercent = getDiscountPercent();
+        return originalPrice - (originalPrice * discountPercent / 100);
+    }
+
+    /**
+     * Verifies that sale price calculation is correct
+     */
+    public boolean isSalePriceCorrect() {
+        double actualSalePrice = getSalePrice();
+        double expectedSalePrice = calculateExpectedSalePrice();
+        return Math.abs(actualSalePrice - expectedSalePrice) < 0.01; // Allow small floating point difference
+    }
+
+    /**
+     * Gets the product name from H1 tag
+     */
+    public String getProductNameH1() {
+        return waitAndGetText(productNameH1);
+    }
+
+    /**
+     * Clicks on first similar product
+     */
+    public void clickFirstSimilarProduct() {
+        waitForElementToBeClickable(similarProducts).click();
+        logger.info("Clicked first similar product");
+    }
+
+    /**
+     * Gets all viewed product names
+     */
+    public java.util.List<WebElement> getViewedProductNames() {
+        waitForElementToBeVisible(viewedProductsSection);
+        return driver.findElements(viewedProductNames);
+    }
+
+    /**
+     * Checks if a product name exists in viewed products list
+     */
+    public boolean isProductInViewedList(String productName) {
+        java.util.List<WebElement> viewedProducts = getViewedProductNames();
+        return viewedProducts.stream()
+                .anyMatch(element -> element.getText().contains(productName));
+    }
+
+    /**
+     * Sets quantity using input field (alternative method)
+     */
+    public void setQuantityByInput(String quantity) {
+        WebElement qtyInput = driver.findElement(By.cssSelector("input[name='quantity']"));
+        qtyInput.clear();
+        qtyInput.sendKeys(quantity);
+        logger.info("Set quantity to: {}", quantity);
+    }
+
+    /**
+     * Clicks decrease button using alternative selector
+     */
+    public void clickDecreaseButtonAlt() {
+        WebElement minusButton = driver.findElement(By.cssSelector(".qty-down"));
+        minusButton.click();
+        logger.info("Clicked decrease button");
+    }
+
+    /**
+     * Waits for alert and gets its text
+     */
+    public String getAlertText() {
+        return popupHandler.getAlertText(5);
+    }
+
+    /**
+     * Accepts the alert
+     */
+    public void acceptAlert() {
+        popupHandler.acceptAlert(5);
+    }
+
+    /**
+     * Gets alert text and accepts it in one call
+     */
+    public String getAlertTextAndAccept() {
+        return popupHandler.getAlertTextAndAccept(5);
+    }
+}

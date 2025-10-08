@@ -111,7 +111,10 @@
                 <version>2.12.0</version>
                 <configuration>
                     <reportVersion>${allure.version}</reportVersion>
-                    <resultsDirectory>${project.basedir}/allure-results</resultsDirectory>
+                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+                    <allureDownloadUrl>
+                        https://github.com/allure-framework/allure2/releases/download/${allure.version}/allure-${allure.version}.zip
+                    </allureDownloadUrl>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,17 +1,12 @@
 package pages;
 
-import helpers.PopupHandler;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RegisterPage extends BasePage {
     private static final Logger logger = LoggerFactory.getLogger(RegisterPage.class);
-    private final PopupHandler popupHandler;
 
     private final By registerNameField = By.xpath("//input[@id='js-popup-register-name']");
     private final By registerEmailField = By.xpath("//input[@id='js-popup-register-email']");
@@ -25,16 +20,13 @@ public class RegisterPage extends BasePage {
 
     public RegisterPage(WebDriver driver) {
         super(driver);
-        this.popupHandler = new PopupHandler(driver);
     }
 
     public RegisterPage setName(String name) {
         try {
             waitForElementToBeVisible(registerNameField);
             waitForElementToBeClickable(registerNameField);
-            WebElement nameField = driver.findElement(registerNameField);
-            nameField.clear();
-            nameField.sendKeys(name);
+            clearAndType(registerNameField, name);
         } catch (Exception e) {
             logger.error("Failed to set name: {}", e.getMessage());
             throw new RuntimeException("Cannot set name", e);
@@ -46,9 +38,7 @@ public class RegisterPage extends BasePage {
         try {
             waitForElementToBeVisible(registerEmailField);
             waitForElementToBeClickable(registerEmailField);
-            WebElement emailField = driver.findElement(registerEmailField);
-            emailField.clear();
-            emailField.sendKeys(email);
+            clearAndType(registerEmailField, email);
         } catch (Exception e) {
             logger.error("Failed to set email: {}", e.getMessage());
             throw new RuntimeException("Cannot set email", e);
@@ -59,9 +49,7 @@ public class RegisterPage extends BasePage {
     public RegisterPage setPassword(String password) {
         try {
             waitForElementToBeClickable(registerPasswordField);
-            WebElement passwordField = driver.findElement(registerPasswordField);
-            passwordField.clear();
-            passwordField.sendKeys(password);
+            clearAndType(registerPasswordField, password);
         } catch (Exception e) {
             logger.error("Failed to set password: {}", e.getMessage());
             throw new RuntimeException("Cannot set password", e);
@@ -83,46 +71,6 @@ public class RegisterPage extends BasePage {
         } catch (Exception e) {
             logger.error("Cannot perform registration", e);
             throw new RuntimeException("Cannot perform registration", e);
-        }
-    }
-
-    /**
-     * Click element with retry and popup handling
-     */
-    private void clickElementWithRetry(By by, String elementName) {
-        int maxAttempts = 3;
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                popupHandler.dismissAllPopups();
-                waitForElementToBeClickable(by);
-                driver.findElement(by).click();
-                return;
-            } catch (ElementClickInterceptedException e) {
-                try {
-                    popupHandler.dismissAllPopups();
-                    WebElement el = driver.findElement(by);
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", el);
-                    return;
-                } catch (Exception jsError) {
-                    if (attempt == maxAttempts) {
-                        throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
-                    }
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            } catch (Exception e) {
-                if (attempt == maxAttempts) {
-                    throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
-                }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            }
         }
     }
 

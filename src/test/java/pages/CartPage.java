@@ -28,20 +28,17 @@ public class CartPage extends BasePage {
     }
 
     public int getCartSize() {
-        waitForPageLoad();
         waitForElementToBeVisible(quantityInputs);
         List<WebElement> inputs = driver.findElements(quantityInputs);
         return inputs.size();
     }
 
     public int getFirstItemQuantity() {
-        waitForPageLoad();
         waitForElementToBeVisible(quantityInputs);
         List<WebElement> inputs = driver.findElements(quantityInputs);
 
         if (!inputs.isEmpty()) {
             WebElement firstInput = inputs.get(0);
-            waitForElementToBeVisible(quantityInputs);
             String value = firstInput.getAttribute("value");
             if (value == null || value.isEmpty()) {
                 logger.error("Quantity value is empty or null");
@@ -59,12 +56,10 @@ public class CartPage extends BasePage {
     }
 
     public void clickFirstPlusButton() {
-        waitForPageLoad();
         waitForElementToBeClickable(firstPlusSign).click();
     }
 
     public void clickFirstMinusButton() {
-        waitForPageLoad();
         waitForElementToBeClickable(firstMinusSign).click();
     }
 
@@ -84,7 +79,16 @@ public class CartPage extends BasePage {
         int initialQuantity = getFirstItemQuantity();
         int expectedQuantity = initialQuantity + 1;
         clickFirstPlusButton();
-        customWait(1000);
+
+        // Wait for quantity to update by checking the value changes
+        wait.until(driver -> {
+            try {
+                return getFirstItemQuantity() == expectedQuantity;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
         int updatedQuantity = getFirstItemQuantity();
         Assert.assertEquals(updatedQuantity, expectedQuantity,
             "Item quantity should be increased by 1");
@@ -98,7 +102,16 @@ public class CartPage extends BasePage {
         int initialQuantity = getFirstItemQuantity();
         int expectedQuantity = initialQuantity - 1;
         clickFirstMinusButton();
-        customWait(1000);
+
+        // Wait for quantity to update by checking the value changes
+        wait.until(driver -> {
+            try {
+                return getFirstItemQuantity() == expectedQuantity;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
         int updatedQuantity = getFirstItemQuantity();
         Assert.assertEquals(updatedQuantity, expectedQuantity,
             "Item quantity should be decreased by 1");
