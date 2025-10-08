@@ -16,14 +16,13 @@ public class ProductDetailPage extends BasePage {
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
     private final By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
     private final By productName = By.xpath("//h1[@class='name']");
-    private final By successNotification = By.xpath("//div[contains(text(), 'Thêm sản phẩm vào giỏ hàng thành công')]");
-    private final By decreaseButton = By.cssSelector(".qty-down");
-    private final By originalPriceLocator = By.cssSelector(".product-price-original");
-    private final By salePriceLocator = By.cssSelector(".product-price");
-    private final By discountPercentLocator = By.cssSelector(".product-price-sale");
-    private final By productNameH1 = By.cssSelector("h1.product-name");
-    private final By similarProducts = By.cssSelector(".product-similar .product-item:first-child a");
-    private final By viewedProductsSection = By.cssSelector(".product-viewed");
+    private final By successNotification = By.xpath("//div[contains(@class,'text-24')]");
+    private final By decreaseButton = By.xpath("//a[@data-value='-1']");
+    private final By originalPriceLocator = By.xpath("//div[@class='info-main-price']//del[@class='old-price']");
+    private final By salePriceLocator = By.xpath("//div[@class='info-main-price']//div[@class='price']");
+    private final By discountPercentLocator = By.xpath("//div[@class='info-main-price']//div[@class='saleoff']");
+    private final By similarProducts = By.xpath("//div[contains(@class,'similar')]//div[@class='owl-item active'][2]");
+    private final By viewedProductsSection = By.xpath("//div[@class='product-history']//div[@class='product-list']");
     private final By viewedProductNames = By.cssSelector("a.product-name");
 
     public ProductDetailPage(WebDriver driver) {
@@ -129,10 +128,6 @@ public class ProductDetailPage extends BasePage {
         double originalPrice = getOriginalPrice();
         double discountPercent = getDiscountPercent();
         return originalPrice - (originalPrice * discountPercent / 100);
-    }
-
-    public String getProductNameH1() {
-        return waitAndGetText(productNameH1);
     }
 
     public void clickFirstSimilarProduct() {
