@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -50,13 +51,16 @@ public class LoginPage extends BasePage {
     }
 
     public void performLogin(String email, String password) {
-        try {
-            openLoginPopup();
-            setEmail(email).setPassword(password).submitLogin();
-        } catch (Exception e) {
-            logger.error("Cannot perform login", e);
-            throw new RuntimeException("Cannot perform login", e);
-        }
+        Allure.step("Login with email: " + email, () -> {
+            try {
+                openLoginPopup();
+                setEmail(email).setPassword(password).submitLogin();
+                logger.info("Login performed for: {}", email);
+            } catch (Exception e) {
+                logger.error("Cannot perform login", e);
+                throw new RuntimeException("Cannot perform login", e);
+            }
+        });
     }
 
     public boolean isLoginSuccessful() {
@@ -77,64 +81,16 @@ public class LoginPage extends BasePage {
         }
     }
 
-    public String getLoggedInUserName() {
-        try {
-            if (isDisplayed(loggedInUserName)) {
-                return waitAndFind(loggedInUserName).getText().trim();
-            }
-        } catch (Exception e) {
-            logger.warn("Could not get logged in user name", e);
-        }
-        return "";
-    }
-
-    public boolean isUserLoggedIn() {
-        return isLoginSuccessful();
-    }
-
-    public void logout() {
-        try {
-            if (isDisplayed(logoutLink)) {
-                click(logoutLink);
-                logger.info("User logged out successfully");
-            }
-        } catch (Exception e) {
-            logger.warn("Logout failed or user not logged in");
-        }
-    }
-
-    public String getEmailError() {
-        try {
-            return waitAndGetText(emailErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getPasswordError() {
-        try {
-            return waitAndGetText(passwordErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getGeneralError() {
-        try {
-            return waitAndGetText(generalErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     public RegisterPage navigateToRegister() {
-        try {
-            openLoginPopup();
-            clickElementWithRetry(createAccountLink, "create account link");
-            return new RegisterPage(driver);
-        } catch (Exception e) {
-            logger.error("Failed to navigate to register page", e);
-            throw new RuntimeException("Cannot navigate to register page", e);
-        }
+        return Allure.step("Navigate to registration form", () -> {
+            try {
+                openLoginPopup();
+                clickElementWithRetry(createAccountLink, "create account link");
+                return new RegisterPage(driver);
+            } catch (Exception e) {
+                logger.error("Failed to navigate to register page", e);
+                throw new RuntimeException("Cannot navigate to register page", e);
+            }
+        });
     }
 }

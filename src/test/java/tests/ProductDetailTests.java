@@ -25,13 +25,13 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that product details page displays product name and information correctly")
     public void testVerifyProductDetailsDisplayed() {
-        Allure.step("Search and select a product");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
-        Allure.step("Verify product name is displayed");
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         String productName = productDetailPage.getProductName();
 
         Assert.assertFalse(productName.isEmpty(), "Product name should be displayed");
@@ -48,14 +48,13 @@ public class ProductDetailTests extends BaseTest {
         By successNotificationLocator = By.id("successNotification");
         Allure.step("Search and select a product");
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
-        Allure.step("Add product to cart");
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
 
-        Allure.step("Verify success notification is displayed");
         Assert.assertTrue(productDetailPage.isSuccessNotificationDisplayed(),
             "Success notification should be displayed after adding to cart");
         logger.info("Success notification verified");
@@ -68,27 +67,23 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that sale price is calculated correctly based on original price and discount percentage")
     public void testSalePriceCorrect() {
-        Allure.step("Navigate to specific product page");
-        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
-
+        // Initialize page objects
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
 
-        Allure.step("Get original price");
+        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
+
         double originalPrice = productDetailPage.getOriginalPrice();
         logger.info("Original price: {}", originalPrice);
         Allure.parameter("Original Price", originalPrice);
 
-        Allure.step("Get sale price");
         double salePrice = productDetailPage.getSalePrice();
         logger.info("Sale price: {}", salePrice);
         Allure.parameter("Sale Price", salePrice);
 
-        Allure.step("Get discount percentage");
         double discountPercent = productDetailPage.getDiscountPercent();
         logger.info("Discount percent: {}%", discountPercent);
         Allure.parameter("Discount %", discountPercent);
 
-        Allure.step("Calculate and verify expected price");
         double expectedPrice = productDetailPage.calculateExpectedSalePrice();
         logger.info("Expected Price: {}", expectedPrice);
         Allure.parameter("Expected Price", expectedPrice);
@@ -104,9 +99,7 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that previously viewed products appear in the viewed products list")
     public void testProductViewedList() {
-        Allure.step("Navigate to first product");
-        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
-
+        // Initialize page objects
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
 
         Allure.step("Get initial product name");
@@ -114,10 +107,8 @@ public class ProductDetailTests extends BaseTest {
         logger.info("Initial product: {}", initialTitle);
         Allure.parameter("First Product", initialTitle);
 
-        Allure.step("Click on similar product");
         productDetailPage.clickFirstSimilarProduct();
 
-        Allure.step("Verify initial product is in viewed list");
         boolean found = productDetailPage.isProductInViewedList(initialTitle);
         Assert.assertTrue(found, "Initial product should be in viewed products list");
         logger.info("Product successfully added to viewed list");
@@ -129,20 +120,16 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that an alert is shown when trying to decrease quantity below 1")
     public void testMinusQuantityShowsAlert() {
-        Allure.step("Search and select a product");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
-
-        Allure.step("Set quantity to 1");
         productDetailPage.setQuantityByInput("1");
-
-        Allure.step("Click decrease button");
         productDetailPage.clickDecreaseButtonAlt();
 
-        Allure.step("Verify alert message");
         String expectedAlertText = "Quý khách cần chọn số lượng sản phẩm lớn hơn 0";
         String actualAlertText = productDetailPage.getAlertText().trim();
         Allure.parameter("Expected Alert", expectedAlertText);
@@ -151,7 +138,6 @@ public class ProductDetailTests extends BaseTest {
         Assert.assertEquals(actualAlertText, expectedAlertText, "Alert text should match expected message");
         logger.info("Alert verified: {}", actualAlertText);
 
-        Allure.step("Accept alert");
         productDetailPage.acceptAlert();
     }
 }

@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,32 +22,21 @@ public class SearchPage extends BasePage {
     }
 
     public int getProductCount() {
-        try {
-            return findElements(productResults).size();
-        } catch (Exception e) {
-            return 0;
-        }
+        return Allure.step("Get search results count", () -> {
+            try {
+                return findElements(productResults).size();
+            } catch (Exception e) {
+                return 0;
+            }
+        });
     }
 
     public boolean hasResults() {
-        return getProductCount() > 0;
+        return Allure.step("Check if search has results", () -> {
+            return getProductCount() > 0;
+        });
     }
 
-    public String getNoResultsMessage() {
-        try {
-            return waitAndGetText(noResultsMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
-    /**
-     * Gets all suggestion items from search dropdown
-     */
     public List<WebElement> getSuggestionItems() {
         try {
             waitForElementToBeVisible(suggestionList);
@@ -73,8 +63,10 @@ public class SearchPage extends BasePage {
      * Gets suggestion items with explicit wait
      */
     public List<WebElement> getSuggestionItemsWithWait() {
-        waitForSearchSuggestions();
-        return getSuggestionItems();
+        return Allure.step("Get search suggestion items", () -> {
+            waitForSearchSuggestions();
+            return getSuggestionItems();
+        });
     }
 
     /**
@@ -89,53 +81,11 @@ public class SearchPage extends BasePage {
     }
 
     /**
-     * Verifies all suggestion items contain the search keyword
-     */
-    public boolean allSuggestionsContainKeyword(String keyword) {
-        List<WebElement> suggestions = getSuggestionItems();
-        if (suggestions.isEmpty()) {
-            return false;
-        }
-
-        for (WebElement item : suggestions) {
-            String itemText = item.getText().toLowerCase();
-            if (!itemText.contains(keyword.toLowerCase())) {
-                logger.warn("Suggestion '{}' does not contain keyword '{}'", itemText, keyword);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Gets the count of suggestion items
      */
     public int getSuggestionCount() {
         return getSuggestionItems().size();
     }
 
-    /**
-     * Checks if "no product" notification is displayed
-     */
-    public boolean isNoProductNotificationDisplayed() {
-        try {
-            return isDisplayed(noproductNoti);
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
-    /**
-     * Gets search input element locator (for direct access in tests)
-     */
-    public By getSearchInputLocator() {
-        return searchInput;
-    }
-
-    /**
-     * Gets suggestion list locator (for direct access in tests)
-     */
-    public By getSuggestionListLocator() {
-        return suggestionList;
-    }
 }

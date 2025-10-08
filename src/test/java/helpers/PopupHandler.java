@@ -5,7 +5,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -41,34 +40,6 @@ public class PopupHandler {
         tryClosePopup(POPUP_CLOSE_BTN_2_CSS);
     }
 
-    /**
-     * Convenience static helper to dismiss all popups without creating a PopupHandler in-line.
-     */
-    public static void dismissAll(WebDriver driver) {
-        try {
-            new PopupHandler(driver).dismissAllPopups();
-        } catch (Exception e) {
-            logger.warn("Failed to dismiss popups via static helper", e);
-        }
-    }
-
-    /**
-     * Clicks an element with automatic popup handling if click is intercepted
-     */
-    public void clickWithPopupHandling(WebElement element) {
-        try {
-            element.click();
-        } catch (ElementClickInterceptedException e) {
-            logger.warn("Click intercepted, attempting to close popups...");
-            dismissAllPopups();
-            try {
-                element.click();
-            } catch (Exception ex) {
-                logger.error("Click failed after popup handling.", ex);
-                throw ex;
-            }
-        }
-    }
 
     private void tryClosePopup(By by) {
         try {
@@ -145,22 +116,6 @@ public class PopupHandler {
     }
 
     /**
-     * Dismisses (clicks Cancel on) JavaScript alert
-     * @param timeoutSeconds timeout in seconds
-     */
-    public void dismissAlert(int timeoutSeconds) {
-        try {
-            Alert alert = waitForAlert(timeoutSeconds);
-            if (alert != null) {
-                alert.dismiss();
-                logger.info("Alert dismissed");
-            }
-        } catch (Exception e) {
-            logger.error("Failed to dismiss alert", e);
-        }
-    }
-
-    /**
      * Gets alert text and accepts it in one call
      * @param timeoutSeconds timeout in seconds
      * @return alert text or null if no alert
@@ -181,20 +136,4 @@ public class PopupHandler {
         return null;
     }
 
-    /**
-     * Checks if alert is present without waiting
-     * @return true if alert is present, false otherwise
-     */
-    public boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public void waitForOverlaysToDisappear() {
-        // Future implementation for waiting overlays
-    }
 }

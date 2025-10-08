@@ -74,11 +74,6 @@ public class AllureSoftAssert extends SoftAssert {
     }
 
     @Override
-    public void assertFalse(boolean condition) {
-        assertFalse(condition, "Assertion should be false");
-    }
-
-    @Override
     public void assertNotNull(Object object, String message) {
         try {
             super.assertNotNull(object, message);

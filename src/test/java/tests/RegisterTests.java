@@ -20,14 +20,14 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a new user can successfully register with valid name, email, and password")
     public void testRegisterWithValidData() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        RegisterPage registerPage;
+
         // Use TestUser.createUniqueUser() to avoid code duplication
         TestUser user = TestUser.createUniqueUser("Register");
 
-        Allure.step("Navigate to registration form");
-        LoginPage loginPage = new LoginPage(getDriver());
-        RegisterPage registerPage = loginPage.navigateToRegister();
-
-        Allure.step("Fill registration form with valid data: " + user.email);
+        registerPage = loginPage.navigateToRegister();
         registerPage.performRegister(user.name, user.email, user.password);
 
         logger.info("Register test completed with email: {}", user.email);
@@ -39,11 +39,11 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that registration fails when using an invalid email format")
     public void testRegisterWithInvalidEmail() {
-        Allure.step("Navigate to registration form");
+        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
-        RegisterPage registerPage = loginPage.navigateToRegister();
+        RegisterPage registerPage;
 
-        Allure.step("Attempt to register with invalid email format");
+        registerPage = loginPage.navigateToRegister();
         registerPage.performRegister("Test User", "invalidemail", "Test123456");
 
         logger.info("Register with invalid email completed");
@@ -55,14 +55,14 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that registration fails when using a weak password")
     public void testRegisterWithWeakPassword() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        RegisterPage registerPage;
+
         // Use TestUser.createUniqueUser() to avoid code duplication
         TestUser user = TestUser.createUniqueUser("WeakPwd");
 
-        Allure.step("Navigate to registration form");
-        LoginPage loginPage = new LoginPage(getDriver());
-        RegisterPage registerPage = loginPage.navigateToRegister();
-
-        Allure.step("Attempt to register with weak password");
+        registerPage = loginPage.navigateToRegister();
         registerPage.performRegister(user.name, user.email, "123");
 
         logger.info("Register with weak password completed");

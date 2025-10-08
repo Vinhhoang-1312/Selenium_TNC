@@ -20,17 +20,15 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can successfully update their phone number in profile")
     public void testUpdatePhoneSuccess() {
-        Allure.step("Login to user account");
+        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         String newPhone = "0912345678";
-
-        Allure.step("Update phone number to: " + newPhone);
         profilePage.updatePhone(newPhone);
 
-        Allure.step("Refresh page and verify phone number persists");
         getDriver().navigate().refresh();
 
         String actualPhone = profilePage.getPhone();
@@ -46,20 +44,19 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their full name in profile")
     public void testUpdateFullname() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
         logger.info("[TEST] Starting testUpdateFullname");
 
-        Allure.step("Login to user account");
-        LoginPage loginPage = new LoginPage(getDriver());
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         try {
-            Allure.step("Get current fullname and update it");
             String oldValue = profilePage.getFullname();
             String newValue = oldValue + "_Test";
             profilePage.updateFullname(newValue);
 
-            Allure.step("Refresh page and verify fullname persists");
             getDriver().navigate().refresh();
 
             String actualValue = profilePage.getFullname();
@@ -79,19 +76,17 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their address in profile")
     public void testUpdateAddress() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
         logger.info("[TEST] Starting testUpdateAddress");
 
-        Allure.step("Login to user account");
-        LoginPage loginPage = new LoginPage(getDriver());
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         String newAddress = "123 Test Street, Hanoi";
-
-        Allure.step("Update address to: " + newAddress);
         profilePage.updateAddress(newAddress);
 
-        Allure.step("Refresh page and verify address persists");
         getDriver().navigate().refresh();
 
         String actualAddress = profilePage.getAddress();
@@ -107,15 +102,13 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can access and view their profile page")
     public void testProfilePageLoads() {
-        Allure.step("Login to user account");
+        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
-        loginPage.performLogin("john5@test.com", "Abc12345");
-
-        Allure.step("Navigate to profile page");
         UserProfilePage profilePage = new UserProfilePage(getDriver());
+
+        loginPage.performLogin("john5@test.com", "Abc12345");
         profilePage.navigateToProfile();
 
-        Allure.step("Verify profile page loaded successfully");
         Assert.assertTrue(profilePage.isProfilePageLoaded(),
             "Profile page should load successfully");
         logger.info("Profile page loaded successfully");
