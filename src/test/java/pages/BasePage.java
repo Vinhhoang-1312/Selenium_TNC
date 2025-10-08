@@ -40,6 +40,15 @@ public abstract class BasePage {
         } catch (ElementNotInteractableException e) {
             WaitUtils.sleep(200);
             click(locator);
+        } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
+            // Accept unexpected JS alert and retry
+            try {
+                popupHandler.getAlertTextAndAccept(3);
+            } catch (Exception ex) {
+                // ignore
+            }
+            // retry click once
+            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         }
     }
 
@@ -147,6 +156,17 @@ public abstract class BasePage {
                     }
                     WaitUtils.sleep(2000);
                 }
+            } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
+                // Accept unexpected JS alert and retry
+                try {
+                    popupHandler.getAlertTextAndAccept(3);
+                } catch (Exception ex) {
+                    // ignore
+                }
+                if (attempt == maxAttempts) {
+                    throw new RuntimeException("Failed to click " + elementName + " after handling unexpected alert", alertEx);
+                }
+                WaitUtils.sleep(500);
             } catch (Exception e) {
                 if (attempt == maxAttempts) {
                     throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
