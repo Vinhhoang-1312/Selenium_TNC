@@ -4,11 +4,13 @@ import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Optional;
 import helpers.PopupHandler;
+import reports.TestUtilities;
 import utils.AllureSoftAssert;
 import utils.DriverHelper;
 
@@ -37,20 +39,29 @@ public abstract class BaseTest {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void tearDown() {
+    public void tearDown(ITestResult result) {
         try {
             if (getSoftAssert() != null) {
                 getSoftAssert().assertAll();
             }
         } catch (AssertionError e) {
             logger.error("Soft assertion failures detected: {}", e.getMessage());
+            if (result.getStatus() == ITestResult.SUCCESS) {
+                result.setStatus(ITestResult.FAILURE);
+                result.setThrowable(e);
+            }
         } finally {
+           if (result.getStatus() == ITestResult.FAILURE) {
+                TestUtilities.captureScreenshotOnFailure(result, result.getMethod().getMethodName());
+            }
+
             try {
                 if (getDriver() != null) {
                     Allure.step("Closing browser");
                     getDriver().quit();
                 }
             } finally {
+                // Clean up thread-local variables
                 DriverHelper.quitDriverThreadLocal();
                 DriverHelper.quitSoftAssertThreadLocal();
             }

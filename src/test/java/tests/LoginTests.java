@@ -170,4 +170,21 @@ public class LoginTests extends BaseTest {
             throw e;
         }
     }
+
+    @Test(groups = {"authentication", "test-screenshot"},
+            description = "AUTH-LI-99: TEST SCREENSHOT - This test will intentionally FAIL")
+    @Story("Testing Screenshot Capture")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test intentionally fails to verify screenshot capture functionality works correctly")
+    public void testScreenshotCapture_IntentionalFail() {
+        LoginPage loginPage = new LoginPage(getDriver());
+
+        logger.info("=== INTENTIONAL FAIL TEST - Testing Screenshot Capture ===");
+
+        Allure.step("Login with valid credentials");
+        loginPage.performLogin(AuthenticationTestData.VALID_EMAIL, AuthenticationTestData.VALID_PASSWORD);
+
+        Allure.step("INTENTIONALLY FAIL - This assertion is designed to fail");
+        Assert.assertTrue(false, "🔴 INTENTIONAL FAILURE: Testing screenshot capture on failure");
+    }
 }

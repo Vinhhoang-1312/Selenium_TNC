@@ -61,14 +61,7 @@ public class RegisterPage extends BasePage {
         Allure.step("Register with email: " + email, () -> {
             try {
                 setName(name).setEmail(email).setPassword(password).submitRegister();
-
-                // Wait for registration to complete
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-
+                waitForPageStability();
                 logger.info("Registration submitted for email: {}", email);
             } catch (Exception e) {
                 logger.error("Cannot perform registration", e);

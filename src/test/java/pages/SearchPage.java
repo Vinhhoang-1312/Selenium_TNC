@@ -80,12 +80,5 @@ public class SearchPage extends BasePage {
         }
     }
 
-    /**
-     * Gets the count of suggestion items
-     */
-    public int getSuggestionCount() {
-        return getSuggestionItems().size();
-    }
-
 
 }
