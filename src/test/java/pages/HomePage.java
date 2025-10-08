@@ -13,7 +13,7 @@ public class HomePage extends BasePage {
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
-    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
+    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");private final By firstProductLink = By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'success-form')]");
 
     public HomePage(WebDriver driver) {
@@ -39,13 +39,13 @@ public class HomePage extends BasePage {
         clearAndType(searchBox, productName);
     }
 
-    public void clickFirstProduct() {
+     public void clickFirstProduct() {
         waitForElementToBeVisible(productTitleLinks);
         List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 
         if (!availableProducts.isEmpty()) {
-            WebElement firstProduct = availableProducts.get(0);
-            waitForElementToBeClickable(By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]")).click();
+            // Use the defined locator instead of duplicating xpath
+            waitForElementToBeClickable(firstProductLink).click();
             logger.info("Successfully clicked first product");
         } else {
             logger.error("No products found on the page");

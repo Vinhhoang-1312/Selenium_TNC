@@ -1,6 +1,7 @@
 package tests;
 
 import core.BaseTest;
+import data.TestUser;
 import io.qameta.allure.*;
 import listeners.BaseListener;
 import org.testng.annotations.Listeners;
@@ -22,20 +23,18 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a new user can successfully register with valid name, email, and password")
     public void testRegisterWithValidData() {
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String uniqueEmail = "user" + timestamp + "@test.com";
-        String name = "Test User " + timestamp;
-        String password = "Test123456";
+        // Use TestUser.createUniqueUser() to avoid code duplication
+        TestUser user = TestUser.createUniqueUser("Register");
 
         Allure.step("Navigate to registration form");
         LoginPage loginPage = new LoginPage(getDriver());
         RegisterPage registerPage = loginPage.navigateToRegister();
 
-        Allure.step("Fill registration form with valid data: " + uniqueEmail);
-        registerPage.performRegister(name, uniqueEmail, password);
+        Allure.step("Fill registration form with valid data: " + user.email);
+        registerPage.performRegister(user.name, user.email, user.password);
 
         customWait(2000);
-        log.info("Register test completed with email: {}", uniqueEmail);
+        log.info("Register test completed with email: {}", user.email);
     }
 
     @Test(groups = {"authentication", "register"},
@@ -61,15 +60,15 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that registration fails when using a weak password")
     public void testRegisterWithWeakPassword() {
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String uniqueEmail = "user" + timestamp + "@test.com";
+        // Use TestUser.createUniqueUser() to avoid code duplication
+        TestUser user = TestUser.createUniqueUser("WeakPwd");
 
         Allure.step("Navigate to registration form");
         LoginPage loginPage = new LoginPage(getDriver());
         RegisterPage registerPage = loginPage.navigateToRegister();
 
         Allure.step("Attempt to register with weak password");
-        registerPage.performRegister("Test User", uniqueEmail, "123");
+        registerPage.performRegister(user.name, user.email, "123");
 
         customWait(1000);
         log.info("Register with weak password completed");
