@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Smoke Test - Quick Check" parallel="false" thread-count="1">
+<suite name="Smoke Test - Quick Check (15 Tests)" parallel="false" thread-count="1">
     <parameter name="browser" value="chrome"/>
 
-    <!-- Test Login -->
-    <test name="Login Smoke Test">
+    <!-- GROUP 1: Login-Register-UserProfile Tests (5 cases) -->
+    <test name="Login Test">
         <classes>
             <class name="tests.LoginTests">
                 <methods>
@@ -14,8 +14,7 @@
         </classes>
     </test>
 
-    <!-- Test Register -->
-    <test name="Register Smoke Test">
+    <test name="Register Test">
         <classes>
             <class name="tests.RegisterTests">
                 <methods>
@@ -24,33 +23,43 @@
             </class>
         </classes>
     </test>
-    <!-- Test UserProfile -->
-    <test name="Search Smoke Test">
+
+    <test name="User Profile Tests">
         <classes>
             <class name="tests.UserProfileTests">
                 <methods>
                     <include name="testUpdatePhoneSuccess"/>
+                    <include name="testUpdateFullname"/>
+                    <include name="testUpdateAddress"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <!-- Test Search -->
-    <test name="Search Smoke Test">
+    <!-- GROUP 2: Cart Tests (5 cases) -->
+    <test name="Cart Tests">
         <classes>
-            <class name="tests.SearchTests">
+            <class name="tests.CartTests">
                 <methods>
-                    <include name="testSearchWithValidKeyword"/>
+                    <include name="testAddSingleProductToCart"/>
+                    <include name="testIncreaseItemQuantity"/>
+                    <include name="testDecreaseItemQuantity"/>
+                    <include name="testAddMultipleProductsToCart"/>
+                    <include name="testVerifyCartSize"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <!-- Test Product Detail -->
-    <test name="Product Detail Smoke Test">
+    <!-- GROUP 3: Product Detail Tests (5 cases) -->
+    <test name="Product Detail Tests">
         <classes>
             <class name="tests.ProductDetailTests">
                 <methods>
+                    <include name="testVerifyProductDetailsDisplayed"/>
+                    <include name="testAddProductToCartShowsNotification"/>
+                    <include name="testSalePriceCorrect"/>
+                    <include name="testProductViewedList"/>
                     <include name="testMinusQuantityShowsAlert"/>
                 </methods>
             </class>
