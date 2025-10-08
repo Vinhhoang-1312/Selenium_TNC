@@ -1,17 +1,16 @@
 package utils;
 
 import org.openqa.selenium.WebDriver;
-import org.testng.asserts.SoftAssert;
 
 public class DriverHelper {
     protected static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
-    protected static final ThreadLocal<SoftAssert> softAssertThreadLocal = new ThreadLocal<>();
+    protected static final ThreadLocal<AllureSoftAssert> softAssertThreadLocal = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
         return driverThreadLocal.get();
     }
 
-    public static SoftAssert getSoftAssert() {
+    public static AllureSoftAssert getSoftAssert() {
         return softAssertThreadLocal.get();
     }
 
@@ -19,7 +18,7 @@ public class DriverHelper {
         driverThreadLocal.set(webDriver);
     }
 
-    public static void setSoftAssertThreadLocal(SoftAssert softAssert) {
+    public static void setSoftAssertThreadLocal(AllureSoftAssert softAssert) {
         softAssertThreadLocal.set(softAssert);
     }
 
@@ -31,4 +30,3 @@ public class DriverHelper {
         softAssertThreadLocal.remove();
     }
 }
-

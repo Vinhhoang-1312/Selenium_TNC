@@ -6,14 +6,11 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
 import java.util.List;
 
 public class CartPage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(CartPage.class);
 
     private final By quantityInputs = By.xpath("//input[contains(@class, 'js-buy-quantity')]");
     private final By firstPlusSign = By.xpath("(//a[@class='js-quantity-change'])[1]");
@@ -56,11 +53,11 @@ public class CartPage extends BasePage {
     }
 
     public void clickFirstPlusButton() {
-        waitForElementToBeClickable(firstPlusSign).click();
+        click(firstPlusSign);
     }
 
     public void clickFirstMinusButton() {
-        waitForElementToBeClickable(firstMinusSign).click();
+        click(firstMinusSign);
     }
 
     /**
@@ -119,13 +116,13 @@ public class CartPage extends BasePage {
     }
 
     public void proceedToCheckout() {
-        waitForElementToBeClickable(makePaymentButton).click();
+        click(makePaymentButton);
         logger.info("Clicked on Proceed to Checkout button");
     }
 
     public void clickOnConfirmPurchase() {
         waitForElementToBeVisible(confirmPurchaseButton);
-        waitForElementToBeClickable(confirmPurchaseButton).click();
+        click(confirmPurchaseButton);
         logger.info("Clicked on confirm purchase");
     }
 
@@ -147,8 +144,7 @@ public class CartPage extends BasePage {
         try {
             acceptAlert();
             waitForElementToBeVisible(missingPhoneErrorLocator);
-            WebElement missingPhoneError = driver.findElement(missingPhoneErrorLocator);
-            String actualText = missingPhoneError.getText();
+            String actualText = waitAndGetText(missingPhoneErrorLocator);
 
             Assert.assertTrue(actualText.contains("Bạn chưa nhập SĐT"),
                 "Error message for missing phone number should be displayed");

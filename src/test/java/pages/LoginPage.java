@@ -1,15 +1,10 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LoginPage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);
 
     private final By accountButton = By.xpath("//a[contains(@class,'item') and contains(@class,'account')]//span[contains(@class,'hover-txt')]");
     private final By loginPopup = By.cssSelector("#js-form-holder");
@@ -31,43 +26,21 @@ public class LoginPage extends BasePage {
      * Opens login popup with retry mechanism and popup handling
      */
     public void openLoginPopup() {
-        int maxAttempts = 2;
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                popupHandler.dismissAllPopups();
-                waitForElementToBeClickable(accountButton);
-                try {
-                    driver.findElement(accountButton).click();
-                } catch (ElementClickInterceptedException e) {
-                    WebElement btn = driver.findElement(accountButton);
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-                }
-                customWait(500);
-                waitForElementToBeVisible(loginPopup);
-                return;
-            } catch (Exception e) {
-                if (attempt < maxAttempts) {
-                    try {
-                        customWait(1000);
-                    } catch (Exception ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                } else {
-                    logger.error("Cannot open login popup after {} attempts", maxAttempts, e);
-                    throw new RuntimeException("Cannot open login popup after " + maxAttempts + " attempts", e);
-                }
-            }
+        try {
+            clickElementWithRetry(accountButton, "account button");
+            waitForElementToBeVisible(loginPopup);
+        } catch (Exception e) {
+            logger.error("Cannot open login popup", e);
+            throw new RuntimeException("Cannot open login popup", e);
         }
     }
 
     public LoginPage setEmail(String email) {
-        waitForElementToBeClickable(loginEmailField);
         clearAndType(loginEmailField, email);
         return this;
     }
 
     public LoginPage setPassword(String password) {
-        waitForElementToBeClickable(loginPasswordField);
         clearAndType(loginPasswordField, password);
         return this;
     }
@@ -88,9 +61,10 @@ public class LoginPage extends BasePage {
 
     public boolean isLoginSuccessful() {
         try {
-            customWait(3000);
+            // Wait for page to stabilize after login
+            waitForElementToBeVisible(loggedInUserName);
             if (isDisplayed(loggedInUserName)) {
-                WebElement accountElement = driver.findElement(loggedInUserName);
+                WebElement accountElement = waitAndFind(loggedInUserName);
                 String accountText = accountElement.getText().trim();
                 // If text is not default "Tài khoản" or "Account", user is logged in
                 if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
@@ -106,8 +80,7 @@ public class LoginPage extends BasePage {
     public String getLoggedInUserName() {
         try {
             if (isDisplayed(loggedInUserName)) {
-                WebElement userNameEl = driver.findElement(loggedInUserName);
-                return userNameEl.getText().trim();
+                return waitAndFind(loggedInUserName).getText().trim();
             }
         } catch (Exception e) {
             logger.warn("Could not get logged in user name", e);

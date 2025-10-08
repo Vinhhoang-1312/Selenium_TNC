@@ -3,13 +3,10 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class SearchPage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(SearchPage.class);
 
     private final By productResults = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
     private final By noResultsMessage = By.xpath("//div[contains(@class,'no-results')]");
@@ -58,6 +55,26 @@ public class SearchPage extends BasePage {
             logger.warn("No suggestion items found", e);
             return List.of();
         }
+    }
+
+    /**
+     * Waits for search suggestions to load
+     */
+    public void waitForSearchSuggestions() {
+        try {
+            waitForElementToBeVisible(suggestionList);
+            logger.info("Search suggestions loaded");
+        } catch (Exception e) {
+            logger.warn("Search suggestions did not load", e);
+        }
+    }
+
+    /**
+     * Gets suggestion items with explicit wait
+     */
+    public List<WebElement> getSuggestionItemsWithWait() {
+        waitForSearchSuggestions();
+        return getSuggestionItems();
     }
 
     /**
@@ -120,20 +137,5 @@ public class SearchPage extends BasePage {
      */
     public By getSuggestionListLocator() {
         return suggestionList;
-    }
-
-    /**
-     * Gets all suggestion items as WebElements with visible wait
-     * This method encapsulates the direct WebDriver access pattern
-     */
-    public List<WebElement> getSuggestionItemsWithWait() {
-        try {
-            waitForElementToBeVisible(suggestionList);
-            customWait(1000);
-            return driver.findElements(By.xpath("//div[@class='content-suggestions']//a"));
-        } catch (Exception e) {
-            logger.warn("No suggestion items found after wait", e);
-            return List.of();
-        }
     }
 }

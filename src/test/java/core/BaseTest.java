@@ -8,10 +8,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Optional;
-import org.testng.asserts.SoftAssert;
 import helpers.PopupHandler;
+import utils.AllureSoftAssert;
 import utils.DriverHelper;
-import helpers.WaitUtils;
 
 import static utils.ConfigReader.getProperty;
 
@@ -26,30 +25,35 @@ public abstract class BaseTest {
         DriverHelper.setDriverThreadLocal(DriverFactory.initDriver(browser));
         navigateToBaseUrl();
         new PopupHandler(getDriver()).dismissAllPopups();
-        DriverHelper.setSoftAssertThreadLocal(new SoftAssert());
+        DriverHelper.setSoftAssertThreadLocal(new AllureSoftAssert());
     }
 
     public WebDriver getDriver() {
         return DriverHelper.getDriver();
     }
 
-    public SoftAssert getSoftAssert() {
+    public AllureSoftAssert getSoftAssert() {
         return DriverHelper.getSoftAssert();
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
         try {
-            if (getDriver() != null) {
-                getDriver().quit();
-            }
-            Allure.step("Tearing down");
             if (getSoftAssert() != null) {
                 getSoftAssert().assertAll();
             }
+        } catch (AssertionError e) {
+            logger.error("Soft assertion failures detected: {}", e.getMessage());
         } finally {
-            DriverHelper.quitDriverThreadLocal();
-            DriverHelper.quitSoftAssertThreadLocal();
+            try {
+                if (getDriver() != null) {
+                    Allure.step("Closing browser");
+                    getDriver().quit();
+                }
+            } finally {
+                DriverHelper.quitDriverThreadLocal();
+                DriverHelper.quitSoftAssertThreadLocal();
+            }
         }
     }
 
@@ -64,11 +68,11 @@ public abstract class BaseTest {
     }
 
     /**
-     * Utility method to pause execution for specified milliseconds
-     *
-     * @param milliseconds time to wait in milliseconds
+     * DEPRECATED: Use explicit waits in page objects instead of Thread.sleep
+     * This method is kept for backward compatibility only
      */
+    @Deprecated
     protected void customWait(int milliseconds) {
-        WaitUtils.sleep(milliseconds);
+        logger.warn("customWait() is deprecated - use explicit wait methods in page objects instead");
     }
 }
