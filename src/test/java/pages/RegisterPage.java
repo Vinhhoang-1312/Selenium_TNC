@@ -2,11 +2,8 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RegisterPage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(RegisterPage.class);
 
     private final By registerNameField = By.xpath("//input[@id='js-popup-register-name']");
     private final By registerEmailField = By.xpath("//input[@id='js-popup-register-email']");
@@ -24,8 +21,6 @@ public class RegisterPage extends BasePage {
 
     public RegisterPage setName(String name) {
         try {
-            waitForElementToBeVisible(registerNameField);
-            waitForElementToBeClickable(registerNameField);
             clearAndType(registerNameField, name);
         } catch (Exception e) {
             logger.error("Failed to set name: {}", e.getMessage());
@@ -36,8 +31,6 @@ public class RegisterPage extends BasePage {
 
     public RegisterPage setEmail(String email) {
         try {
-            waitForElementToBeVisible(registerEmailField);
-            waitForElementToBeClickable(registerEmailField);
             clearAndType(registerEmailField, email);
         } catch (Exception e) {
             logger.error("Failed to set email: {}", e.getMessage());
@@ -48,7 +41,6 @@ public class RegisterPage extends BasePage {
 
     public RegisterPage setPassword(String password) {
         try {
-            waitForElementToBeClickable(registerPasswordField);
             clearAndType(registerPasswordField, password);
         } catch (Exception e) {
             logger.error("Failed to set password: {}", e.getMessage());
@@ -116,7 +108,8 @@ public class RegisterPage extends BasePage {
 
     public boolean isRegistrationSuccessful() {
         try {
-            customWait(2000);
+            // Wait for success message to appear instead of arbitrary sleep
+            waitForElementToBeVisible(successMessage);
             String success = getSuccessMessage();
             return success != null && !success.isEmpty();
         } catch (Exception e) {

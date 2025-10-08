@@ -8,14 +8,11 @@ import org.testng.annotations.Test;
 import pages.CartPage;
 import pages.HomePage;
 import pages.ProductDetailPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Listeners({BaseListener.class})
 @Epic("E-Commerce")
 @Feature("Checkout Process")
 public class CheckoutTests extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(CheckoutTests.class);
 
     @Test(groups = {"checkout"},
             description = "CHECKOUT-01: Verify error when phone number is missing")
@@ -35,6 +32,6 @@ public class CheckoutTests extends BaseTest {
         cartPage.proceedToCheckout();
         cartPage.verifyMissingPhoneNumberError();
 
-        log.info("Missing phone number error verified during checkout");
+        logger.info("Missing phone number error verified during checkout");
     }
 }

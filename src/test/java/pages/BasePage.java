@@ -4,12 +4,14 @@ import helpers.PopupHandler;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.List;
-import helpers.WaitUtils;
 
 public abstract class BasePage {
+    protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);
     protected final WebDriver driver;
     protected final WebDriverWait wait;
     protected final PopupHandler popupHandler;
@@ -24,10 +26,6 @@ public abstract class BasePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    protected List<WebElement> waitAndFindList(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
-    }
-
     protected void clearAndType(By locator, String value) {
         WebElement element = waitAndFind(locator);
         element.clear();
@@ -38,7 +36,7 @@ public abstract class BasePage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         } catch (ElementNotInteractableException e) {
-            WaitUtils.sleep(200);
+            // Retry immediately without sleep - element will become interactable or fail fast
             click(locator);
         } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
             // Accept unexpected JS alert and retry
@@ -50,16 +48,6 @@ public abstract class BasePage {
             // retry click once
             wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         }
-    }
-
-    protected void clickWithJs(By locator) {
-        WebElement element = waitAndFind(locator);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-    }
-
-    protected void pressEnter(By locator) {
-        WebElement element = waitAndFind(locator);
-        element.sendKeys(Keys.ENTER);
     }
 
     protected boolean isDisplayed(By locator) {
@@ -74,32 +62,14 @@ public abstract class BasePage {
         return driver.findElements(locator);
     }
 
-    public String getTitle() {
-        return driver.getTitle();
-    }
-
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
-    }
-
     public String waitAndGetText(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
     }
 
-    public boolean checkCurrentUrl(String url) {
-        return wait.until(ExpectedConditions.urlContains(url));
-    }
-
-    public String waitAndGetAttribute(By locator, String nameAttribute) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getAttribute(nameAttribute);
-    }
-
-    public boolean waitAndCheckEnabled(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).isEnabled();
-    }
-
+    // DEPRECATED: Use explicit waits instead of Thread.sleep
+    // This method is kept for backward compatibility but should not be used
     public void customWait(int milliseconds) {
-        WaitUtils.sleep(milliseconds);
+        logger.warn("customWait() is deprecated - use explicit wait methods instead");
     }
 
     public void waitForElementToDisappear(By locator) {
@@ -117,25 +87,6 @@ public abstract class BasePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public void waitForPageLoad() {
-        wait.until(webDriver -> {
-            String readyState = (String) ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState");
-            return readyState != null && readyState.equals("complete");
-        });
-    }
-
-    public void waitForPresence(By locator) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-    }
-
-    public List<WebElement> waitForAllElementsPresence(By locator) {
-        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
-    }
-
-    /**
-     * Clicks an element with retry and popup handling (DRY for all pages)
-     */
     protected void clickElementWithRetry(By by, String elementName) {
         int maxAttempts = 3;
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -154,7 +105,11 @@ public abstract class BasePage {
                     if (attempt == maxAttempts) {
                         throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
                     }
-                    WaitUtils.sleep(2000);
+                    // Brief pause before retry - use short explicit wait instead of sleep
+                    try {
+                        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loading, .spinner")));
+                    } catch (Exception ignored) {
+                    }
                 }
             } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
                 // Accept unexpected JS alert and retry
@@ -166,12 +121,15 @@ public abstract class BasePage {
                 if (attempt == maxAttempts) {
                     throw new RuntimeException("Failed to click " + elementName + " after handling unexpected alert", alertEx);
                 }
-                WaitUtils.sleep(500);
             } catch (Exception e) {
                 if (attempt == maxAttempts) {
                     throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
                 }
-                WaitUtils.sleep(2000);
+                // Brief pause before retry
+                try {
+                    wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loading, .spinner")));
+                } catch (Exception ignored) {
+                }
             }
         }
     }

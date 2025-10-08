@@ -9,14 +9,11 @@ import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Listeners({BaseListener.class})
 @Epic("E-Commerce")
 @Feature("Shopping Cart")
 public class CartTests extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(CartTests.class);
 
     @Test(groups = {"cart", "smoke"},
             description = "CART-01: Add single product to cart")
@@ -34,7 +31,7 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyFirstItemQuantity();
-        log.info("Single product added to cart successfully");
+        logger.info("Single product added to cart successfully");
     }
 
     @Test(groups = {"cart"},
@@ -53,7 +50,7 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = new CartPage(getDriver());
         cartPage.checkItemQuantityIncrease();
-        log.info("Item quantity increased successfully");
+        logger.info("Item quantity increased successfully");
     }
 
     @Test(groups = {"cart"},
@@ -72,7 +69,7 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = new CartPage(getDriver());
         cartPage.checkItemQuantityDecrease();
-        log.info("Item quantity decreased successfully");
+        logger.info("Item quantity decreased successfully");
     }
 
     @Test(groups = {"cart"},
@@ -101,7 +98,7 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyMultipleProducts();
-        log.info("Multiple products added to cart successfully");
+        logger.info("Multiple products added to cart successfully");
     }
 
     @Test(groups = {"cart"},
@@ -120,7 +117,7 @@ public class CartTests extends BaseTest {
 
         CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyCartSize(1);
-        log.info("Cart size verified successfully");
+        logger.info("Cart size verified successfully");
     }
 
     @Test(groups = {"cart"},
@@ -142,6 +139,6 @@ public class CartTests extends BaseTest {
         String cartProductName = cartPage.getFirstProductName();
         Assert.assertTrue(cartProductName.contains(productName.substring(0, Math.min(20, productName.length()))),
             "Product name in cart should match the added product");
-        log.info("Product name verified in cart: {}", cartProductName);
+        logger.info("Product name verified in cart: {}", cartProductName);
     }
 }

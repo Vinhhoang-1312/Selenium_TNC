@@ -8,14 +8,11 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import pages.RegisterPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Listeners({BaseListener.class})
 @Epic("Authentication")
 @Feature("User Registration")
 public class RegisterTests extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(RegisterTests.class);
 
     @Test(groups = {"authentication", "register"},
             description = "REG-01: Register with valid data")
@@ -33,8 +30,7 @@ public class RegisterTests extends BaseTest {
         Allure.step("Fill registration form with valid data: " + user.email);
         registerPage.performRegister(user.name, user.email, user.password);
 
-        customWait(2000);
-        log.info("Register test completed with email: {}", user.email);
+        logger.info("Register test completed with email: {}", user.email);
     }
 
     @Test(groups = {"authentication", "register"},
@@ -50,8 +46,7 @@ public class RegisterTests extends BaseTest {
         Allure.step("Attempt to register with invalid email format");
         registerPage.performRegister("Test User", "invalidemail", "Test123456");
 
-        customWait(1000);
-        log.info("Register with invalid email completed");
+        logger.info("Register with invalid email completed");
     }
 
     @Test(groups = {"authentication", "register"},
@@ -70,7 +65,6 @@ public class RegisterTests extends BaseTest {
         Allure.step("Attempt to register with weak password");
         registerPage.performRegister(user.name, user.email, "123");
 
-        customWait(1000);
-        log.info("Register with weak password completed");
+        logger.info("Register with weak password completed");
     }
 }

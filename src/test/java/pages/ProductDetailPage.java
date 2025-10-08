@@ -5,11 +5,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ProductDetailPage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(ProductDetailPage.class);
     private final Actions actions;
 
     private final By addToCartButton = By.xpath("//a[contains(text(),'Thêm vào giỏ hàng')]");
@@ -57,16 +54,6 @@ public class ProductDetailPage extends BasePage {
         logger.info("Set product quantity to: {}", quantity);
     }
 
-    public void clickDecreaseButton() {
-        try {
-            waitForElementToBeClickable(decreaseButton).click();
-            logger.info("Clicked decrease quantity button");
-        } catch (Exception e) {
-            logger.warn("Failed to click decrease button normally, attempting JS click", e);
-            WebElement btn = waitAndFind(decreaseButton);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-        }
-    }
 
     public void goToCart() {
         // Use waitAndFind so any unexpected JS alert is handled via PopupHandler before we interact
@@ -121,41 +108,20 @@ public class ProductDetailPage extends BasePage {
         return originalPrice - (originalPrice * discountPercent / 100);
     }
 
-    /**
-     * Verifies that sale price calculation is correct
-     */
-    public boolean isSalePriceCorrect() {
-        double actualSalePrice = getSalePrice();
-        double expectedSalePrice = calculateExpectedSalePrice();
-        return Math.abs(actualSalePrice - expectedSalePrice) < 0.01; // Allow small floating point difference
-    }
-
-    /**
-     * Gets the product name from H1 tag
-     */
     public String getProductNameH1() {
         return waitAndGetText(productNameH1);
     }
 
-    /**
-     * Clicks on first similar product
-     */
     public void clickFirstSimilarProduct() {
-        waitForElementToBeClickable(similarProducts).click();
+        click(similarProducts);
         logger.info("Clicked first similar product");
     }
 
-    /**
-     * Gets all viewed product names
-     */
     public java.util.List<WebElement> getViewedProductNames() {
         waitForElementToBeVisible(viewedProductsSection);
         return driver.findElements(viewedProductNames);
     }
 
-    /**
-     * Checks if a product name exists in viewed products list
-     */
     public boolean isProductInViewedList(String productName) {
         java.util.List<WebElement> viewedProducts = getViewedProductNames();
         return viewedProducts.stream()
@@ -166,19 +132,16 @@ public class ProductDetailPage extends BasePage {
      * Sets quantity using input field (alternative method)
      */
     public void setQuantityByInput(String quantity) {
-        // Use the canonical quantityInput locator to avoid selector mismatch
-        WebElement qtyInput = waitAndFind(quantityInput);
-        qtyInput.clear();
-        qtyInput.sendKeys(quantity);
+        waitForElementToBeVisible(quantityInput);
+        clearAndType(quantityInput, quantity);
         logger.info("Set quantity to: {}", quantity);
     }
 
     /**
-     * Clicks decrease button using alternative selector
+     * Clicks decrease button (uses base click with retry and alert handling)
      */
     public void clickDecreaseButtonAlt() {
-        WebElement minusButton = waitAndFind(By.cssSelector(".qty-down"));
-        minusButton.click();
+        click(decreaseButton);
         logger.info("Clicked decrease button");
     }
 
@@ -194,12 +157,5 @@ public class ProductDetailPage extends BasePage {
      */
     public void acceptAlert() {
         popupHandler.acceptAlert(5);
-    }
-
-    /**
-     * Gets alert text and accepts it in one call
-     */
-    public String getAlertTextAndAccept() {
-        return popupHandler.getAlertTextAndAccept(5);
     }
 }

@@ -2,11 +2,8 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class UserProfilePage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(UserProfilePage.class);
 
     private final By profileLink = By.xpath("//a[contains(@href,'profile') or contains(@href,'account')]");
     private final By nameField = By.cssSelector("#profile-name");
@@ -31,7 +28,7 @@ public class UserProfilePage extends BasePage {
 
     public void navigateToProfile() {
         try {
-            waitForElementToBeClickable(profileLink).click();
+            click(profileLink);
             logger.info("Navigated to profile page");
         } catch (Exception e) {
             logger.error("Failed to navigate to profile: {}", e.getMessage());
@@ -42,15 +39,12 @@ public class UserProfilePage extends BasePage {
     public void updateProfile(String name, String phone, String address) {
         try {
             if (name != null && !name.isEmpty()) {
-                waitForElementToBeClickable(nameField);
                 clearAndType(nameField, name);
             }
             if (phone != null && !phone.isEmpty()) {
-                waitForElementToBeClickable(phoneField);
                 clearAndType(phoneField, phone);
             }
             if (address != null && !address.isEmpty()) {
-                waitForElementToBeClickable(addressField);
                 clearAndType(addressField, address);
             }
             clickElementWithRetry(saveProfileButton, "save profile");
@@ -66,15 +60,9 @@ public class UserProfilePage extends BasePage {
      */
     public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
         try {
-            waitForElementToBeClickable(currentPasswordField);
             clearAndType(currentPasswordField, currentPassword);
-
-            waitForElementToBeClickable(newPasswordField);
             clearAndType(newPasswordField, newPassword);
-
-            waitForElementToBeClickable(confirmPasswordField);
             clearAndType(confirmPasswordField, confirmPassword);
-
             clickElementWithRetry(changePasswordButton, "change password");
             logger.info("Password change request submitted");
         } catch (Exception e) {
@@ -85,9 +73,7 @@ public class UserProfilePage extends BasePage {
 
     public void updatePhone(String phone) {
         try {
-            waitForElementToBeClickable(phoneInput);
             clearAndType(phoneInput, phone);
-
             clickElementWithRetry(saveButton, "save button");
             logger.info("Phone updated to: {}", phone);
         } catch (Exception e) {
@@ -98,7 +84,6 @@ public class UserProfilePage extends BasePage {
 
     public void updateFullname(String fullname) {
         try {
-            waitForElementToBeClickable(fullnameInput);
             clearAndType(fullnameInput, fullname);
             clickElementWithRetry(saveButton, "save button");
             logger.info("Fullname updated to: {}", fullname);
@@ -110,7 +95,6 @@ public class UserProfilePage extends BasePage {
 
     public void updateAddress(String address) {
         try {
-            waitForElementToBeClickable(addressInput);
             clearAndType(addressInput, address);
             clickElementWithRetry(saveButton, "save button");
             logger.info("Address updated to: {}", address);
@@ -120,10 +104,10 @@ public class UserProfilePage extends BasePage {
         }
     }
 
-    // Getters
+    // Getters - Use waitAndFind instead of direct driver.findElement
     public String getPhone() {
         try {
-            return driver.findElement(phoneInput).getAttribute("value");
+            return waitAndFind(phoneInput).getAttribute("value");
         } catch (Exception e) {
             return "";
         }
@@ -131,7 +115,7 @@ public class UserProfilePage extends BasePage {
 
     public String getFullname() {
         try {
-            return driver.findElement(fullnameInput).getAttribute("value");
+            return waitAndFind(fullnameInput).getAttribute("value");
         } catch (Exception e) {
             return "";
         }
@@ -139,7 +123,7 @@ public class UserProfilePage extends BasePage {
 
     public String getAddress() {
         try {
-            return driver.findElement(addressInput).getAttribute("value");
+            return waitAndFind(addressInput).getAttribute("value");
         } catch (Exception e) {
             return "";
         }
@@ -147,7 +131,7 @@ public class UserProfilePage extends BasePage {
 
     public String getProfileName() {
         try {
-            return driver.findElement(nameField).getAttribute("value");
+            return waitAndFind(nameField).getAttribute("value");
         } catch (Exception e) {
             return "";
         }
@@ -155,7 +139,7 @@ public class UserProfilePage extends BasePage {
 
     public String getProfileEmail() {
         try {
-            return driver.findElement(emailField).getAttribute("value");
+            return waitAndFind(emailField).getAttribute("value");
         } catch (Exception e) {
             return "";
         }

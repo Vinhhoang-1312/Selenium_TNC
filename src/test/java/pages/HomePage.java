@@ -3,13 +3,10 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class HomePage extends BasePage {
-    private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
@@ -27,7 +24,7 @@ public class HomePage extends BasePage {
         if (!driver.findElements(loadingSpinner).isEmpty()) {
             waitForElementToDisappear(loadingSpinner);
         }
-        waitForElementToBeClickable(searchButton).click();
+        click(searchButton);
         logger.info("Successfully searched for product: {}", productName);
     }
 
@@ -44,8 +41,7 @@ public class HomePage extends BasePage {
         List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 
         if (!availableProducts.isEmpty()) {
-            // Use the defined locator instead of duplicating xpath
-            waitForElementToBeClickable(firstProductLink).click();
+            click(firstProductLink);
             logger.info("Successfully clicked first product");
         } else {
             logger.error("No products found on the page");
