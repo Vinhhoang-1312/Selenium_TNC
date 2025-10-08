@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +16,7 @@ public class ProductDetailPage extends BasePage {
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'loading-spinner')]");
     private final By quantityInput = By.xpath("//input[@id='js-buy-quantity']");
     private final By productName = By.xpath("//h1[@class='name']");
-    private final By successNotification = By.xpath("//div[@class='content-container']");
+    private final By successNotification = By.xpath("//div[contains(text(), 'Thêm sản phẩm vào giỏ hàng thành công')]");
     private final By decreaseButton = By.cssSelector(".qty-down");
     private final By originalPriceLocator = By.cssSelector(".product-price-original");
     private final By salePriceLocator = By.cssSelector(".product-price");
@@ -31,35 +32,39 @@ public class ProductDetailPage extends BasePage {
     }
 
     public void addToCart() {
-        waitForElementToDisappear(loadingSpinner);
-        waitForElementToBeVisible(addToCartButton);
-        clickElementWithRetry(addToCartButton, "add to cart");
-        popupHandler.acceptAlert(3);
+        Allure.step("Add product to cart", () -> {
+            waitForElementToDisappear(loadingSpinner);
+            waitForElementToBeVisible(addToCartButton);
+            clickElementWithRetry(addToCartButton, "add to cart");
+            popupHandler.acceptAlert(3);
 
-        // Wait for cart update to complete
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+            // Wait for cart update to complete
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
-        logger.info("Successfully added product to cart");
+            logger.info("Successfully added product to cart");
+        });
     }
 
     public void addToCart(int quantity) {
-        setQuantity(quantity);
-        waitForElementToBeVisible(addToCartButton);
-        clickElementWithRetry(addToCartButton, "add to cart");
-        popupHandler.acceptAlert(3);
+        Allure.step("Add " + quantity + " product(s) to cart", () -> {
+            setQuantity(quantity);
+            waitForElementToBeVisible(addToCartButton);
+            clickElementWithRetry(addToCartButton, "add to cart");
+            popupHandler.acceptAlert(3);
 
-        // Wait for cart update to complete
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+            // Wait for cart update to complete
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
-        logger.info("Successfully added {} product(s) to cart", quantity);
+            logger.info("Successfully added {} product(s) to cart", quantity);
+        });
     }
 
     public void setQuantity(int quantity) {
@@ -70,19 +75,23 @@ public class ProductDetailPage extends BasePage {
 
 
     public void goToCart() {
-        // Use waitAndFind so any unexpected JS alert is handled via PopupHandler before we interact
-        WebElement cartIconElement = waitAndFind(cartIcon);
-        waitForElementToBeVisible(cartIcon);
-        actions.moveToElement(cartIconElement).perform();
-        logger.info("Successfully hovered over cart icon");
+        Allure.step("Navigate to shopping cart", () -> {
+            // Use waitAndFind so any unexpected JS alert is handled via PopupHandler before we interact
+            WebElement cartIconElement = waitAndFind(cartIcon);
+            waitForElementToBeVisible(cartIcon);
+            actions.moveToElement(cartIconElement).perform();
+            logger.info("Successfully hovered over cart icon");
 
-        waitForElementToBeVisible(viewCartLink);
-        clickElementWithRetry(viewCartLink, "view cart link");
-        logger.info("Successfully navigated to cart page");
+            waitForElementToBeVisible(viewCartLink);
+            clickElementWithRetry(viewCartLink, "view cart link");
+            logger.info("Successfully navigated to cart page");
+        });
     }
 
     public String getProductName() {
-        return waitAndGetText(productName);
+        return Allure.step("Get product name", () -> {
+            return waitAndGetText(productName);
+        });
     }
 
     public boolean isSuccessNotificationDisplayed() {

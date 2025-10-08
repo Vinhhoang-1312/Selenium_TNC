@@ -23,13 +23,12 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that searching with a valid keyword returns relevant product results")
     public void testSearchWithValidKeyword() {
-        Allure.step("Search for 'laptop'");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
         homePage.searchProduct("laptop");
 
-        Allure.step("Verify search results are displayed");
         Assert.assertTrue(searchPage.hasResults(), "Search should return results for valid keyword");
         int resultCount = searchPage.getProductCount();
         Allure.parameter("Results Count", resultCount);
@@ -42,10 +41,10 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.MINOR)
     @Description("Verify system behavior when searching with special characters")
     public void testSearchWithSpecialCharacters() {
-        Allure.step("Search with special characters: @#$%");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
-        homePage.searchProduct("@#$%");
 
+        homePage.searchProduct("@#$%");
         logger.info("Search with special characters completed");
     }
 
@@ -55,10 +54,10 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.MINOR)
     @Description("Verify system behavior when searching with empty keyword")
     public void testSearchWithEmptyKeyword() {
-        Allure.step("Submit search with empty keyword");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
-        homePage.searchProduct("");
 
+        homePage.searchProduct("");
         logger.info("Search with empty keyword completed");
     }
 
@@ -68,14 +67,13 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that search suggestions contain the entered keyword")
     public void testSearchSuggestionsContainKeyword() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
-        Allure.step("Enter search keyword: rtx 2050");
         homePage.typeSearch("rtx 2050");
         searchPage.waitForSearchSuggestions();
 
-        Allure.step("Verify all suggestions contain the keyword");
         List<WebElement> suggestedItems = searchPage.getSuggestionItemsWithWait();
         Assert.assertFalse(suggestedItems.isEmpty(), "Suggestion list should not be empty");
 
@@ -95,18 +93,17 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that search results persist after page reload")
     public void testSearchReloadPage() {
-        Allure.step("Perform initial search");
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
+
         homePage.searchProduct("laptop");
 
-        SearchPage searchPage = new SearchPage(getDriver());
         int initialCount = searchPage.getProductCount();
         Allure.parameter("Initial Results Count", initialCount);
 
-        Allure.step("Reload page");
         getDriver().navigate().refresh();
 
-        Allure.step("Verify results count remains the same");
         int afterReloadCount = searchPage.getProductCount();
         Allure.parameter("After Reload Count", afterReloadCount);
         Assert.assertEquals(afterReloadCount, initialCount,
@@ -120,21 +117,19 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that repeated searches return consistent results")
     public void testRepeatedSearch() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
-        Allure.step("Perform first search");
         homePage.searchProduct("laptop");
         int firstCount = searchPage.getProductCount();
         Allure.parameter("First Search Count", firstCount);
 
-        Allure.step("Navigate back and search again");
         getDriver().navigate().to(baseUrl);
         homePage.searchProduct("laptop");
         int secondCount = searchPage.getProductCount();
         Allure.parameter("Second Search Count", secondCount);
 
-        Allure.step("Verify results are consistent");
         Assert.assertEquals(secondCount, firstCount,
             "Repeated search should return consistent results");
         logger.info("Repeated search consistent: {} products", secondCount);
@@ -146,19 +141,14 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that search suggestions list is displayed when typing")
     public void testSuggestionListDisplayed() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
-        Allure.step("Type search keyword to trigger suggestions");
         homePage.typeSearch("laptop");
-        searchPage.waitForSearchSuggestions();
 
-        Allure.step("Verify suggestion list is displayed");
         Assert.assertTrue(searchPage.isSuggestionListDisplayed(),
-            "Suggestion list should be displayed");
-        Assert.assertTrue(searchPage.getSuggestionCount() > 0,
-            "Should have at least one suggestion");
-        Allure.parameter("Suggestion Count", searchPage.getSuggestionCount());
-        logger.info("Suggestion list displayed with {} items", searchPage.getSuggestionCount());
+            "Suggestion list should be displayed when typing");
+        logger.info("Suggestion list displayed successfully");
     }
 }

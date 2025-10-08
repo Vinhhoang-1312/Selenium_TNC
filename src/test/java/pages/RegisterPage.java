@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -57,71 +58,24 @@ public class RegisterPage extends BasePage {
      * Performs full registration with name, email and password
      */
     public void performRegister(String name, String email, String password) {
-        try {
-            setName(name).setEmail(email).setPassword(password).submitRegister();
-
-            // Wait for registration to complete
+        Allure.step("Register with email: " + email, () -> {
             try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                setName(name).setEmail(email).setPassword(password).submitRegister();
+
+                // Wait for registration to complete
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
+                logger.info("Registration submitted for email: {}", email);
+            } catch (Exception e) {
+                logger.error("Cannot perform registration", e);
+                throw new RuntimeException("Cannot perform registration", e);
             }
-
-            logger.info("Registration submitted for email: {}", email);
-        } catch (Exception e) {
-            logger.error("Cannot perform registration", e);
-            throw new RuntimeException("Cannot perform registration", e);
-        }
+        });
     }
 
-    public String getErrorMessage() {
-        try {
-            return waitAndGetText(errorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
-    public String getEmailError() {
-        try {
-            return waitAndGetText(emailErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getPasswordError() {
-        try {
-            return waitAndGetText(passwordErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getNameError() {
-        try {
-            return waitAndGetText(nameErrorMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public String getSuccessMessage() {
-        try {
-            return waitAndGetText(successMessage);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    public boolean isRegistrationSuccessful() {
-        try {
-            // Wait for success message to appear instead of arbitrary sleep
-            waitForElementToBeVisible(successMessage);
-            String success = getSuccessMessage();
-            return success != null && !success.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

@@ -42,13 +42,11 @@ public class E2ETests extends BaseTest {
             popupHandler.dismissAllPopups();
 
             // Register
-            Allure.step("Step 1: Register new user - " + user.email);
             registerPage = loginPage.navigateToRegister();
             registerPage.performRegister(user.name, user.email, user.password);
             logger.info("Registration completed for: {}", user.email);
 
             // Login
-            Allure.step("Step 2: Login with newly created user");
             getDriver().get(baseUrl);
             popupHandler.dismissAllPopups();
             loginPage.performLogin(user.email, user.password);
@@ -56,18 +54,15 @@ public class E2ETests extends BaseTest {
             logger.info("Login successful for: {}", user.email);
 
             // Search
-            Allure.step("Step 3: Search for product");
             homePage.searchProduct("laptop");
             homePage.clickFirstProduct();
             logger.info("Product search and selection completed");
 
             // Add to cart
-            Allure.step("Step 4: Add product to cart");
             productDetailPage.addToCart();
             logger.info("Product added to cart");
 
             // Verify cart
-            Allure.step("Step 5: Verify cart contains product");
             productDetailPage.goToCart();
             int cartSize = cartPage.getCartSize();
             logger.info("Cart size after add: {}", cartSize);
