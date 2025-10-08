@@ -20,11 +20,13 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can successfully update their phone number in profile")
     public void testUpdatePhoneSuccess() {
-        Allure.step("Login to user account");
+        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
+        Allure.step("Login to user account");
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         String newPhone = "0912345678";
 
         Allure.step("Update phone number to: " + newPhone);
@@ -46,13 +48,15 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their full name in profile")
     public void testUpdateFullname() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
         logger.info("[TEST] Starting testUpdateFullname");
 
         Allure.step("Login to user account");
-        LoginPage loginPage = new LoginPage(getDriver());
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         try {
             Allure.step("Get current fullname and update it");
             String oldValue = profilePage.getFullname();
@@ -79,13 +83,15 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their address in profile")
     public void testUpdateAddress() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
         logger.info("[TEST] Starting testUpdateAddress");
 
         Allure.step("Login to user account");
-        LoginPage loginPage = new LoginPage(getDriver());
         loginPage.performLogin("john5@test.com", "Abc12345");
 
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
         String newAddress = "123 Test Street, Hanoi";
 
         Allure.step("Update address to: " + newAddress);

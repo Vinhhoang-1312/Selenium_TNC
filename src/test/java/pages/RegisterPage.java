@@ -59,6 +59,14 @@ public class RegisterPage extends BasePage {
     public void performRegister(String name, String email, String password) {
         try {
             setName(name).setEmail(email).setPassword(password).submitRegister();
+
+            // Wait for registration to complete
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
             logger.info("Registration submitted for email: {}", email);
         } catch (Exception e) {
             logger.error("Cannot perform registration", e);
