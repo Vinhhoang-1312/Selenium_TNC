@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
+import org.testng.annotations.Optional;
 import org.testng.asserts.SoftAssert;
 import helpers.PopupHandler;
 import utils.DriverHelper;
-import utils.WaitUtils;
+import helpers.WaitUtils;
 
 import static utils.ConfigReader.getProperty;
 
@@ -21,7 +22,7 @@ public abstract class BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     @Parameters(value = "browser")
-    public void setUp(String browser) {
+    public void setUp(@Optional("chrome") String browser) {
         DriverHelper.setDriverThreadLocal(DriverFactory.initDriver(browser));
         navigateToBaseUrl();
         new PopupHandler(getDriver()).dismissAllPopups();
@@ -43,7 +44,9 @@ public abstract class BaseTest {
                 getDriver().quit();
             }
             Allure.step("Tearing down");
-            getSoftAssert().assertAll();
+            if (getSoftAssert() != null) {
+                getSoftAssert().assertAll();
+            }
         } finally {
             DriverHelper.quitDriverThreadLocal();
             DriverHelper.quitSoftAssertThreadLocal();

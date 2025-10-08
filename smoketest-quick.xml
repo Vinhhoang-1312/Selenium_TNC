@@ -41,7 +41,7 @@
         <classes>
             <class name="tests.ProductDetailTests">
                 <methods>
-                    <include name="testVerifyProductDetailsDisplayed"/>
+                    <include name="testMinusQuantityShowsAlert"/>
                 </methods>
             </class>
         </classes>

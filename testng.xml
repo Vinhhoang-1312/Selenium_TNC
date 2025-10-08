@@ -2,15 +2,9 @@
 <suite name="TNC Store Test Suite" parallel="none" thread-count="1">
     <parameter name="browser" value="chrome"/>
 
-    <test name="Smoke Tests">
-        <groups>
-            <run>
-                <include name="smoke"/>
-            </run>
-        </groups>
+    <test name="Full Test Suite">
         <packages>
             <package name="tests"/>
         </packages>
     </test>
 </suite>
-
