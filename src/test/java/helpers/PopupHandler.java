@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -73,13 +74,21 @@ public class PopupHandler {
         try {
             List<WebElement> closeBtns = driver.findElements(by);
             for (WebElement btn : closeBtns) {
-                if (btn.isDisplayed() && btn.isEnabled()) {
-                    btn.click();
-                    logger.info("Closed popup with selector: {}", by);
+                try {
+                    if (btn.isDisplayed() && btn.isEnabled()) {
+                        btn.click();
+                        logger.info("Closed popup with selector: {}", by);
+                    }
+                } catch (WebDriverException clickEx) {
+                    // element may be stale or window closed, continue
+                    logger.warn("Could not click close button for selector {}: {}", by, clickEx.toString());
                 }
             }
         } catch (NoSuchElementException ignore) {
             // No popup found, continue
+        } catch (WebDriverException wde) {
+            // Browser window may have been closed or detached; swallow to avoid test crash
+            logger.warn("WebDriverException while searching for popup {}: {}", by, wde.toString());
         } catch (Exception e) {
             logger.warn("Failed to close popup with selector: {}", by, e);
         }

@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
-import utils.WaitUtils;
+import helpers.WaitUtils;
 
 public abstract class BasePage {
     protected final WebDriver driver;

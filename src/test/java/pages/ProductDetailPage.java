@@ -37,6 +37,8 @@ public class ProductDetailPage extends BasePage {
         waitForElementToDisappear(loadingSpinner);
         waitForElementToBeVisible(addToCartButton);
         clickElementWithRetry(addToCartButton, "add to cart");
+        popupHandler.acceptAlert(3);
+
         logger.info("Successfully added product to cart");
     }
 
@@ -44,6 +46,8 @@ public class ProductDetailPage extends BasePage {
         setQuantity(quantity);
         waitForElementToBeVisible(addToCartButton);
         clickElementWithRetry(addToCartButton, "add to cart");
+        popupHandler.acceptAlert(3);
+
         logger.info("Successfully added {} product(s) to cart", quantity);
     }
 
@@ -59,13 +63,14 @@ public class ProductDetailPage extends BasePage {
             logger.info("Clicked decrease quantity button");
         } catch (Exception e) {
             logger.warn("Failed to click decrease button normally, attempting JS click", e);
-            WebElement btn = driver.findElement(decreaseButton);
+            WebElement btn = waitAndFind(decreaseButton);
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
         }
     }
 
     public void goToCart() {
-        WebElement cartIconElement = driver.findElement(cartIcon);
+        // Use waitAndFind so any unexpected JS alert is handled via PopupHandler before we interact
+        WebElement cartIconElement = waitAndFind(cartIcon);
         waitForElementToBeVisible(cartIcon);
         actions.moveToElement(cartIconElement).perform();
         logger.info("Successfully hovered over cart icon");
@@ -161,7 +166,8 @@ public class ProductDetailPage extends BasePage {
      * Sets quantity using input field (alternative method)
      */
     public void setQuantityByInput(String quantity) {
-        WebElement qtyInput = driver.findElement(By.cssSelector("input[name='quantity']"));
+        // Use the canonical quantityInput locator to avoid selector mismatch
+        WebElement qtyInput = waitAndFind(quantityInput);
         qtyInput.clear();
         qtyInput.sendKeys(quantity);
         logger.info("Set quantity to: {}", quantity);
@@ -171,7 +177,7 @@ public class ProductDetailPage extends BasePage {
      * Clicks decrease button using alternative selector
      */
     public void clickDecreaseButtonAlt() {
-        WebElement minusButton = driver.findElement(By.cssSelector(".qty-down"));
+        WebElement minusButton = waitAndFind(By.cssSelector(".qty-down"));
         minusButton.click();
         logger.info("Clicked decrease button");
     }
