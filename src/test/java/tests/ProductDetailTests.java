@@ -3,11 +3,16 @@ package tests;
 import core.BaseTest;
 import io.qameta.allure.*;
 import listeners.BaseListener;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
+
+import java.time.Duration;
 
 @Listeners({BaseListener.class})
 @Epic("E-Commerce")
@@ -40,7 +45,8 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that success notification is displayed after adding product to cart")
     public void testAddProductToCartShowsNotification() {
-        // Initialize page objects
+        By successNotificationLocator = By.id("successNotification");
+        Allure.step("Search and select a product");
         HomePage homePage = new HomePage(getDriver());
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
 
@@ -52,6 +58,7 @@ public class ProductDetailTests extends BaseTest {
         Assert.assertTrue(productDetailPage.isSuccessNotificationDisplayed(),
             "Success notification should be displayed after adding to cart");
         logger.info("Success notification verified");
+
     }
 
     @Test(groups = {"product"},
@@ -78,6 +85,7 @@ public class ProductDetailTests extends BaseTest {
         Allure.parameter("Discount %", discountPercent);
 
         double expectedPrice = productDetailPage.calculateExpectedSalePrice();
+        logger.info("Expected Price: {}", expectedPrice);
         Allure.parameter("Expected Price", expectedPrice);
 
         Assert.assertEquals(salePrice, expectedPrice,
@@ -94,9 +102,8 @@ public class ProductDetailTests extends BaseTest {
         // Initialize page objects
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
 
-        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
-
-        String initialTitle = productDetailPage.getProductNameH1();
+        Allure.step("Get initial product name");
+        String initialTitle = productDetailPage.getProductName();
         logger.info("Initial product: {}", initialTitle);
         Allure.parameter("First Product", initialTitle);
 

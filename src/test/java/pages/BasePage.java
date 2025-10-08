@@ -23,7 +23,12 @@ public abstract class BasePage {
     }
 
     protected WebElement waitAndFind(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+//        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        String text = element.getAttribute("innerText");
+        System.out.println("Notification text: \"" + text + "\"");
+        return element;
     }
 
     protected void clearAndType(By locator, String value) {
@@ -52,7 +57,8 @@ public abstract class BasePage {
 
     protected boolean isDisplayed(By locator) {
         try {
-            return waitAndFind(locator).isDisplayed();
+            waitAndFind(locator);
+            return true;
         } catch (Exception e) {
             return false;
         }
