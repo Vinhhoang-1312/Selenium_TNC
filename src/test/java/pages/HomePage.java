@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,22 +19,24 @@ public class HomePage extends BasePage {
     }
 
     public void searchProduct(String productName) {
-        waitForElementToBeVisible(searchBox);
-        clearAndType(searchBox, productName);
+        Allure.step("Search for product: " + productName, () -> {
+            waitForElementToBeVisible(searchBox);
+            clearAndType(searchBox, productName);
 
-        if (!driver.findElements(loadingSpinner).isEmpty()) {
-            waitForElementToDisappear(loadingSpinner);
-        }
-        click(searchButton);
+            if (!driver.findElements(loadingSpinner).isEmpty()) {
+                waitForElementToDisappear(loadingSpinner);
+            }
+            click(searchButton);
 
-        // Wait for search results to load
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+            // Wait for search results to load
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
-        logger.info("Successfully searched for product: {}", productName);
+            logger.info("Successfully searched for product: {}", productName);
+        });
     }
 
     /**
@@ -44,17 +47,19 @@ public class HomePage extends BasePage {
         clearAndType(searchBox, productName);
     }
 
-     public void clickFirstProduct() {
-        waitForElementToBeVisible(productTitleLinks);
-        List<WebElement> availableProducts = driver.findElements(productTitleLinks);
+    public void clickFirstProduct() {
+        Allure.step("Click first product from search results", () -> {
+            waitForElementToBeVisible(productTitleLinks);
+            List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 
-        if (!availableProducts.isEmpty()) {
-            click(firstProductLink);
-            logger.info("Successfully clicked first product");
-        } else {
-            logger.error("No products found on the page");
-            throw new RuntimeException("No products found on homepage");
-        }
+            if (!availableProducts.isEmpty()) {
+                click(firstProductLink);
+                logger.info("Successfully clicked first product");
+            } else {
+                logger.error("No products found on the page");
+                throw new RuntimeException("No products found on homepage");
+            }
+        });
     }
 
     /**
