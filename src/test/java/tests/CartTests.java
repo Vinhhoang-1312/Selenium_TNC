@@ -21,15 +21,17 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a user can successfully add a single product to the shopping cart")
     public void testAddSingleProductToCart() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyFirstItemQuantity();
         logger.info("Single product added to cart successfully");
     }
@@ -40,15 +42,17 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can increase product quantity in the cart")
     public void testIncreaseItemQuantity() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("Màn Hình Gaming Dell Alienware AW2721D IPS/ QHD/ 240Hz");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.checkItemQuantityIncrease();
         logger.info("Item quantity increased successfully");
     }
@@ -59,15 +63,17 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can decrease product quantity in the cart")
     public void testDecreaseItemQuantity() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart(2);
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.checkItemQuantityDecrease();
         logger.info("Item quantity decreased successfully");
     }
@@ -78,25 +84,23 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can add multiple different products to the cart")
     public void testAddMultipleProductsToCart() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
 
         // Add first product
         homePage.searchProduct("laptop");
-        customWait(1000);
         homePage.clickFirstProduct();
         productDetailPage.addToCart();
-        getDriver().navigate().back();
-        customWait(1000);
+        homePage.navigateBack();
 
         // Add second product
         homePage.searchProduct("mouse");
-        customWait(1000);
         homePage.clickFirstProduct();
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyMultipleProducts();
         logger.info("Multiple products added to cart successfully");
     }
@@ -107,15 +111,17 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that cart size is correctly displayed after adding products")
     public void testVerifyCartSize() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.verifyCartSize(1);
         logger.info("Cart size verified successfully");
     }
@@ -126,16 +132,18 @@ public class CartTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that product name in cart matches the added product")
     public void testVerifyFirstProductName() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("laptop");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         String productName = productDetailPage.getProductName();
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         String cartProductName = cartPage.getFirstProductName();
         Assert.assertTrue(cartProductName.contains(productName.substring(0, Math.min(20, productName.length()))),
             "Product name in cart should match the added product");

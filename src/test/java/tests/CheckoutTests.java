@@ -20,15 +20,17 @@ public class CheckoutTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that checkout process shows error when mandatory phone number field is missing")
     public void testCheckoutMissingPhoneNumber() {
+        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
         homePage.searchProduct("Màn Hình Samsung S3 LS24F320GAEXXV 24 Inch/ FHD/ IPS/ 120Hz/ 5ms");
         homePage.clickFirstProduct();
 
-        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         productDetailPage.addToCart();
         productDetailPage.goToCart();
 
-        CartPage cartPage = new CartPage(getDriver());
         cartPage.proceedToCheckout();
         cartPage.verifyMissingPhoneNumberError();
 

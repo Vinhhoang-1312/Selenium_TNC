@@ -22,11 +22,13 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a user can successfully login with valid email and password credentials")
     public void testLoginWithValidCredentials() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
             String email = AuthenticationTestData.VALID_EMAIL;
             String password = AuthenticationTestData.VALID_PASSWORD;
 
-            LoginPage loginPage = new LoginPage(getDriver());
             logger.info("Attempting login with user: {}", email);
             Allure.step("Open login popup and enter credentials");
             loginPage.performLogin(email, password);
@@ -46,8 +48,10 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that login fails when using an invalid email format")
     public void testLoginWithInvalidEmail() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
-            LoginPage loginPage = new LoginPage(getDriver());
             logger.info("Attempting login with invalid email");
 
             Allure.step("Attempt login with invalid email format");
@@ -72,8 +76,10 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when using credentials that don't exist in the system")
     public void testLoginWithNonExistentAccount() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
-            LoginPage loginPage = new LoginPage(getDriver());
             TestUser nonExistentUser = TestUser.createUniqueUser("NonExistent");
             logger.info("Attempting login with non-existent account: {}", nonExistentUser.email);
 
@@ -96,8 +102,10 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when email field is left empty")
     public void testLoginWithEmptyEmail() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
-            LoginPage loginPage = new LoginPage(getDriver());
             logger.info("Attempting login with empty email");
 
             Allure.step("Attempt login with empty email field");
@@ -119,8 +127,10 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when password field is left empty")
     public void testLoginWithEmptyPassword() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
-            LoginPage loginPage = new LoginPage(getDriver());
             logger.info("Attempting login with empty password");
 
             Allure.step("Attempt login with empty password field");
@@ -142,8 +152,10 @@ public class LoginTests extends BaseTest {
     @Severity(SeverityLevel.MINOR)
     @Description("Verify that login fails when both email and password fields are empty")
     public void testLoginWithBothFieldsEmpty() {
+        // Initialize page objects
+        LoginPage loginPage = new LoginPage(getDriver());
+
         try {
-            LoginPage loginPage = new LoginPage(getDriver());
             logger.info("Attempting login with both fields empty");
 
             Allure.step("Attempt login with both fields empty");
