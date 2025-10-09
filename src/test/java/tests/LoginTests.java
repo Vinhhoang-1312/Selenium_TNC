@@ -1,15 +1,14 @@
 package tests;
 
 import core.BaseTest;
-import data.AuthenticationTestData;
 import data.TestUser;
 import io.qameta.allure.*;
 import listeners.BaseListener;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import pages.HomePage;
 import pages.LoginPage;
+import utils.TestDataProviders;
 
 @Listeners({BaseListener.class})
 @Epic("Authentication")
@@ -26,8 +25,10 @@ public class LoginTests extends BaseTest {
         LoginPage loginPage = new LoginPage(getDriver());
 
         try {
-            String email = AuthenticationTestData.getValidEmail();
-            String password = AuthenticationTestData.getValidPassword();
+            // Get valid credentials from DataProvider (first row of Excel)
+            Object[][] validData = new TestDataProviders().provideValidLoginData();
+            String email = (String) validData[0][1]; // Email column
+            String password = (String) validData[0][2]; // Password column
 
             logger.info("Attempting login with user: {}", email);
             loginPage.performLogin(email, password);
@@ -50,11 +51,15 @@ public class LoginTests extends BaseTest {
         LoginPage loginPage = new LoginPage(getDriver());
 
         try {
+            // Get invalid email from DataProvider (second row of Excel)
+            Object[][] invalidData = new TestDataProviders().provideInvalidLoginData();
+            String invalidEmail = (String) invalidData[0][1]; // First invalid email
+
+            Object[][] validData = new TestDataProviders().provideValidLoginData();
+            String validPassword = (String) validData[0][2]; // Valid password
+
             logger.info("Attempting login with invalid email");
-            loginPage.performLogin(
-                    AuthenticationTestData.getInvalidEmail1(),
-                    AuthenticationTestData.getValidPassword()
-            );
+            loginPage.performLogin(invalidEmail, validPassword);
 
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email");
@@ -99,9 +104,13 @@ public class LoginTests extends BaseTest {
         LoginPage loginPage = new LoginPage(getDriver());
 
         try {
+            // Get valid password from DataProvider
+            Object[][] validData = new TestDataProviders().provideValidLoginData();
+            String validPassword = (String) validData[0][2];
+
             logger.info("Attempting login with empty email");
 
-            loginPage.performLogin("", AuthenticationTestData.getValidPassword());
+            loginPage.performLogin("", validPassword);
 
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty email");
@@ -122,9 +131,13 @@ public class LoginTests extends BaseTest {
         LoginPage loginPage = new LoginPage(getDriver());
 
         try {
+            // Get valid email from DataProvider
+            Object[][] validData = new TestDataProviders().provideValidLoginData();
+            String validEmail = (String) validData[0][1];
+
             logger.info("Attempting login with empty password");
 
-            loginPage.performLogin(AuthenticationTestData.getValidEmail(), "");
+            loginPage.performLogin(validEmail, "");
 
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty password");
@@ -158,18 +171,4 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "test-screenshot"},
-            description = "AUTH-LI-99: TEST SCREENSHOT - This test will intentionally FAIL")
-    @Story("Testing Screenshot Capture")
-    @Severity(SeverityLevel.CRITICAL)
-    @Description("This test intentionally fails to verify screenshot capture functionality works correctly")
-    public void testScreenshotCapture_IntentionalFail() {
-        LoginPage loginPage = new LoginPage(getDriver());
-
-        logger.info("=== INTENTIONAL FAIL TEST - Testing Screenshot Capture ===");
-
-        loginPage.performLogin(AuthenticationTestData.getValidEmail(), AuthenticationTestData.getValidPassword());
-
-        Assert.assertTrue(false, "🔴 INTENTIONAL FAILURE: Testing screenshot capture on failure");
-    }
 }

@@ -59,10 +59,8 @@ public class ProductDetailPage extends BasePage {
         logger.info("Set product quantity to: {}", quantity);
     }
 
-
     public void goToCart() {
         Allure.step("Navigate to shopping cart", () -> {
-            // Use waitAndFind so any unexpected JS alert is handled via PopupHandler before we interact
             WebElement cartIconElement = waitAndFind(cartIcon);
             waitForElementToBeVisible(cartIcon);
             actions.moveToElement(cartIconElement).perform();
@@ -86,33 +84,21 @@ public class ProductDetailPage extends BasePage {
         return isDisplayed(successNotification);
     }
 
-    /**
-     * Gets original price as double
-     */
     public double getOriginalPrice() {
         String priceText = waitAndGetText(originalPriceLocator).replaceAll("[^0-9]", "");
         return Double.parseDouble(priceText);
     }
 
-    /**
-     * Gets sale price as double
-     */
     public double getSalePrice() {
         String priceText = waitAndGetText(salePriceLocator).replaceAll("[^0-9]", "");
         return Double.parseDouble(priceText);
     }
 
-    /**
-     * Gets discount percentage as double
-     */
     public double getDiscountPercent() {
         String discountText = waitAndGetText(discountPercentLocator).replaceAll("[^0-9]", "");
         return Double.parseDouble(discountText);
     }
 
-    /**
-     * Calculates expected sale price based on original price and discount
-     */
     public double calculateExpectedSalePrice() {
         double originalPrice = getOriginalPrice();
         double discountPercent = getDiscountPercent();
@@ -135,33 +121,21 @@ public class ProductDetailPage extends BasePage {
                 .anyMatch(element -> element.getText().contains(productName));
     }
 
-    /**
-     * Sets quantity using input field (alternative method)
-     */
     public void setQuantityByInput(String quantity) {
         waitForElementToBeVisible(quantityInput);
         clearAndType(quantityInput, quantity);
         logger.info("Set quantity to: {}", quantity);
     }
 
-    /**
-     * Clicks decrease button (uses base click with retry and alert handling)
-     */
     public void clickDecreaseButtonAlt() {
         click(decreaseButton);
         logger.info("Clicked decrease button");
     }
 
-    /**
-     * Waits for alert and gets its text
-     */
     public String getAlertText() {
         return popupHandler.getAlertText(5);
     }
 
-    /**
-     * Accepts the alert
-     */
     public void acceptAlert() {
         popupHandler.acceptAlert(5);
     }

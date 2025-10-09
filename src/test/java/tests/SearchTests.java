@@ -24,7 +24,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that searching with a valid keyword returns relevant product results")
     public void testSearchWithValidKeyword() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -42,7 +41,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.MINOR)
     @Description("Verify system behavior when searching with special characters")
     public void testSearchWithSpecialCharacters() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -58,7 +56,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.MINOR)
     @Description("Verify system behavior when searching with empty keyword")
     public void testSearchWithEmptyKeyword() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -73,7 +70,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that search suggestions contain the entered keyword")
     public void testSearchSuggestionsContainKeyword() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -99,7 +95,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that search results persist after page reload")
     public void testSearchReloadPage() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -123,7 +118,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that repeated searches return consistent results")
     public void testRepeatedSearch() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
@@ -147,7 +141,6 @@ public class SearchTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that search suggestions list is displayed when typing")
     public void testSuggestionListDisplayed() {
-        // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 

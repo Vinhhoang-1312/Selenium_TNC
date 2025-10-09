@@ -1,17 +1,33 @@
 package data;
 
-import utils.XlsxDataLoader;
+import utils.ExcelDataReader;
 import java.util.Map;
-
+import java.util.HashMap;
 
 public class AuthenticationTestData {
     private static final String excelPath = "src/test/resources/testdata.xlsx";
     private static final String sheetName = "LoginData";
-    private static final XlsxDataLoader loader = new XlsxDataLoader(excelPath);
+    private static final ExcelDataReader reader = new ExcelDataReader(excelPath);
 
     public static String get(String rowKey, String column) {
-        Map<String, String> data = loader.getRowData(sheetName, rowKey);
-        return data.getOrDefault(column, "");
+        Object[][] allData = reader.getSheetData(sheetName);
+
+        for (Object[] row : allData) {
+            if (row.length > 0 && rowKey.equals(String.valueOf(row[0]))) {
+                int columnIndex = getColumnIndex(column);
+                if (columnIndex >= 0 && columnIndex < row.length) {
+                    return String.valueOf(row[columnIndex]);
+                }
+            }
+        }
+        return "";
+    }
+
+    private static int getColumnIndex(String columnName) {
+        Map<String, Integer> columns = new HashMap<>();
+        columns.put("Email", 1);
+        columns.put("Password", 2);
+        return columns.getOrDefault(columnName, -1);
     }
 
     public static String getValidEmail() {
