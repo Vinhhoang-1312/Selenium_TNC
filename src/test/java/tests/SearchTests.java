@@ -27,7 +27,7 @@ public class SearchTests extends BaseTest {
         HomePage homePage = new HomePage(getDriver());
         SearchPage searchPage = new SearchPage(getDriver());
 
-        homePage.searchProduct("laptop");
+        homePage.searchProduct("rtx 2050");
 
         Assert.assertTrue(searchPage.hasResults(), "Search should return results for valid keyword");
         int resultCount = searchPage.getProductCount();
@@ -43,8 +43,11 @@ public class SearchTests extends BaseTest {
     public void testSearchWithSpecialCharacters() {
         // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
 
         homePage.searchProduct("@#$%");
+        String text = searchPage.getNoProductNoti();
+        Assert.assertEquals(text,"Ôi! Rất tiếc không tìm thấy sản phẩm nào...!");
         logger.info("Search with special characters completed");
     }
 
@@ -56,11 +59,13 @@ public class SearchTests extends BaseTest {
     public void testSearchWithEmptyKeyword() {
         // Initialize page objects
         HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
 
         homePage.searchProduct("");
+        String text = searchPage.getNoProductNoti();
+        Assert.assertEquals(text,"Ôi! Rất tiếc không tìm thấy sản phẩm nào...!");
         logger.info("Search with empty keyword completed");
     }
-
     @Test(groups = {"search"},
             description = "SEARCH-04: Search suggestions contain correct keyword")
     @Story("Search Autocomplete")
@@ -84,7 +89,7 @@ public class SearchTests extends BaseTest {
                 "Suggested item should contain the search query");
         }
         Allure.parameter("Suggestions Count", suggestedItems.size());
-        logger.info("All {} suggestions contain the search keyword", suggestedItems.size());
+        logger.info("All each suggestions contain the search keyword");
     }
 
     @Test(groups = {"search"},
