@@ -23,9 +23,6 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
-    /**
-     * Opens login popup with retry mechanism and popup handling
-     */
     public void openLoginPopup() {
         Allure.step("Open login popup", () -> {
             try {

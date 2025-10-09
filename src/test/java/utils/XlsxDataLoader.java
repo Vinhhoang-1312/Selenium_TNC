@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Loads test data from an Excel (.xlsx) file.
- * This implementation is distinct from FST06 and follows SOLID, CLEAN, DRY principles.
- */
+
 public class XlsxDataLoader {
     private final String filePath;
     private final Map<String, Map<String, Map<String, String>>> sheetDataCache = new HashMap<>();
@@ -20,12 +17,6 @@ public class XlsxDataLoader {
         this.filePath = filePath;
     }
 
-    /**
-     * Loads a row of data as a map from the given sheet, using the row key (first column value).
-     * @param sheetName Sheet to read from
-     * @param rowKey Value in the first column to identify the row
-     * @return Map of column header to cell value for the row
-     */
     public Map<String, String> getRowData(String sheetName, String rowKey) {
         if (!sheetDataCache.containsKey(sheetName)) {
             sheetDataCache.put(sheetName, loadSheet(sheetName));
