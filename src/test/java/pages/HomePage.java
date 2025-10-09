@@ -4,10 +4,12 @@ import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
 public class HomePage extends BasePage {
+    private final Actions actions;
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
@@ -16,6 +18,7 @@ public class HomePage extends BasePage {
 
     public HomePage(WebDriver driver) {
         super(driver);
+        this.actions = new Actions(driver);
     }
 
     public void searchProduct(String productName) {

@@ -6,6 +6,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
 
 public class ProductDetailPage extends BasePage {
     private final Actions actions;
@@ -74,11 +75,13 @@ public class ProductDetailPage extends BasePage {
     }
 
     public String getProductName() {
+        WebElement element = waitForElementToBeVisible(productName);
+        String title = element.getText();
+        logger.info("Product title found: {}", title);
         return Allure.step("Get product name", () -> {
             return waitAndGetText(productName);
         });
     }
-
     public boolean isSuccessNotificationDisplayed() {
         return isDisplayed(successNotification);
     }
