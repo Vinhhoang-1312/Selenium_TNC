@@ -11,7 +11,8 @@ public class HomePage extends BasePage {
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
-    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");private final By firstProductLink = By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]");
+    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
+    private final By firstProductLink = By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'success-form')]");
 
     public HomePage(WebDriver driver) {

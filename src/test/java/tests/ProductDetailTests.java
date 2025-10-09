@@ -100,7 +100,7 @@ public class ProductDetailTests extends BaseTest {
     public void testProductViewedList() {
         // Initialize page objects
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
-
+        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
         Allure.step("Get initial product name");
         String initialTitle = productDetailPage.getProductName();
         logger.info("Initial product: {}", initialTitle);
