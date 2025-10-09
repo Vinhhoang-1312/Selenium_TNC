@@ -1,0 +1,70 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Cart Test Suite - TNCStore" parallel="false" thread-count="1">
+    <parameter name="browser" value="chrome"/>
+
+    <!-- CART-01: Add single product to cart -->
+    <test name="CART-01 - Add Single Product">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testAddSingleProductToCart"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- CART-02: Increase item quantity -->
+    <test name="CART-02 - Increase Quantity">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testIncreaseItemQuantity"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- CART-03: Decrease item quantity -->
+    <test name="CART-03 - Decrease Quantity">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testDecreaseItemQuantity"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- CART-04: Add multiple products -->
+    <test name="CART-04 - Add Multiple Products">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testAddMultipleProductsToCart"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- CART-05: Verify cart size -->
+    <test name="CART-05 - Verify Cart Size">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testVerifyCartSize"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- CART-06: Verify first product name -->
+    <test name="CART-06 - Verify First Product Name">
+        <classes>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testVerifyFirstProductName"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
