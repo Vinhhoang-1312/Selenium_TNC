@@ -20,7 +20,6 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can successfully update their phone number in profile")
     public void testUpdatePhoneSuccess() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
@@ -44,7 +43,6 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their full name in profile")
     public void testUpdateFullname() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
@@ -76,7 +74,6 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their address in profile")
     public void testUpdateAddress() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
@@ -102,7 +99,6 @@ public class UserProfileTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can access and view their profile page")
     public void testProfilePageLoads() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 

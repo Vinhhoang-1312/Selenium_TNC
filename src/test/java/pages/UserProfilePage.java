@@ -113,12 +113,14 @@ public class UserProfilePage extends BasePage {
      * Checks if profile page loaded successfully
      */
     public boolean isProfilePageLoaded() {
-        try {
-            waitForElementToBeVisible(nameField);
-            return isDisplayed(nameField) || isDisplayed(phoneInput) || isDisplayed(fullnameInput);
-        } catch (Exception e) {
-            logger.warn("Profile page did not load successfully", e);
-            return false;
-        }
+        return Allure.step("Check if profile page loaded successfully", () -> {
+            try {
+                waitForElementToBeVisible(nameField);
+                return isDisplayed(nameField) || isDisplayed(phoneInput) || isDisplayed(fullnameInput);
+            } catch (Exception e) {
+                logger.warn("Profile page did not load successfully", e);
+                return false;
+            }
+        });
     }
 }

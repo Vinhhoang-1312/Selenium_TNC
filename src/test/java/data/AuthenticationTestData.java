@@ -1,14 +1,43 @@
 package data;
 
+import utils.XlsxDataLoader;
+import java.util.Map;
+
 /**
- * Test data constants for authentication tests
+ * Loads authentication test data from Excel using XlsxDataLoader.
  */
 public class AuthenticationTestData {
+    private static final String excelPath = "src/test/resources/testdata.xlsx";
+    private static final String sheetName = "LoginData";
+    private static final XlsxDataLoader loader = new XlsxDataLoader(excelPath);
 
-    // Valid test credentials
+    public static String getValidEmail() {
+        Map<String, String> data = loader.getRowData(sheetName, "valid");
+        return data.getOrDefault("Email", "");
+    }
 
-    public static final String VALID_EMAIL = "john5@test.com";
-    public static final String VALID_PASSWORD = "Abc12345";
-    public static final String INVALID_EMAIL_1 = "test@";
+    public static String getValidPassword() {
+        Map<String, String> data = loader.getRowData(sheetName, "valid");
+        return data.getOrDefault("Password", "");
+    }
 
+    public static String getInvalidEmail1() {
+        Map<String, String> data = loader.getRowData(sheetName, "invalidEmail1");
+        return data.getOrDefault("Email", "");
+    }
+
+    public static String getEmptyEmail() {
+        Map<String, String> data = loader.getRowData(sheetName, "emptyEmail");
+        return data.getOrDefault("Email", "");
+    }
+
+    public static String getEmptyPassword() {
+        Map<String, String> data = loader.getRowData(sheetName, "emptyPassword");
+        return data.getOrDefault("Password", "");
+    }
+
+    public static String getBothEmptyEmailPassword() {
+        Map<String, String> data = loader.getRowData(sheetName, "bothEmpty");
+        return data.getOrDefault("Email", "") + "," + data.getOrDefault("Password", "");
+    }
 }
