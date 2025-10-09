@@ -54,9 +54,6 @@ public class RegisterPage extends BasePage {
         clickElementWithRetry(registerButton, "register button");
     }
 
-    /**
-     * Performs full registration with name, email and password
-     */
     public void performRegister(String name, String email, String password) {
         Allure.step("Register with email: " + email, () -> {
             try {
@@ -69,6 +66,4 @@ public class RegisterPage extends BasePage {
             }
         });
     }
-
-
 }

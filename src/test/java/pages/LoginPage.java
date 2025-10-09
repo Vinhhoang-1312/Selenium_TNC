@@ -70,12 +70,10 @@ public class LoginPage extends BasePage {
 
     public boolean isLoginSuccessful() {
         try {
-            // Wait for page to stabilize after login
             waitForElementToBeVisible(loggedInUserName);
             if (isDisplayed(loggedInUserName)) {
                 WebElement accountElement = waitAndFind(loggedInUserName);
                 String accountText = accountElement.getText().trim();
-                // If text is not default "Tài khoản" or "Account", user is logged in
                 if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
                     return true;
                 }

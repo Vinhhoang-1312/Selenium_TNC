@@ -5,10 +5,6 @@ import org.testng.asserts.SoftAssert;
 
 import java.io.ByteArrayInputStream;
 
-/**
- * Custom SoftAssert wrapper that integrates with Allure reporting
- * All assertions are logged to Allure report with detailed information
- */
 public class AllureSoftAssert extends SoftAssert {
 
     @Override
@@ -129,4 +125,3 @@ public class AllureSoftAssert extends SoftAssert {
         }
     }
 }
-

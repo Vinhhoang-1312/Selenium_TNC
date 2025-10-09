@@ -11,7 +11,8 @@ public class HomePage extends BasePage {
 
     private final By searchBox = By.xpath("//input[@id='js-global-seach']");
     private final By searchButton = By.xpath("//button[@class='submit-search']");
-    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");private final By firstProductLink = By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]");
+    private final By productTitleLinks = By.xpath("//div[@id='js-product-list']//a[@class='product-name line-clamp-2']");
+    private final By firstProductLink = By.xpath("(//div[@id='js-product-list']//a[@class='product-name line-clamp-2'])[1]");
     private final By loadingSpinner = By.xpath("//div[contains(@class, 'success-form')]");
 
     public HomePage(WebDriver driver) {
@@ -32,9 +33,6 @@ public class HomePage extends BasePage {
         });
     }
 
-    /**
-     * Types the search text into the search box without submitting (useful for suggestions)
-     */
     public void typeSearch(String productName) {
         waitForElementToBeVisible(searchBox);
         clearAndType(searchBox, productName);
@@ -55,9 +53,6 @@ public class HomePage extends BasePage {
         });
     }
 
-    /**
-     * Navigate back to previous page with wait for page to stabilize
-     */
     public void navigateBack() {
         driver.navigate().back();
         waitForPageStability();
