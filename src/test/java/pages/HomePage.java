@@ -33,9 +33,6 @@ public class HomePage extends BasePage {
         });
     }
 
-    /**
-     * Types the search text into the search box without submitting (useful for suggestions)
-     */
     public void typeSearch(String productName) {
         waitForElementToBeVisible(searchBox);
         clearAndType(searchBox, productName);
@@ -56,9 +53,6 @@ public class HomePage extends BasePage {
         });
     }
 
-    /**
-     * Navigate back to previous page with wait for page to stabilize
-     */
     public void navigateBack() {
         driver.navigate().back();
         waitForPageStability();

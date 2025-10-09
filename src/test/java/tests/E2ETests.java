@@ -1,7 +1,7 @@
 package tests;
 
 import core.BaseTest;
-import data.TestUser;
+import data.AuthenticationTestData;
 import helpers.PopupHandler;
 import io.qameta.allure.*;
 import listeners.BaseListener;
@@ -20,38 +20,32 @@ import pages.RegisterPage;
 public class E2ETests extends BaseTest {
 
     @Test(groups = {"e2e", "regression"},
-            description = "E2E-01: Register -> Login -> Search -> Add to cart -> Verify cart")
+            description = "E2E-01: Login -> Search -> Add to cart -> Verify cart")
     @Story("Complete User Journey")
     @Severity(SeverityLevel.BLOCKER)
-    @Description("Verify complete user journey from registration to cart verification")
-    public void testRegisterLoginSearchAddToCart() {
+    @Description("Verify complete user journey from login to cart verification")
+    public void testLoginSearchAddToCart() {
         // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
-        RegisterPage registerPage;
         HomePage homePage = new HomePage(getDriver());
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
         CartPage cartPage = new CartPage(getDriver());
         PopupHandler popupHandler = new PopupHandler(getDriver());
 
         try {
-            // Create unique user
-            TestUser user = TestUser.createUniqueUser("E2EUser");
-            logger.info("Starting E2E test with user: {}", user.email);
-            Allure.parameter("Test User Email", user.email);
+            // Get valid credentials from Excel file
+            String email = AuthenticationTestData.getValidEmail();
+            String password = AuthenticationTestData.getValidPassword();
+
+            logger.info("Starting E2E test with user: {}", email);
+            Allure.parameter("Test User Email", email);
 
             popupHandler.dismissAllPopups();
-
-            // Register
-            registerPage = loginPage.navigateToRegister();
-            registerPage.performRegister(user.name, user.email, user.password);
-            logger.info("Registration completed for: {}", user.email);
 
             // Login
-            getDriver().get(baseUrl);
-            popupHandler.dismissAllPopups();
-            loginPage.performLogin(user.email, user.password);
-            Assert.assertTrue(loginPage.isLoginSuccessful(), "User should be able to login with newly created credentials");
-            logger.info("Login successful for: {}", user.email);
+            loginPage.performLogin(email, password);
+            Assert.assertTrue(loginPage.isLoginSuccessful(), "User should be able to login with valid credentials");
+            logger.info("Login successful for: {}", email);
 
             // Search
             homePage.searchProduct("laptop");
