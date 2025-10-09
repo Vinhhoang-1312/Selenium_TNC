@@ -26,14 +26,12 @@ public class LoginTests extends BaseTest {
         LoginPage loginPage = new LoginPage(getDriver());
 
         try {
-            String email = AuthenticationTestData.VALID_EMAIL;
-            String password = AuthenticationTestData.VALID_PASSWORD;
+            String email = AuthenticationTestData.getValidEmail();
+            String password = AuthenticationTestData.getValidPassword();
 
             logger.info("Attempting login with user: {}", email);
-            Allure.step("Open login popup and enter credentials");
             loginPage.performLogin(email, password);
 
-            Allure.step("Verify login is successful");
             Assert.assertTrue(loginPage.isLoginSuccessful(), "Login should be successful with valid credentials");
             logger.info("Login test completed successfully with user: {}", email);
         } catch (Exception e) {
@@ -53,14 +51,11 @@ public class LoginTests extends BaseTest {
 
         try {
             logger.info("Attempting login with invalid email");
-
-            Allure.step("Attempt login with invalid email format");
             loginPage.performLogin(
-                    AuthenticationTestData.INVALID_EMAIL_1,
-                    AuthenticationTestData.VALID_PASSWORD
+                    AuthenticationTestData.getInvalidEmail1(),
+                    AuthenticationTestData.getValidPassword()
             );
 
-            Allure.step("Verify login fails for invalid email");
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for invalid email");
             logger.info("Login correctly failed with invalid email");
@@ -83,10 +78,8 @@ public class LoginTests extends BaseTest {
             TestUser nonExistentUser = TestUser.createUniqueUser("NonExistent");
             logger.info("Attempting login with non-existent account: {}", nonExistentUser.email);
 
-            Allure.step("Attempt login with non-existent account: " + nonExistentUser.email);
             loginPage.performLogin(nonExistentUser.email, nonExistentUser.password);
 
-            Allure.step("Verify login fails for non-existent account");
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail for non-existent account");
             logger.info("Login correctly failed with non-existent account");
@@ -108,10 +101,8 @@ public class LoginTests extends BaseTest {
         try {
             logger.info("Attempting login with empty email");
 
-            Allure.step("Attempt login with empty email field");
-            loginPage.performLogin("", AuthenticationTestData.VALID_PASSWORD);
+            loginPage.performLogin("", AuthenticationTestData.getValidPassword());
 
-            Allure.step("Verify login fails with empty email");
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty email");
             logger.info("Login correctly failed with empty email");
@@ -133,10 +124,8 @@ public class LoginTests extends BaseTest {
         try {
             logger.info("Attempting login with empty password");
 
-            Allure.step("Attempt login with empty password field");
-            loginPage.performLogin(AuthenticationTestData.VALID_EMAIL, "");
+            loginPage.performLogin(AuthenticationTestData.getValidEmail(), "");
 
-            Allure.step("Verify login fails with empty password");
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with empty password");
             logger.info("Login correctly failed with empty password");
@@ -158,10 +147,8 @@ public class LoginTests extends BaseTest {
         try {
             logger.info("Attempting login with both fields empty");
 
-            Allure.step("Attempt login with both fields empty");
             loginPage.performLogin("", "");
 
-            Allure.step("Verify login fails with both fields empty");
             boolean loginFailed = !loginPage.isLoginSuccessful();
             Assert.assertTrue(loginFailed, "Login should fail with both fields empty");
             logger.info("Login correctly failed with both fields empty");
@@ -181,10 +168,8 @@ public class LoginTests extends BaseTest {
 
         logger.info("=== INTENTIONAL FAIL TEST - Testing Screenshot Capture ===");
 
-        Allure.step("Login with valid credentials");
-        loginPage.performLogin(AuthenticationTestData.VALID_EMAIL, AuthenticationTestData.VALID_PASSWORD);
+        loginPage.performLogin(AuthenticationTestData.getValidEmail(), AuthenticationTestData.getValidPassword());
 
-        Allure.step("INTENTIONALLY FAIL - This assertion is designed to fail");
         Assert.assertTrue(false, "🔴 INTENTIONAL FAILURE: Testing screenshot capture on failure");
     }
 }
