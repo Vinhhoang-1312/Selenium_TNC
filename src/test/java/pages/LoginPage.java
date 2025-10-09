@@ -23,31 +23,36 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
-    /**
-     * Opens login popup with retry mechanism and popup handling
-     */
     public void openLoginPopup() {
-        try {
-            clickElementWithRetry(accountButton, "account button");
-            waitForElementToBeVisible(loginPopup);
-        } catch (Exception e) {
-            logger.error("Cannot open login popup", e);
-            throw new RuntimeException("Cannot open login popup", e);
-        }
+        Allure.step("Open login popup", () -> {
+            try {
+                clickElementWithRetry(accountButton, "account button");
+                waitForElementToBeVisible(loginPopup);
+            } catch (Exception e) {
+                logger.error("Cannot open login popup", e);
+                throw new RuntimeException("Cannot open login popup", e);
+            }
+        });
     }
 
     public LoginPage setEmail(String email) {
-        clearAndType(loginEmailField, email);
+        Allure.step("Set login email: " + email, () -> {
+            clearAndType(loginEmailField, email);
+        });
         return this;
     }
 
     public LoginPage setPassword(String password) {
-        clearAndType(loginPasswordField, password);
+        Allure.step("Set login password", () -> {
+            clearAndType(loginPasswordField, password);
+        });
         return this;
     }
 
     public void submitLogin() {
-        clickElementWithRetry(loginButton, "login button");
+        Allure.step("Submit login form", () -> {
+            clickElementWithRetry(loginButton, "login button");
+        });
     }
 
     public void performLogin(String email, String password) {

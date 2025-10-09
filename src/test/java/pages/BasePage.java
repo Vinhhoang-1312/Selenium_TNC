@@ -19,7 +19,7 @@ public abstract class BasePage {
 
     protected BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10));
         this.popupHandler = new PopupHandler(driver);
     }
 
@@ -92,6 +92,10 @@ public abstract class BasePage {
 
     public WebElement waitForElementToBeVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public List<WebElement> waitForAllElementsPresence(By locator) {
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 
     protected void clickElementWithRetry(By by, String elementName) {

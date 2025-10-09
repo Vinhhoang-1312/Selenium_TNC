@@ -45,7 +45,6 @@ public class ProductDetailTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that success notification is displayed after adding product to cart")
     public void testAddProductToCartShowsNotification() {
-        By successNotificationLocator = By.id("successNotification");
         Allure.step("Search and select a product");
         HomePage homePage = new HomePage(getDriver());
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
@@ -101,7 +100,7 @@ public class ProductDetailTests extends BaseTest {
     public void testProductViewedList() {
         // Initialize page objects
         ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
-
+        getDriver().get("https://www.tncstore.vn/man-hinh-gaming-asus-tuf-gaming-vg249q3a.html");
         Allure.step("Get initial product name");
         String initialTitle = productDetailPage.getProductName();
         logger.info("Initial product: {}", initialTitle);

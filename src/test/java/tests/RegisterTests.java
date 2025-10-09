@@ -20,13 +20,10 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a new user can successfully register with valid name, email, and password")
     public void testRegisterWithValidData() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         RegisterPage registerPage;
 
-        // Use TestUser.createUniqueUser() to avoid code duplication
         TestUser user = TestUser.createUniqueUser("Register");
-
         registerPage = loginPage.navigateToRegister();
         registerPage.performRegister(user.name, user.email, user.password);
 
@@ -39,7 +36,6 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that registration fails when using an invalid email format")
     public void testRegisterWithInvalidEmail() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         RegisterPage registerPage;
 
@@ -55,11 +51,8 @@ public class RegisterTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that registration fails when using a weak password")
     public void testRegisterWithWeakPassword() {
-        // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         RegisterPage registerPage;
-
-        // Use TestUser.createUniqueUser() to avoid code duplication
         TestUser user = TestUser.createUniqueUser("WeakPwd");
 
         registerPage = loginPage.navigateToRegister();
