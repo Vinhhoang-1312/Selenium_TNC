@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.ProductDetailPage;
 import pages.CartPage;
+import utils.Reporter;
 
 @Listeners({BaseListener.class})
 @Epic("E-Commerce")
@@ -146,7 +147,105 @@ public class CartTests extends BaseTest {
 
         String cartProductName = cartPage.getFirstProductName();
         Assert.assertTrue(cartProductName.contains(productName.substring(0, Math.min(20, productName.length()))),
-            "Product name in cart should match the added product");
+                "Product name in cart should match the added product");
         logger.info("Product name verified in cart: {}", cartProductName);
+    }
+
+    @Test(groups = {"cart"},
+            description = "CART-07: Verify remove product in cart")
+    @Story("Cart Verification")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify remove product in cart")
+    public void testRemoveproductfromcart() {
+        HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
+        Reporter.LogToReport("Step 1: Search product ");
+        homePage.searchProduct("laptop");
+        homePage.clickFirstProduct();
+
+        Reporter.LogToReport("Step 2: Add product ");
+        String productName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
+        productDetailPage.goToCart();
+
+        Reporter.LogToReport("Step 3: Check cart ");
+        String cartProductName = cartPage.getFirstProductName();
+        Assert.assertTrue(cartProductName.contains(productName.substring(0, Math.min(20, productName.length()))),
+                "Product name in cart should match the added product");
+        logger.info("Product name verified in cart: {}", cartProductName);
+
+        Reporter.LogToReport("Step 4: Remove product in cart ");
+        cartPage.removeProduct();
+        cartPage.verifyCartIsEmpty();
+    }
+
+    @Test(groups = {"cart"},
+            description = "CART-08: Add multiple products to cart and remove one")
+    @Story("Add Products to Cart")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that user can add multiple different products to the cart and remove it")
+    public void testAddMultipleProductsToCartandRemoveOne() {
+        // Initialize page objects
+        HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
+        Reporter.LogToReport("Step 1: Search product and add first product");
+        homePage.searchProduct("laptop");
+        homePage.clickFirstProduct();
+        String firstProductName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
+        homePage.navigateBack();
+
+        Reporter.LogToReport("Step 2: Add second product");
+        homePage.searchProduct("mouse");
+        homePage.clickFirstProduct();
+        String secondProductName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
+        productDetailPage.goToCart();
+
+        Reporter.LogToReport("Step 3: Check cart");
+        cartPage.verifyMultipleProducts();
+
+        Reporter.LogToReport("Step 4: Remove first product");
+        cartPage.removeProductByName(firstProductName);
+        cartPage.verifyProductRemoved(firstProductName);
+    }
+
+    @Test(groups = {"cart"},
+            description = "CART-08: Add multiple products to cart, remove one and check total prices ")
+    @Story("Add Products to Cart")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that user can add multiple different products to the cart and remove it and price is changed")
+    public void testAddMultipleProductsToCart_RemoveOneandChecktotalPrices() {
+        // Initialize page objects
+        HomePage homePage = new HomePage(getDriver());
+        ProductDetailPage productDetailPage = new ProductDetailPage(getDriver());
+        CartPage cartPage = new CartPage(getDriver());
+
+        Reporter.LogToReport("Step 1: Search product and add first product");
+        homePage.searchProduct("laptop");
+        homePage.clickFirstProduct();
+        String firstProductName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
+        homePage.navigateBack();
+
+        Reporter.LogToReport("Step 2: Add second product");
+        homePage.searchProduct("mouse");
+        homePage.clickFirstProduct();
+        String secondProductName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
+        productDetailPage.goToCart();
+
+        Reporter.LogToReport("Step 3: Check cart");
+        cartPage.verifyMultipleProducts();
+
+        Reporter.LogToReport("Step 4: Remove first product");
+        double totalBefore = cartPage.getTotalCartPrice();
+        cartPage.removeProductByName(firstProductName);
+        cartPage.verifyProductRemoved(firstProductName);
+        cartPage.verifyTotalPriceChanged(totalBefore);
     }
 }

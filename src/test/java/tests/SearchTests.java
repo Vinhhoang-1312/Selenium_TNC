@@ -9,6 +9,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.SearchPage;
+import utils.Reporter;
 
 import java.util.List;
 
@@ -149,4 +150,48 @@ public class SearchTests extends BaseTest {
             "Suggestion list should be displayed when typing");
         logger.info("Suggestion list displayed successfully");
     }
+
+    @Test(groups = {"search", "smoke"},
+            description = "SEARCH-08: Verify all search results contain keyword")
+    @Story("Product Search")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Verify all search results contain keyword")
+    public void testSearchWithValidKeywordandCheckResult() {
+        // Initialize page objects
+        HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
+
+        Reporter.LogToReport("Step 1: Search Product");
+        homePage.searchProduct("laptop");
+        Assert.assertTrue(searchPage.hasResults(), "Search should return results for valid keyword");
+        int resultCount = searchPage.getProductCount();
+        Allure.parameter("Results Count", resultCount);
+
+        Reporter.LogToReport("Step 2: Check result after search product match with keyword");
+        searchPage.verifyAllResultsContainKeyword("laptop");
+    }
+
+    @Test(groups = {"search"},
+            description = "SEARCH-8: Verify 'Xem thêm' button loads additional products")
+    @Story("Search - Load More Feature")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that clicking 'Xem thêm' loads more products instead of reloading the page.")
+    public void testSearchLoadMoreFunctionality() {
+        HomePage homePage = new HomePage(getDriver());
+        SearchPage searchPage = new SearchPage(getDriver());
+
+        String keyword = "laptop";
+        Reporter.LogToReport("Step 1: Search for keyword '" + keyword + "'");
+        homePage.searchProduct(keyword);
+
+        Assert.assertTrue(searchPage.hasResults(), "Search should return results for valid keyword");
+
+        Reporter.LogToReport("Step 2: Verify 'Xem thêm' button loads more products");
+        boolean loadMoreWorks = searchPage.verifyLoadMoreWorks();
+
+        Assert.assertTrue(loadMoreWorks,
+                "'Xem thêm' button should load more products without refreshing page");
+        logger.info("'Xem thêm' hoạt động đúng cho từ khóa '{}'", keyword);
+    }
+
 }
