@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Smoke Test Suite" verbose="1" parallel="classes" thread-count="2">
+    <test name="Smoke Tests">
+        <classes>
+            <class name="tests.LoginTests">
+                <methods>
+                    <include name="testLoginWithValidCredentials"/>
+                </methods>
+            </class>
+            <class name="tests.RegisterTests">
+                <methods>
+                    <include name="testRegisterWithValidData"/>
+                </methods>
+            </class>
+            <class name="tests.E2ETests">
+                <methods>
+                    <include name="testLoginSearchAddToCart"/>
+                </methods>
+            </class>
+            <class name="tests.CheckoutTests">
+                <methods>
+                    <include name="testCheckoutMissingPhoneNumber"/>
+                </methods>
+            </class>
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testAddSingleProductToCart"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
+

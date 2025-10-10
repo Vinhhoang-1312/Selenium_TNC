@@ -11,14 +11,13 @@ import pages.LoginPage;
 import utils.TestDataProviders;
 import utils.Reporter;
 
-@Listeners({BaseListener.class})
+@Listeners({ BaseListener.class })
 @Epic("Authentication")
 @Feature("Login Functionality")
 public class LoginTests extends BaseTest {
 
-    @Test(groups = {"authentication", "smoke", "login"},
-          description = "AUTH-LI-01: Login with valid credentials",
-          dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
+    @Test(groups = { "authentication", "smoke",
+            "login" }, description = "AUTH-LI-01: Login with valid credentials", dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("User Login")
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that a user can successfully login with valid email and password credentials")
@@ -44,9 +43,8 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "negative", "login"},
-          description = "AUTH-LI-02: Login with invalid email",
-          dataProvider = "invalidLoginData", dataProviderClass = TestDataProviders.class)
+    @Test(groups = { "authentication", "negative",
+            "login" }, description = "AUTH-LI-02: Login with invalid email", dataProvider = "invalidLoginData", dataProviderClass = TestDataProviders.class)
     @Story("User Login - Negative Scenarios")
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that login fails when using an invalid email format")
@@ -56,8 +54,7 @@ public class LoginTests extends BaseTest {
         try {
             String invalidEmail = (String) invalidRow[1];
 
-            Object[] validRow = TestDataProviders.class.getDeclaredMethods()[0].getDeclaringClass() == TestDataProviders.class ?
-                    new TestDataProviders().provideValidLoginData()[0] : new TestDataProviders().provideValidLoginData()[0];
+            Object[] validRow = new TestDataProviders().provideValidLoginData()[0];
             String validPassword = (String) validRow[2];
 
             logger.info("Attempting login with invalid email");
@@ -76,8 +73,8 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "negative", "login"},
-            description = "AUTH-LI-04: Login with non-existent account")
+    @Test(groups = { "authentication", "negative",
+            "login" }, description = "AUTH-LI-04: Login with non-existent account")
     @Story("User Login - Negative Scenarios")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when using credentials that don't exist in the system")
@@ -102,9 +99,8 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "negative", "login"},
-            description = "AUTH-LI-05: Login with empty email",
-            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
+    @Test(groups = { "authentication", "negative",
+            "login" }, description = "AUTH-LI-05: Login with empty email", dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("User Login - Validation")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when email field is left empty")
@@ -130,9 +126,8 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "negative", "login"},
-            description = "AUTH-LI-06: Login with empty password",
-            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
+    @Test(groups = { "authentication", "negative",
+            "login" }, description = "AUTH-LI-06: Login with empty password", dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("User Login - Validation")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that login fails when password field is left empty")
@@ -158,8 +153,7 @@ public class LoginTests extends BaseTest {
         }
     }
 
-    @Test(groups = {"authentication", "negative", "login"},
-            description = "AUTH-LI-07: Login with both fields empty")
+    @Test(groups = { "authentication", "negative", "login" }, description = "AUTH-LI-07: Login with both fields empty")
     @Story("User Login - Validation")
     @Severity(SeverityLevel.MINOR)
     @Description("Verify that login fails when both email and password fields are empty")
