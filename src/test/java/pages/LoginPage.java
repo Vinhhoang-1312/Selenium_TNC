@@ -66,7 +66,7 @@ public class LoginPage extends BasePage {
             throw new RuntimeException("Cannot perform login", e);
         }
     }
-
+//
     public boolean isLoginSuccessful() {
         try {
             waitForElementToBeVisible(loggedInUserName);
