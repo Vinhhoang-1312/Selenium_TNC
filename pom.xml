@@ -126,4 +126,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>logintest-userprofile</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- when this profile is activated, surefire will pick this TestNG suite file -->
+                <suiteXmlFile>logintest-userprofile.xml</suiteXmlFile>
+            </properties>
+        </profile>
+        <profile>
+            <id>logintest-userprofile.xml</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- tolerant profile name (if user passes -Plogintest-userprofile.xml by mistake) -->
+                <suiteXmlFile>logintest-userprofile.xml</suiteXmlFile>
+            </properties>
+        </profile>
+    </profiles>
 </project>

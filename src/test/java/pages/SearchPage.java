@@ -35,7 +35,8 @@ public class SearchPage extends BasePage {
             }
         });
     }
-    public String getNoProductNoti(){
+
+    public String getNoProductNoti() {
         String notitext = waitAndGetText(noproductNoti);
         return notitext;
     }
@@ -167,7 +168,6 @@ public class SearchPage extends BasePage {
 
         return newCount > initialCount;
     }
-
 
 
 }

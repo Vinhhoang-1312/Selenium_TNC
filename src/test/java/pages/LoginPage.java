@@ -1,9 +1,9 @@
 package pages;
 
-import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import utils.Reporter;
 
 public class LoginPage extends BasePage {
 
@@ -24,48 +24,47 @@ public class LoginPage extends BasePage {
     }
 
     public void openLoginPopup() {
-        Allure.step("Open login popup", () -> {
-            try {
-                clickElementWithRetry(accountButton, "account button");
-                waitForElementToBeVisible(loginPopup);
-            } catch (Exception e) {
-                logger.error("Cannot open login popup", e);
-                throw new RuntimeException("Cannot open login popup", e);
-            }
-        });
+        Reporter.Action("Open login popup");
+        try {
+            clickElementWithRetry(accountButton, "account button");
+            waitForElementToBeVisible(loginPopup);
+            Reporter.Success("Login popup opened successfully");
+        } catch (Exception e) {
+            logger.error("Cannot open login popup", e);
+            Reporter.Error("Failed to open login popup: " + e.getMessage());
+            throw new RuntimeException("Cannot open login popup", e);
+        }
     }
 
     public LoginPage setEmail(String email) {
-        Allure.step("Set login email: " + email, () -> {
-            clearAndType(loginEmailField, email);
-        });
+        Reporter.Action("Set login email: " + email);
+        clearAndType(loginEmailField, email);
         return this;
     }
 
     public LoginPage setPassword(String password) {
-        Allure.step("Set login password", () -> {
-            clearAndType(loginPasswordField, password);
-        });
+        Reporter.Action("Set login password");
+        clearAndType(loginPasswordField, password);
         return this;
     }
 
     public void submitLogin() {
-        Allure.step("Submit login form", () -> {
-            clickElementWithRetry(loginButton, "login button");
-        });
+        Reporter.Action("Submit login form");
+        clickElementWithRetry(loginButton, "login button");
     }
 
     public void performLogin(String email, String password) {
-        Allure.step("Login with email: " + email, () -> {
-            try {
-                openLoginPopup();
-                setEmail(email).setPassword(password).submitLogin();
-                logger.info("Login performed for: {}", email);
-            } catch (Exception e) {
-                logger.error("Cannot perform login", e);
-                throw new RuntimeException("Cannot perform login", e);
-            }
-        });
+        Reporter.Action("Login with email: " + email);
+        try {
+            openLoginPopup();
+            setEmail(email).setPassword(password).submitLogin();
+            logger.info("Login performed for: {}", email);
+            Reporter.Success("Login action completed");
+        } catch (Exception e) {
+            logger.error("Cannot perform login", e);
+            Reporter.Error("Login failed: " + e.getMessage());
+            throw new RuntimeException("Cannot perform login", e);
+        }
     }
 
     public boolean isLoginSuccessful() {
@@ -75,25 +74,29 @@ public class LoginPage extends BasePage {
                 WebElement accountElement = waitAndFind(loggedInUserName);
                 String accountText = accountElement.getText().trim();
                 if (!accountText.isEmpty() && !accountText.equals("Tài khoản") && !accountText.equals("Account")) {
+                    Reporter.Success("Login successful, user: " + accountText);
                     return true;
                 }
             }
+            Reporter.Warn("Login verification failed");
             return false;
         } catch (Exception e) {
+            Reporter.Warn("Login verification failed: " + e.getMessage());
             return false;
         }
     }
 
     public RegisterPage navigateToRegister() {
-        return Allure.step("Navigate to registration form", () -> {
-            try {
-                openLoginPopup();
-                clickElementWithRetry(createAccountLink, "create account link");
-                return new RegisterPage(driver);
-            } catch (Exception e) {
-                logger.error("Failed to navigate to register page", e);
-                throw new RuntimeException("Cannot navigate to register page", e);
-            }
-        });
+        Reporter.Action("Navigate to registration form");
+        try {
+            openLoginPopup();
+            clickElementWithRetry(createAccountLink, "create account link");
+            Reporter.Success("Navigated to register page");
+            return new RegisterPage(driver);
+        } catch (Exception e) {
+            logger.error("Failed to navigate to register page", e);
+            Reporter.Error("Failed to navigate to register page: " + e.getMessage());
+            throw new RuntimeException("Cannot navigate to register page", e);
+        }
     }
 }

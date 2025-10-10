@@ -1,8 +1,8 @@
 package pages;
 
-import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.Reporter;
 
 public class RegisterPage extends BasePage {
 
@@ -21,49 +21,57 @@ public class RegisterPage extends BasePage {
     }
 
     public RegisterPage setName(String name) {
+        Reporter.Action("Set registration name: " + name);
         try {
             clearAndType(registerNameField, name);
+            return this;
         } catch (Exception e) {
             logger.error("Failed to set name: {}", e.getMessage());
+            Reporter.Error("Failed to set name: " + e.getMessage());
             throw new RuntimeException("Cannot set name", e);
         }
-        return this;
     }
 
     public RegisterPage setEmail(String email) {
+        Reporter.Action("Set registration email: " + email);
         try {
             clearAndType(registerEmailField, email);
+            return this;
         } catch (Exception e) {
             logger.error("Failed to set email: {}", e.getMessage());
+            Reporter.Error("Failed to set email: " + e.getMessage());
             throw new RuntimeException("Cannot set email", e);
         }
-        return this;
     }
 
     public RegisterPage setPassword(String password) {
+        Reporter.Action("Set registration password");
         try {
             clearAndType(registerPasswordField, password);
+            return this;
         } catch (Exception e) {
             logger.error("Failed to set password: {}", e.getMessage());
+            Reporter.Error("Failed to set password: " + e.getMessage());
             throw new RuntimeException("Cannot set password", e);
         }
-        return this;
     }
 
     public void submitRegister() {
+        Reporter.Action("Submit registration form");
         clickElementWithRetry(registerButton, "register button");
     }
 
     public void performRegister(String name, String email, String password) {
-        Allure.step("Register with email: " + email, () -> {
-            try {
-                setName(name).setEmail(email).setPassword(password).submitRegister();
-                waitForPageStability();
-                logger.info("Registration submitted for email: {}", email);
-            } catch (Exception e) {
-                logger.error("Cannot perform registration", e);
-                throw new RuntimeException("Cannot perform registration", e);
-            }
-        });
+        Reporter.Action("Register new user with email: " + email);
+        try {
+            setName(name).setEmail(email).setPassword(password).submitRegister();
+            waitForPageStability();
+            logger.info("Registration submitted for email: {}", email);
+            Reporter.Success("Registration submitted successfully");
+        } catch (Exception e) {
+            logger.error("Cannot perform registration", e);
+            Reporter.Error("Registration failed: " + e.getMessage());
+            throw new RuntimeException("Cannot perform registration", e);
+        }
     }
 }

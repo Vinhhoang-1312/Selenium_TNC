@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Smoke Test - Quick Check (15 Tests)" parallel="false" thread-count="1">
+<suite name="Smoke Test - Quick Check (15 Tests)" parallel="tests" thread-count="5">
     <parameter name="browser" value="chrome"/>
 
     <!-- GROUP 1: Login-Register-UserProfile Tests (5 cases) -->

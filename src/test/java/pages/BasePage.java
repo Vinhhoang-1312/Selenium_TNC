@@ -16,11 +16,13 @@ public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
     protected final PopupHandler popupHandler;
+    protected final JSUtils jsUtils;
 
     protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10));
         this.popupHandler = new PopupHandler(driver);
+        this.jsUtils = new JSUtils(driver);
     }
 
     protected WebElement waitAndFind(By locator) {
@@ -109,7 +111,7 @@ public abstract class BasePage {
             } catch (ElementClickInterceptedException e) {
                 popupHandler.dismissAllPopups();
                 WebElement el = driver.findElement(by);
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", el);
+                jsUtils.clickElementByJS(el);
                 return;
             } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
                 popupHandler.getAlertTextAndAccept(3);

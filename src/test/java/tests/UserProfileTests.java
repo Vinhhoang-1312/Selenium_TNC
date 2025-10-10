@@ -8,6 +8,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import pages.UserProfilePage;
+import utils.TestDataProviders;
+import utils.Reporter;
 
 @Listeners({BaseListener.class})
 @Epic("User Management")
@@ -15,98 +17,121 @@ import pages.UserProfilePage;
 public class UserProfileTests extends BaseTest {
 
     @Test(groups = {"userprofile", "smoke"},
-            description = "USER-01: Update phone number successfully")
+            description = "USER-01: Update phone number successfully",
+            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("Profile Update")
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can successfully update their phone number in profile")
-    public void testUpdatePhoneSuccess() {
+    public void testUpdatePhoneSuccess(Object[] validRow) {
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
-        loginPage.performLogin("john5@test.com", "Abc12345");
+        String email = (String) validRow[1];
+        String password = (String) validRow[2];
 
-        String newPhone = "0912345678";
+        Reporter.LogToReport("Step 1: Login with valid credentials");
+        loginPage.performLogin(email, password);
+
+        Reporter.LogToReport("Step 2: Navigate to profile page");
+        profilePage.navigateToProfile();
+
+        String newPhone = "0912777777";
+        Reporter.LogToReport("Step 3: Update phone number to " + newPhone);
         profilePage.updatePhone(newPhone);
 
+        Reporter.LogToReport("Step 4: Refresh and verify phone");
         getDriver().navigate().refresh();
-
         String actualPhone = profilePage.getPhone();
-        Allure.parameter("Expected Phone", newPhone);
-        Allure.parameter("Actual Phone", actualPhone);
         Assert.assertEquals(actualPhone, newPhone, "Phone number should be updated successfully");
+
         logger.info("Phone updated successfully to: {}", newPhone);
     }
 
     @Test(groups = {"userprofile"},
-            description = "USER-02: Update fullname successfully")
+            description = "USER-02: Update fullname successfully",
+            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("Profile Update")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can successfully update their full name in profile")
-    public void testUpdateFullname() {
+    public void testUpdateFullname(Object[] validRow) {
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
-        logger.info("[TEST] Starting testUpdateFullname");
+        String email = (String) validRow[1];
+        String password = (String) validRow[2];
 
-        loginPage.performLogin("john5@test.com", "Abc12345");
+        Reporter.LogToReport("Step 1: Login with valid credentials");
+        loginPage.performLogin(email, password);
 
-        try {
-            String oldValue = profilePage.getFullname();
-            String newValue = oldValue + "_Test";
-            profilePage.updateFullname(newValue);
+        Reporter.LogToReport("Step 2: Navigate to profile page");
+        profilePage.navigateToProfile();
 
-            getDriver().navigate().refresh();
-
-            String actualValue = profilePage.getFullname();
-            Allure.parameter("Expected Fullname", newValue);
-            Allure.parameter("Actual Fullname", actualValue);
-            Assert.assertEquals(actualValue, newValue, "Fullname should be updated successfully");
-            logger.info("Fullname updated successfully to: {}", newValue);
-        } catch (Exception e) {
-            logger.error("[TEST] Error updating fullname: {}", e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Test(groups = {"userprofile"},
-            description = "USER-03: Update address successfully")
-    @Story("Profile Update")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Verify that user can successfully update their address in profile")
-    public void testUpdateAddress() {
-        LoginPage loginPage = new LoginPage(getDriver());
-        UserProfilePage profilePage = new UserProfilePage(getDriver());
-
-        logger.info("[TEST] Starting testUpdateAddress");
-
-        loginPage.performLogin("john5@test.com", "Abc12345");
-
-        String newAddress = "123 Test Street, Hanoi";
-        profilePage.updateAddress(newAddress);
+        Reporter.LogToReport("Step 3: Update fullname");
+        String oldValue = profilePage.getFullname();
+        String newValue = oldValue + "_Test";
+        profilePage.updateFullname(newValue);
 
         getDriver().navigate().refresh();
 
+        String actualValue = profilePage.getFullname();
+        Assert.assertEquals(actualValue, newValue, "Fullname should be updated successfully");
+        logger.info("Fullname updated successfully to: {}", newValue);
+    }
+
+    @Test(groups = {"userprofile"},
+            description = "USER-03: Update address successfully",
+            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
+    @Story("Profile Update")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that user can successfully update their address in profile")
+    public void testUpdateAddress(Object[] validRow) {
+        LoginPage loginPage = new LoginPage(getDriver());
+        UserProfilePage profilePage = new UserProfilePage(getDriver());
+
+        String email = (String) validRow[1];
+        String password = (String) validRow[2];
+
+        Reporter.LogToReport("Step 1: Login with valid credentials");
+        loginPage.performLogin(email, password);
+
+        Reporter.LogToReport("Step 2: Navigate to profile page");
+        profilePage.navigateToProfile();
+
+        String newAddress = "123 Test Street, Hanoi";
+        Reporter.LogToReport("Step 3: Update address to " + newAddress);
+        profilePage.updateAddress(newAddress);
+
+        Reporter.LogToReport("Step 4: Refresh and verify address");
+        getDriver().navigate().refresh();
         String actualAddress = profilePage.getAddress();
-        Allure.parameter("Expected Address", newAddress);
-        Allure.parameter("Actual Address", actualAddress);
         Assert.assertEquals(actualAddress, newAddress, "Address should be updated successfully");
+
         logger.info("Address updated successfully to: {}", newAddress);
     }
 
     @Test(groups = {"userprofile"},
-            description = "USER-04: Verify profile page loads successfully")
+            description = "USER-04: Verify profile page loads successfully",
+            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("Profile Navigation")
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify that user can access and view their profile page")
-    public void testProfilePageLoads() {
+    public void testProfilePageLoads(Object[] validRow) {
         LoginPage loginPage = new LoginPage(getDriver());
         UserProfilePage profilePage = new UserProfilePage(getDriver());
 
-        loginPage.performLogin("john5@test.com", "Abc12345");
+        String email = (String) validRow[1];
+        String password = (String) validRow[2];
+
+        Reporter.LogToReport("Step 1: Login with valid credentials");
+        loginPage.performLogin(email, password);
+
+        Reporter.LogToReport("Step 2: Navigate to profile page");
         profilePage.navigateToProfile();
 
+        Reporter.LogToReport("Step 3: Verify profile page loaded");
         Assert.assertTrue(profilePage.isProfilePageLoaded(),
             "Profile page should load successfully");
+
         logger.info("Profile page loaded successfully");
     }
 }

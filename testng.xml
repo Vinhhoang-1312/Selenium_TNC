@@ -1,6 +1,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="TNC Store Test Suite" parallel="none" thread-count="1">
+<suite name="TNC Store Test Suite" parallel="classes" thread-count="4">
     <parameter name="browser" value="chrome"/>
+
+    <!-- Register Allure TestNG listener first so Allure lifecycle is initialized before custom listeners -->
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+    </listeners>
 
     <test name="Full Test Suite">
         <packages>

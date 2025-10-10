@@ -1,12 +1,13 @@
 package pages;
 
-import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import utils.Reporter;
 
 public class UserProfilePage extends BasePage {
 
-    private final By profileLink = By.xpath("//a[contains(@href,'profile') or contains(@href,'account')]");
+    private final By profileLink = By.xpath("//a[@href='?view=change-info']");
     private final By nameField = By.cssSelector("#profile-name");
     private final By emailField = By.cssSelector("#profile-email");
     private final By phoneField = By.cssSelector("#profile-phone");
@@ -28,99 +29,117 @@ public class UserProfilePage extends BasePage {
     }
 
     public void navigateToProfile() {
-        Allure.step("Navigate to user profile page", () -> {
-            try {
-                click(profileLink);
-                logger.info("Navigated to profile page");
-            } catch (Exception e) {
-                logger.error("Failed to navigate to profile: {}", e.getMessage());
-                throw new RuntimeException("Cannot navigate to profile page", e);
-            }
-        });
+        Reporter.Action("Navigate to user profile page");
+        try {
+            click(profileLink);
+            logger.info("Navigated to profile page");
+            Reporter.Success("Profile page opened");
+        } catch (Exception e) {
+            logger.error("Failed to navigate to profile: {}", e.getMessage());
+            Reporter.Error("Failed to navigate to profile: " + e.getMessage());
+            throw new RuntimeException("Cannot navigate to profile page", e);
+        }
     }
 
     public void updatePhone(String phone) {
-        Allure.step("Update phone number to: " + phone, () -> {
-            try {
-                clearAndType(phoneInput, phone);
-                clickElementWithRetry(saveButton, "save button");
-                logger.info("Phone updated to: {}", phone);
-            } catch (Exception e) {
-                logger.error("Failed to update phone: {}", e.getMessage());
-                throw new RuntimeException("Cannot update phone", e);
-            }
-        });
+        Reporter.Action("Update phone number to: " + phone);
+        try {
+            WebElement phoneElement = waitAndFind(phoneInput);
+            jsUtils.scrollToElement(phoneElement);
+            clearAndType(phoneInput, phone);
+            clickElementWithRetry(saveButton, "save button");
+            logger.info("Phone updated to: {}", phone);
+            Reporter.Success("Phone updated successfully");
+        } catch (Exception e) {
+            logger.error("Failed to update phone: {}", e.getMessage());
+            Reporter.Error("Failed to update phone: " + e.getMessage());
+            throw new RuntimeException("Cannot update phone", e);
+        }
     }
 
     public void updateFullname(String fullname) {
-        Allure.step("Update fullname to: " + fullname, () -> {
-            try {
-                clearAndType(fullnameInput, fullname);
-                clickElementWithRetry(saveButton, "save button");
-                logger.info("Fullname updated to: {}", fullname);
-            } catch (Exception e) {
-                logger.error("Failed to update fullname: {}", e.getMessage());
-                throw new RuntimeException("Cannot update fullname", e);
-            }
-        });
+        Reporter.Action("Update fullname to: " + fullname);
+        try {
+            WebElement fullnameElement = waitAndFind(fullnameInput);
+            jsUtils.scrollToElement(fullnameElement);
+            clearAndType(fullnameInput, fullname);
+            clickElementWithRetry(saveButton, "save button");
+            logger.info("Fullname updated to: {}", fullname);
+            Reporter.Success("Fullname updated successfully");
+        } catch (Exception e) {
+            logger.error("Failed to update fullname: {}", e.getMessage());
+            Reporter.Error("Failed to update fullname: " + e.getMessage());
+            throw new RuntimeException("Cannot update fullname", e);
+        }
     }
 
     public void updateAddress(String address) {
-        Allure.step("Update address to: " + address, () -> {
-            try {
-                clearAndType(addressInput, address);
-                clickElementWithRetry(saveButton, "save button");
-                logger.info("Address updated to: {}", address);
-            } catch (Exception e) {
-                logger.error("Failed to update address: {}", e.getMessage());
-                throw new RuntimeException("Cannot update address", e);
-            }
-        });
+        Reporter.Action("Update address to: " + address);
+        try {
+            WebElement addressElement = waitAndFind(addressInput);
+            jsUtils.scrollToElement(addressElement);
+            clearAndType(addressInput, address);
+            clickElementWithRetry(saveButton, "save button");
+            logger.info("Address updated to: {}", address);
+            Reporter.Success("Address updated successfully");
+        } catch (Exception e) {
+            logger.error("Failed to update address: {}", e.getMessage());
+            Reporter.Error("Failed to update address: " + e.getMessage());
+            throw new RuntimeException("Cannot update address", e);
+        }
     }
 
-    // Getters - Use waitAndFind instead of direct driver.findElement
     public String getPhone() {
-        return Allure.step("Get phone number from profile", () -> {
-            try {
-                return waitAndFind(phoneInput).getAttribute("value");
-            } catch (Exception e) {
-                return "";
-            }
-        });
+        Reporter.Action("Get phone number from profile");
+        try {
+            String phone = waitAndFind(phoneInput).getAttribute("value");
+            Reporter.Success("Retrieved phone: " + phone);
+            return phone;
+        } catch (Exception e) {
+            Reporter.Warn("Failed to get phone: " + e.getMessage());
+            return "";
+        }
     }
 
     public String getFullname() {
-        return Allure.step("Get fullname from profile", () -> {
-            try {
-                return waitAndFind(fullnameInput).getAttribute("value");
-            } catch (Exception e) {
-                return "";
-            }
-        });
+        Reporter.Action("Get fullname from profile");
+        try {
+            String fullname = waitAndFind(fullnameInput).getAttribute("value");
+            Reporter.Success("Retrieved fullname: " + fullname);
+            return fullname;
+        } catch (Exception e) {
+            Reporter.Warn("Failed to get fullname: " + e.getMessage());
+            return "";
+        }
     }
 
     public String getAddress() {
-        return Allure.step("Get address from profile", () -> {
-            try {
-                return waitAndFind(addressInput).getAttribute("value");
-            } catch (Exception e) {
-                return "";
-            }
-        });
+        Reporter.Action("Get address from profile");
+        try {
+            String address = waitAndFind(addressInput).getAttribute("value");
+            Reporter.Success("Retrieved address: " + address);
+            return address;
+        } catch (Exception e) {
+            Reporter.Warn("Failed to get address: " + e.getMessage());
+            return "";
+        }
     }
 
-    /**
-     * Checks if profile page loaded successfully
-     */
     public boolean isProfilePageLoaded() {
-        return Allure.step("Check if profile page loaded successfully", () -> {
-            try {
-                waitForElementToBeVisible(nameField);
-                return isDisplayed(nameField) || isDisplayed(phoneInput) || isDisplayed(fullnameInput);
-            } catch (Exception e) {
-                logger.warn("Profile page did not load successfully", e);
-                return false;
+        Reporter.Action("Check if profile page loaded successfully");
+        try {
+            waitForElementToBeVisible(nameField);
+            boolean loaded = isDisplayed(nameField) || isDisplayed(phoneInput) || isDisplayed(fullnameInput);
+            if (loaded) {
+                Reporter.Success("Profile page loaded successfully");
+            } else {
+                Reporter.Warn("Profile page did not load");
             }
-        });
+            return loaded;
+        } catch (Exception e) {
+            logger.warn("Profile page did not load successfully", e);
+            Reporter.Warn("Profile page load failed: " + e.getMessage());
+            return false;
+        }
     }
 }

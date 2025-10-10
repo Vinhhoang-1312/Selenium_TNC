@@ -12,7 +12,7 @@ import pages.CartPage;
 import pages.HomePage;
 import pages.LoginPage;
 import pages.ProductDetailPage;
-import pages.RegisterPage;
+import utils.TestDataProviders;
 
 @Listeners({BaseListener.class})
 @Epic("E-Commerce")
@@ -20,11 +20,12 @@ import pages.RegisterPage;
 public class E2ETests extends BaseTest {
 
     @Test(groups = {"e2e", "regression"},
-            description = "E2E-01: Login -> Search -> Add to cart -> Verify cart")
+            description = "E2E-01: Login -> Search -> Add to cart -> Verify cart",
+            dataProvider = "validLoginData", dataProviderClass = TestDataProviders.class)
     @Story("Complete User Journey")
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify complete user journey from login to cart verification")
-    public void testLoginSearchAddToCart() {
+    public void testLoginSearchAddToCart(Object[] validRow) {
         // Initialize page objects
         LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(getDriver());
@@ -34,8 +35,8 @@ public class E2ETests extends BaseTest {
 
         try {
             // Get valid credentials from Excel file
-            String email = AuthenticationTestData.getValidEmail();
-            String password = AuthenticationTestData.getValidPassword();
+            String email = (String) validRow[1];
+            String password = (String) validRow[2];
 
             logger.info("Starting E2E test with user: {}", email);
             Allure.parameter("Test User Email", email);
