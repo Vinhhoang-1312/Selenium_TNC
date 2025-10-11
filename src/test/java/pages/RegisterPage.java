@@ -58,7 +58,7 @@ public class RegisterPage extends BasePage {
 
     public void submitRegister() {
         Reporter.Action("Submit registration form");
-        clickElementWithRetry(registerButton, "register button");
+        click(registerButton);
     }
 
     public void performRegister(String name, String email, String password) {

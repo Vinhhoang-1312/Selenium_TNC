@@ -35,7 +35,7 @@ public class ProductDetailPage extends BasePage {
         Allure.step("Add product to cart", () -> {
             waitForElementToDisappear(loadingSpinner);
             waitForElementToBeVisible(addToCartButton);
-            clickElementWithRetry(addToCartButton, "add to cart");
+            click(addToCartButton);
             popupHandler.acceptAlert(3);
             waitForPageStability();
             logger.info("Successfully added product to cart");
@@ -46,7 +46,7 @@ public class ProductDetailPage extends BasePage {
         Allure.step("Add " + quantity + " product(s) to cart", () -> {
             setQuantity(quantity);
             waitForElementToBeVisible(addToCartButton);
-            clickElementWithRetry(addToCartButton, "add to cart");
+            click(addToCartButton);
             popupHandler.acceptAlert(3);
             waitForPageStability();
             logger.info("Successfully added {} product(s) to cart", quantity);
@@ -67,7 +67,7 @@ public class ProductDetailPage extends BasePage {
             logger.info("Successfully hovered over cart icon");
 
             waitForElementToBeVisible(viewCartLink);
-            clickElementWithRetry(viewCartLink, "view cart link");
+            click(viewCartLink);
             logger.info("Successfully navigated to cart page");
         });
     }

@@ -47,7 +47,7 @@ public class UserProfilePage extends BasePage {
             WebElement phoneElement = waitAndFind(phoneInput);
             jsUtils.scrollToElement(phoneElement);
             clearAndType(phoneInput, phone);
-            clickElementWithRetry(saveButton, "save button");
+            click(saveButton);
             logger.info("Phone updated to: {}", phone);
             Reporter.Success("Phone updated successfully");
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class UserProfilePage extends BasePage {
             WebElement fullnameElement = waitAndFind(fullnameInput);
             jsUtils.scrollToElement(fullnameElement);
             clearAndType(fullnameInput, fullname);
-            clickElementWithRetry(saveButton, "save button");
+            click(saveButton);
             logger.info("Fullname updated to: {}", fullname);
             Reporter.Success("Fullname updated successfully");
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class UserProfilePage extends BasePage {
             WebElement addressElement = waitAndFind(addressInput);
             jsUtils.scrollToElement(addressElement);
             clearAndType(addressInput, address);
-            clickElementWithRetry(saveButton, "save button");
+            click(saveButton);
             logger.info("Address updated to: {}", address);
             Reporter.Success("Address updated successfully");
         } catch (Exception e) {

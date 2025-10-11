@@ -26,7 +26,7 @@ public class LoginPage extends BasePage {
     public void openLoginPopup() {
         Reporter.Action("Open login popup");
         try {
-            clickElementWithRetry(accountButton, "account button");
+            click(accountButton);
             waitForElementToBeVisible(loginPopup);
             Reporter.Success("Login popup opened successfully");
         } catch (Exception e) {
@@ -50,7 +50,7 @@ public class LoginPage extends BasePage {
 
     public void submitLogin() {
         Reporter.Action("Submit login form");
-        clickElementWithRetry(loginButton, "login button");
+        click(loginButton);
     }
 
     public void performLogin(String email, String password) {
@@ -90,7 +90,7 @@ public class LoginPage extends BasePage {
         Reporter.Action("Navigate to registration form");
         try {
             openLoginPopup();
-            clickElementWithRetry(createAccountLink, "create account link");
+            click(createAccountLink);
             Reporter.Success("Navigated to register page");
             return new RegisterPage(driver);
         } catch (Exception e) {

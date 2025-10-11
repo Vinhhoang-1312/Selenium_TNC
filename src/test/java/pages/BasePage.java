@@ -41,29 +41,32 @@ public abstract class BasePage {
     }
 
     protected void click(By locator) {
-        click(locator, 3); // Default max retries
-    }
-
-    protected void click(By locator, int maxRetries) {
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
-        } catch (ElementNotInteractableException e) {
-            if (maxRetries > 0) {
-                // Retry with decremented counter
-                click(locator, maxRetries - 1);
-            } else {
-                // Max retries exceeded, throw the exception
-                throw e;
-            }
-        } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
-            // Accept unexpected JS alert and retry
+        int maxAttempts = 3;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
+                popupHandler.dismissAllPopups();
+                wait.until(ExpectedConditions.elementToBeClickable(locator));
+                driver.findElement(locator).click();
+                return;
+            } catch (ElementClickInterceptedException e) {
+                popupHandler.dismissAllPopups();
+                WebElement el = driver.findElement(locator);
+                jsUtils.clickElementByJS(el);
+                return;
+            } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
                 popupHandler.getAlertTextAndAccept(3);
-            } catch (Exception ex) {
-                // ignore
+                if (attempt == maxAttempts) {
+                    throw new RuntimeException("Failed to click after handling unexpected alert", alertEx);
+                }
+            } catch (Exception e) {
+                if (attempt == maxAttempts) {
+                    throw new RuntimeException("Failed to click after " + maxAttempts + " attempts", e);
+                }
+                try {
+                    wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loading, .spinner")));
+                } catch (Exception ignored) {
+                }
             }
-            // retry click once
-            wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         }
     }
 
@@ -94,11 +97,8 @@ public abstract class BasePage {
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
+            logger.warn("Timeout waiting for element to disappear: {}", locator);
         }
-    }
-
-    public WebElement waitForElementToBeClickable(By locator) {
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     public WebElement waitForElementToBeVisible(By locator) {
@@ -109,47 +109,12 @@ public abstract class BasePage {
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }
 
-    protected void clickElementWithRetry(By by, String elementName) {
-        int maxAttempts = 3;
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                popupHandler.dismissAllPopups();
-                wait.until(ExpectedConditions.elementToBeClickable(by));
-                driver.findElement(by).click();
-                return;
-            } catch (ElementClickInterceptedException e) {
-                popupHandler.dismissAllPopups();
-                WebElement el = driver.findElement(by);
-                jsUtils.clickElementByJS(el);
-                return;
-            } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
-                popupHandler.getAlertTextAndAccept(3);
-                if (attempt == maxAttempts) {
-                    throw new RuntimeException("Failed to click " + elementName + " after handling unexpected alert", alertEx);
-                }
-            } catch (Exception e) {
-                if (attempt == maxAttempts) {
-                    throw new RuntimeException("Failed to click " + elementName + " after " + maxAttempts + " attempts", e);
-                }
-                try {
-                    wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loading, .spinner")));
-                } catch (Exception ignored) {
-                }
-            }
-        }
-    }
 
     protected void waitForPageStability() {
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loading, .spinner")));
         } catch (Exception e) {
             // No loading spinner found or timeout, page is stable
-        }
-        try {
-            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState").equals("complete"));
-        } catch (Exception e) {
-            // Fallback if JS check fails
         }
     }
 }
