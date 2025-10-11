@@ -41,11 +41,20 @@ public abstract class BasePage {
     }
 
     protected void click(By locator) {
+        click(locator, 3); // Default max retries
+    }
+
+    protected void click(By locator, int maxRetries) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         } catch (ElementNotInteractableException e) {
-            // Retry immediately without sleep - element will become interactable or fail fast
-            click(locator);
+            if (maxRetries > 0) {
+                // Retry with decremented counter
+                click(locator, maxRetries - 1);
+            } else {
+                // Max retries exceeded, throw the exception
+                throw e;
+            }
         } catch (org.openqa.selenium.UnhandledAlertException alertEx) {
             // Accept unexpected JS alert and retry
             try {
