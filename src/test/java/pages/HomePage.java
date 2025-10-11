@@ -47,6 +47,7 @@ public class HomePage extends BasePage {
             List<WebElement> availableProducts = driver.findElements(productTitleLinks);
 
             if (!availableProducts.isEmpty()) {
+                popupHandler.dismissAllPopups(); // Dismiss overlays before clicking
                 click(firstProductLink);
                 logger.info("Successfully clicked first product");
             } else {
