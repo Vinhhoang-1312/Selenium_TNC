@@ -30,7 +30,7 @@ public class HomePage extends BasePage {
             if (!driver.findElements(loadingSpinner).isEmpty()) {
                 waitForElementToDisappear(loadingSpinner);
             }
-            click(searchButton);
+            clickElementWithRetry(searchButton, "search button");
             waitForPageStability();
             logger.info("Successfully searched for product: {}", productName);
         });
