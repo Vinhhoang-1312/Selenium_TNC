@@ -1,9 +1,15 @@
-name: Scheduled Tests - 3:10PM Daily
+name: Scheduled Tests - 5:30PM & 2AM Daily
 
 on:
-# ... (triggers) ...
+  schedule:
+    # Chạy mỗi ngày lúc 5h30 chiều giờ Việt Nam (UTC+7)
+    # Cron sử dụng UTC nên 5h30 chiều VN = 10h30 sáng cùng ngày theo UTC
+    - cron: '30 10 * * *'
+    # Chạy mỗi ngày lúc 2h sáng giờ Việt Nam (UTC+7)
+    # 2h sáng VN = 19h tối hôm trước theo UTC
+    - cron: '0 19 * * *'
+  workflow_dispatch: {}
 
-# BƯỚC THAY ĐỔI 1: THÊM QUYỀN
 permissions:
   contents: write
   pages: write
@@ -14,7 +20,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ... (Các bước checkout, setup JDK, cache Maven) ...
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Cache Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
 
       - name: Run Full Test Suite (testng.xml)
         run: mvn clean test -DsuiteXmlFile=testng.xml
@@ -23,18 +44,44 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: mvn allure:report
-      # ... (Các bước Upload Allure Results/Report) ...
 
-      # BƯỚC THAY ĐỔI 2: THÊM BƯỚC TRIỂN KHAI
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-scheduled-${{ github.run_number }}
+          path: target/allure-results
+          retention-days: 7
+
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-scheduled-${{ github.run_number }}
+          path: target/site/allure-maven-plugin
+          retention-days: 7
+
       - name: Deploy Scheduled Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
-          publish_branch: allure-pages-scheduled # Branch riêng cho Scheduled
-          # Thêm thư mục con dựa trên số lần chạy để lưu trữ lịch sử báo cáo
+          publish_branch: allure-pages-scheduled
           destination_dir: ${{ github.run_number }}
           allow_empty_commit: true
 
-      # ... (Các bước Test Summary và Check Test Results) ...
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "### 🕐 Scheduled Test Run - $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This is an automated test run to ensure the test suite is still working." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
+
+      # Optional: Send notification if tests fail
+      - name: Check Test Results
+        if: failure()
+        run: |
+          echo "::warning::Scheduled tests failed! Please check the test results."

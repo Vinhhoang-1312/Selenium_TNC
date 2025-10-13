@@ -7,18 +7,32 @@ on:
     branches: [main, master]
   workflow_dispatch: {}
 
-# BƯỚC THAY ĐỔI 1: THÊM QUYỀN
 permissions:
-  contents: write # Cho phép action ghi/tạo branch mới
-  pages: write    # Cho phép action quản lý GitHub Pages
-  id-token: write # Cần thiết cho xác thực
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      # ... (Các bước checkout, setup JDK, cache Maven) ...
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Cache Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
 
       - name: Run Smoke Test Suite (smoke-test.xml)
         run: mvn clean test -Psmoke-test
@@ -28,17 +42,31 @@ jobs:
         if: always()
         run: mvn allure:report
 
-      # ... (Các bước Upload Allure Results/Report) ...
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-ci
+          path: target/allure-results
+          retention-days: 30
 
-      # BƯỚC THAY ĐỔI 2: THÊM BƯỚC TRIỂN KHAI
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report-ci
+          path: target/site/allure-maven-plugin
+          retention-days: 30
+
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: always() # Luôn chạy để công bố báo cáo, kể cả khi kiểm thử fail
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: target/site/allure-maven-plugin # Thư mục chứa báo cáo HTML
-          publish_branch: allure-pages-ci # Tên branch mới để lưu trữ báo cáo
+          publish_dir: target/site/allure-maven-plugin
+          publish_branch: allure-pages-ci
           allow_empty_commit: true
+
       - name: Test Summary
         if: always()
         run: |
