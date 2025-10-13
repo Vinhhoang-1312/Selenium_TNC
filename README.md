@@ -1,106 +1,124 @@
 # 🏪 TNC Store Automation Testing Framework
 
-## Project Overview
+# 🏪 TNC Store Automation Testing Framework
 
-Automation testing framework for TNC Store website using Selenium WebDriver, TestNG, and ExtentReports.
-Enterprise-grade framework for scalable, maintainable, and collaborative test automation.
+## Overview
+
+This project is an automated testing framework for the TNC Store website, built with Selenium WebDriver, TestNG, Allure, and SLF4J. It supports scalable, maintainable, and parallelizable UI test automation for e-commerce flows.
+
+## Features
+
+- Page Object Model (POM) for maintainable test code
+- Parallel test execution with TestNG
+- Allure reporting integration
+- Data-driven testing (Excel, JSON)
+- Utilities for screenshots, waits, and reporting
+- Maven-based build and dependency management
 
 ## Project Structure
 
 ```
 TNC_S/
-├── pom.xml
-├── README.md
-├── AUTOMATION_TESTING_BEST_PRACTICES.md
-├── *.bat (test run scripts)
-├── report/
-│   └── screenshots/
-├── test-output/
+├── pom.xml                # Maven build file
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies (for data tools)
 ├── src/
 │   ├── main/
-│   │   └── java/
-│   │       ├── commons/
-│   │       │   ├── DriverFactory.java
-│   │       │   └── Driver_Factory.java
-│   │       ├── config/
-│   │       │   └── TNCStoreConfig.java
-│   │       ├── helpers/
-│   │       │   └── PageHelpers.java
-│   │       ├── listener/
-│   │       │   ├── TestListener.java
-│   │       │   └── listener.java
-│   │       ├── locators/
-│   │       ├── pages/
-│   │       │   └── BasePage.java
-│   │       └── reports/
-│   │           └── report.java
+│   │   ├── java/
+│   │   │   └── utils/     # Core Java utilities (driver, config, reporting)
+│   │   └── resources/     # Main resources (application.properties, testdata.xlsx)
 │   └── test/
 │       ├── java/
-│       │   ├── config/
-│       │   ├── helpers/
-│       │   │   ├── AuthenticationMethodVerificationHelper.java
-│       │   │   ├── BaseTest.java
-│       │   │   ├── ConfigReader.java
-│       │   │   ├── ExcelReader.java
-│       │   │   ├── ExtentManager.java
-│       │   │   ├── NetworkResponseHelper.java
-│       │   │   ├── PopupHandler.java
-│       │   │   ├── ReportManager.java
-│       │   │   ├── ScreenshotUtils.java
-│       │   │   ├── TestDataProvider.java
-│       │   │   └── WaitUtils.java
-│       │   ├── model/
-│       │   │   ├── AuthenticationTestData.java
-│       │   │   ├── CartTestData.java
-│       │   │   ├── ProductDetailTestData.java
-│       │   │   ├── SearchTestData.java
-│       │   │   └── Model.java
-│       │   ├── pages/
-│       │   │   ├── AuthenticationPage.java
-│       │   │   ├── HomePage.java
-│       │   │   └── ...
-│       │   └── test/
-│       │       ├── authentication/
-│       │       ├── userprofile/
-│       │       ├── cart/
-│       │       ├── search/
-│       │       ├── productdetail/
-│       │       └── checkout/
-│       └── resources/
-│           ├── config.properties
-│           ├── extent-config.css
-│           ├── extent-config.xml
-│           ├── testdata.json
-│           ├── data/
-│           │   ├── ... (test data files)
-│           ├── qa/
-│           └── testdata/
-│               └── ...
-└── target/
+│       │   ├── core/      # Base test, driver factory
+│       │   ├── helpers/   # Helper classes (e.g., PopupHandler)
+│       │   ├── listeners/ # TestNG listeners
+│       │   ├── pages/     # Page Object classes (LoginPage, CartPage, etc.)
+│       │   ├── reports/   # Reporting utilities
+│       │   ├── tests/     # Test classes (LoginTests, CartTests, etc.)
+│       │   └── utils/     # Additional utilities (e.g., write_xlsx_data_resources.py)
+│       └── resources/     # Test resources (allure.properties, testdata, etc.)
+├── testng.xml             # TestNG suite configuration
+├── *.xml                  # Other TestNG suite files
+├── target/                # Build and test output
+└── allure-results/        # Allure results (generated)
 ```
 
-## Key Folders & Files
+## Key Technologies
 
-- **commons/**: Core driver and listener utilities
-- **config/**: Project configuration (URLs, timeouts, etc.)
-- **helpers/**: Test utilities, base classes, reporting, waits, data providers
-- **listener/**: TestNG listeners for reporting and retry
-- **locators/**: (if used) Centralized element locators
-- **pages/**: Page Object Model classes (one class per page)
-- **model/**: Test data models (POJOs)
-- **test/**: Test classes, organized by feature/module
-- **resources/**: Config, test data, and reporting templates
-- **report/**: Test reports and screenshots
-- **test-output/**: TestNG output
-- **target/**: Build output
+- **Java 21**
+- **Selenium WebDriver 4**
+- **TestNG 7**
+- **Allure 2**
+- **SLF4J** (logging)
+- **Apache POI** (Excel data)
+- **Maven** (build & dependency management)
+
+## How to Run Tests
+
+1. **Install Java 21+ and Maven**
+2. `mvn clean test` to run all tests (default: Chrome browser)
+3. Use `-DsuiteXmlFile=your-suite.xml` or Maven profiles to run specific suites (see `pom.xml`)
+4. Generate Allure report:
+
+- `allure serve target/allure-results` (Allure CLI required)
+
+## Test Suite Organization
+
+- Test classes are in `src/test/java/tests/` (e.g., `LoginTests.java`, `CartTests.java`)
+- Page Objects are in `src/test/java/pages/`
+- Utilities and helpers are in `core/`, `helpers/`, `utils/`, and `reports/`
+- Test data is in `src/test/resources/testdata/` and Excel/JSON files
+
+## Configuration
+
+- **Browser**: Set via TestNG parameter or `config.properties`
+- **Test data**: Excel (`testdata.xlsx`), JSON, or Java classes
+- **Allure**: Results in `target/allure-results/`, config in `src/test/resources/`
 
 ## Coding Conventions
 
-### Naming
+- **Packages**: lowercase, meaningful (e.g., core, helpers, pages)
+- **Classes**: PascalCase (e.g., LoginPage, CartTests)
+- **Methods/Variables**: camelCase
+- **Constants**: UPPER_SNAKE_CASE
+- **Test Classes**: End with `Tests` (e.g., LoginTests)
+- **Test Methods**: methodName_condition_expectedResult
+- **Indentation**: 4 spaces
+- **No unnecessary comments** (especially Vietnamese)
 
-- **Packages**: lowercase, meaningful (e.g., commons, helpers, pages)
-- **Classes**: PascalCase (e.g., LoginPage, CartTest)
-- **Methods**: camelCase, descriptive (e.g., clickLoginButton, enterEmail)
+## Best Practices
+
+- Use assertions from TestNG in test classes
+- No hardcoded test data in scripts
+- Driver managed by DriverFactory (Singleton/ThreadLocal)
+- Parallel execution via TestNG XML
+- Clean, DRY, and reusable code
+- No sensitive info in logs
+- No errors (Alt+F6) before closing PR
+- In PowerShell, use `;` instead of `&&` for command chaining
+
+## Dependencies (Maven)
+
+See `pom.xml` for all dependencies. Key ones:
+
+- Selenium Java
+- TestNG
+- Allure TestNG
+- SLF4J
+- Apache POI (Excel)
+
+## Python Utilities
+
+Some data tools/scripts use Python (see `requirements.txt`). Install with:
+
+```
+pip install -r requirements.txt
+```
+
+## Contact
+
+For questions, contact the TNC Store QA team.
+
 - **Variables**: camelCase, concise (e.g., userName, expectedTitle)
 - **Constants**: SNAKE_CASE, all uppercase (e.g., BASE_URL, DEFAULT_TIMEOUT)
 - **Test Classes**: End with `Test` (e.g., LoginTest)
