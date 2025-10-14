@@ -16,17 +16,18 @@ jobs:
   ci:
     name: CI - Test & Report
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: ☕ Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: "21"
           distribution: "temurin"
 
-      - name: Cache Maven repository
+      - name: ⚙️ Cache Maven repository
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
@@ -34,17 +35,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Run Smoke Test Suite (smoke-test.xml)
+      - name: 🚀 Run Smoke Test Suite
         run: mvn clean test -Psmoke-test
         continue-on-error: false
 
-      - name: Prepare Allure Environment Info
+      - name: 🧩 Restore Allure History (for Trend)
         run: |
+          git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || true
+          if [ -d gh-pages-ci/history ]; then
+            mkdir -p target/allure-results/history
+            cp -a gh-pages-ci/history/. target/allure-results/history/ || true
+            echo "✅ Restored history from previous CI run"
+          else
+            echo "⚠️ No previous history found"
+          fi
+
+      - name: 🧰 Prepare Allure Environment Info
+        run: |
+          mkdir -p target/allure-results
           echo "ENV=Production" > target/allure-results/environment.properties
           echo "BROWSER=Chrome" >> target/allure-results/environment.properties
           echo "BASE_URL=https://tnc-six.vercel.app" >> target/allure-results/environment.properties
 
-      - name: Prepare Allure Executor Info
+      - name: 🧰 Prepare Allure Executor Info
         run: |
           echo '{
             "name": "GitHub Actions",
@@ -56,32 +69,20 @@ jobs:
             "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/"
           }' > target/allure-results/executor.json
 
-      - name: Download Allure History from GitHub Pages branch
-        run: |
-          git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || true
-          if [ -d gh-pages-ci/history ]; then
-            mkdir -p target/allure-results/history
-            cp -a gh-pages-ci/history/. target/allure-results/history/ || true
-            echo "Copied history from gh-pages-ci/history to target/allure-results/history"
-          else
-            echo "No history found in gh-pages-ci/history"
-          fi
-
-      - name: Generate Allure Report
+      - name: 🧮 Generate Allure Report
         if: always()
         run: mvn allure:report
 
-      # 🔥 Preserve Allure History for Trend
-      - name: Preserve Allure History
+      - name: 📦 Preserve Updated Allure History
         if: always()
         run: |
           mkdir -p target/allure-results/history
           if [ -d target/site/allure-maven-plugin/history ]; then
             cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
-            echo "Copied new history from report to allure-results"
+            echo "✅ History preserved for next CI run"
           fi
 
-      - name: Upload Allure Results
+      - name: 📤 Upload Allure Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -89,7 +90,7 @@ jobs:
           path: target/allure-results
           retention-days: 30
 
-      - name: Upload Allure Report
+      - name: 📤 Upload Allure Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -97,7 +98,7 @@ jobs:
           path: target/site/allure-maven-plugin
           retention-days: 30
 
-      - name: Deploy Allure Report to GitHub Pages
+      - name: 🌐 Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
@@ -106,23 +107,23 @@ jobs:
           publish_branch: allure-pages-ci
           allow_empty_commit: true
 
-      - name: Test Summary
+      - name: 🧾 Test Summary
         if: always()
         run: |
-          echo "### Test Results 📊" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ CI Smoke Tests Completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
-
+          echo "📊 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/)" >> $GITHUB_STEP_SUMMARY
 
   cd:
     name: CD - Deploy to Vercel
     runs-on: ubuntu-latest
     needs: ci
+
     steps:
-      - name: Checkout repository
+      - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
+      - name: 🌍 Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
