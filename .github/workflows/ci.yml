@@ -61,7 +61,11 @@ jobs:
           git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || true
           if [ -d gh-pages-ci/history ]; then
             mkdir -p target/allure-results/history
-            cp -r gh-pages-ci/history/* target/allure-results/history/ || true
+            cp -a gh-pages-ci/history/. target/allure-results/history/ || true
+            echo "Copied history from gh-pages-ci/history to target/allure-results/history"
+            ls -l target/allure-results/history || true
+          else
+            echo "No history found in gh-pages-ci/history"
           fi
 
       - name: Generate Allure Report
