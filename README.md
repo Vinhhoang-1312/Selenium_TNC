@@ -1,6 +1,5 @@
-# 🏪 TNC Store Automation Testing Framework
 
-# 🏪 TNC Store Automation Testing Framework
+# 🏪 TNC Store Automation Testing Framework - Intergrated CI/CD in Github_Actions
 
 ## Overview
 
