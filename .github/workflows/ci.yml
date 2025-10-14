@@ -63,7 +63,6 @@ jobs:
             mkdir -p target/allure-results/history
             cp -a gh-pages-ci/history/. target/allure-results/history/ || true
             echo "Copied history from gh-pages-ci/history to target/allure-results/history"
-            ls -l target/allure-results/history || true
           else
             echo "No history found in gh-pages-ci/history"
           fi
@@ -72,6 +71,15 @@ jobs:
         if: always()
         run: mvn allure:report
 
+      # 🔥 NEW: Preserve and Sync History for Allure Trend
+      - name: Preserve Allure History
+        if: always()
+        run: |
+          mkdir -p target/allure-results/history
+          if [ -d target/site/allure-maven-plugin/history ]; then
+            cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
+            echo "Copied new history from report to allure-results"
+          fi
 
       - name: Upload Allure Results
         uses: actions/upload-artifact@v4
@@ -104,22 +112,3 @@ jobs:
           echo "### Test Results 📊" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
-
-  cd:
-    name: CD - Deploy to Vercel
-    runs-on: ubuntu-latest
-    needs: ci
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

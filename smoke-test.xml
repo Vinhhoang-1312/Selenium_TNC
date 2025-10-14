@@ -6,11 +6,13 @@
             <class name="tests.LoginTests">
                 <methods>
                     <include name="testLoginWithValidCredentials"/>
+                    <include name="testLoginWithInvalidEmail"/>
                 </methods>
             </class>
             <class name="tests.RegisterTests">
                 <methods>
                     <include name="testRegisterWithValidData"/>
+                    <include name="testRegisterWithInvalidEmail"/>
                 </methods>
             </class>
             <class name="tests.E2ETests">
@@ -26,9 +28,9 @@
             <class name="tests.CartTests">
                 <methods>
                     <include name="testAddSingleProductToCart"/>
+                    <include name="testRemoveproductfromcart"/>
                 </methods>
             </class>
         </classes>
     </test>
 </suite>
-

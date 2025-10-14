@@ -2,12 +2,10 @@ name: Scheduled Tests - 2:00AM Daily
 
 on:
   schedule:
-    # Chạy mỗi ngày lúc 2h sáng giờ Việt Nam (UTC+7)
-    # Cron sử dụng UTC nên 2h sáng VN = 19h tối hôm trước theo UTC
-    - cron: '0 19 * * *'   # 2:00 sáng VN (19:00 UTC hôm trước)
-    - cron: '50 2 * * *'   # 9:50 sáng VN (2:50 UTC)
-    - cron: '0 8 * * *'    # 3:00 chiều VN (8:00 UTC)
-    - cron: '0 9 * * *'    # 4:00 chiều VN (9:00 UTC)
+    - cron: '0 19 * * *'   # 2:00 sáng VN
+    - cron: '50 2 * * *'   # 9:50 sáng VN
+    - cron: '0 8 * * *'    # 3:00 chiều VN
+    - cron: '0 9 * * *'    # 4:00 chiều VN
   workflow_dispatch: {}
 
 permissions:
@@ -40,31 +38,30 @@ jobs:
         run: mvn clean test -DsuiteXmlFile=testng.xml
         continue-on-error: true
 
-      - name: Restore Allure History
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-history
-          path: target/allure-results/history
-        continue-on-error: true
+      - name: Restore Allure History from GitHub Pages
+        run: |
+          git clone --depth=1 --single-branch --branch allure-pages-scheduled https://github.com/${{ github.repository }}.git gh-pages-scheduled || true
+          if [ -d gh-pages-scheduled/history ]; then
+            mkdir -p target/allure-results/history
+            cp -a gh-pages-scheduled/history/. target/allure-results/history/ || true
+            echo "Copied history from gh-pages-scheduled/history to target/allure-results/history"
+          else
+            echo "No previous history found for scheduled runs"
+          fi
 
       - name: Generate Allure Report
         if: always()
         run: mvn allure:report
 
-      - name: Save Allure History
+      # 🔥 NEW: Preserve History for Trend
+      - name: Preserve Allure History
         if: always()
         run: |
-          mkdir -p history
-          cp -r target/site/allure-maven-plugin/history/* history/ || true
-        continue-on-error: true
-
-      - name: Upload Allure History
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-history
-          path: history
-          retention-days: 30
+          mkdir -p target/allure-results/history
+          if [ -d target/site/allure-maven-plugin/history ]; then
+            cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
+            echo "Copied updated history for next run"
+          fi
 
       - name: Upload Allure Results
         if: always()
@@ -89,7 +86,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-scheduled
-          destination_dir: ${{ github.run_number }}
           allow_empty_commit: true
 
       - name: Test Summary
@@ -97,11 +93,4 @@ jobs:
         run: |
           echo "### 🕐 Scheduled Test Run - $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This is an automated test run to ensure the test suite is still working." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
-
-      - name: Check Test Results
-        if: failure()
-        run: |
-          echo "::warning::Scheduled tests failed! Please check the test results."
+          echo "Automated test run completed. Check Allure report for details." >> $GITHUB_STEP_SUMMARY
