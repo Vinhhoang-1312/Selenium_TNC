@@ -2,10 +2,10 @@ name: CI - Code Quality Check
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   pull_request:
-    branches: [main, master]
-  workflow_dispatch: {}
+    branches: [ main, master ]
+  workflow_dispatch: { }
 
 permissions:
   contents: write
@@ -66,70 +66,70 @@ jobs:
             "buildOrder": 1,
             "buildName": "${{ github.workflow }} #${{ github.run_number }}",
             "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/"
+            "reportUrl": "https://tnc-git-allure-pages-ci-vinhhoang-1312s-projects.vercel.app/#"
           }' > target/allure-results/executor.json
-
-      - name: 🧮 Generate Allure Report
-        if: always()
-        run: mvn allure:report
-
-      - name: 📦 Preserve Updated Allure History
-        if: always()
-        run: |
-          mkdir -p target/allure-results/history
-          if [ -d target/site/allure-maven-plugin/history ]; then
-            cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
-            echo "✅ History preserved for next CI run"
-          fi
-
-      - name: 📤 Upload Allure Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results-ci
-          path: target/allure-results
-          retention-days: 30
-
-      - name: 📤 Upload Allure Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-report-ci
-          path: target/site/allure-maven-plugin
-          retention-days: 30
-
-      - name: 🌐 Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: target/site/allure-maven-plugin
-          publish_branch: allure-pages-ci
-          allow_empty_commit: true
-
-      - name: 🧾 Test Summary
-        if: always()
-        run: |
-          echo "### ✅ CI Smoke Tests Completed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📊 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/)" >> $GITHUB_STEP_SUMMARY
-
-  cd:
-    name: CD - Deploy to Vercel
-    runs-on: ubuntu-latest
-    needs: ci
-
-    steps:
-      - name: 🧾 Checkout repository
-        uses: actions/checkout@v4
-
-      - name: 🌍 Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+               
+               - name: 🧮 Generate Allure Report
+               if: always()
+               run: mvn allure:report
+               
+               - name: 📦 Preserve Updated Allure History
+               if: always()
+               run: |
+               mkdir -p target/allure-results/history
+               if [ -d target/site/allure-maven-plugin/history ]; then
+               cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
+               echo "✅ History preserved for next CI run"
+               fi
+               
+               - name: 📤 Upload Allure Results
+               uses: actions/upload-artifact@v4
+               if: always()
+               with:
+               name: allure-results-ci
+               path: target/allure-results
+               retention-days: 30
+               
+               - name: 📤 Upload Allure Report
+               uses: actions/upload-artifact@v4
+               if: always()
+               with:
+               name: allure-report-ci
+               path: target/site/allure-maven-plugin
+               retention-days: 30
+               
+               - name: 🌐 Deploy Allure Report to GitHub Pages
+               uses: peaceiris/actions-gh-pages@v4
+               if: always()
+               with:
+               github_token: ${{ secrets.GITHUB_TOKEN }}
+               publish_dir: target/site/allure-maven-plugin
+               publish_branch: allure-pages-ci
+               allow_empty_commit: true
+               
+               - name: 🧾 Test Summary
+               if: always()
+               run: |
+               echo "### ✅ CI Smoke Tests Completed" >> $GITHUB_STEP_SUMMARY
+               echo "" >> $GITHUB_STEP_SUMMARY
+               echo "📊 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/)" >> $GITHUB_STEP_SUMMARY
+               
+               cd:
+               name: CD - Deploy to Vercel
+               runs-on: ubuntu-latest
+               needs: ci
+               
+               steps:
+               - name: 🧾 Checkout repository
+               uses: actions/checkout@v4
+               
+               - name: 🌍 Deploy to Vercel
+               uses: amondnet/vercel-action@v25
+               with:
+               vercel-token: ${{ secrets.VERCEL_TOKEN }}
+               vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+               vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+               working-directory: .
+               vercel-args: --prod
+               env:
+               VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
