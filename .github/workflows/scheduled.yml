@@ -18,7 +18,6 @@ permissions:
 jobs:
   scheduled-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -102,7 +101,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
 
-      # Optional: Send notification if tests fail
       - name: Check Test Results
         if: failure()
         run: |
