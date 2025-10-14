@@ -41,9 +41,31 @@ jobs:
         run: mvn clean test -DsuiteXmlFile=testng.xml
         continue-on-error: true
 
+      - name: Restore Allure History
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history
+          path: target/allure-results/history
+        continue-on-error: true
+
       - name: Generate Allure Report
         if: always()
         run: mvn allure:report
+
+      - name: Save Allure History
+        if: always()
+        run: |
+          mkdir -p history
+          cp -r target/site/allure-maven-plugin/history/* history/ || true
+        continue-on-error: true
+
+      - name: Upload Allure History
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-history
+          path: history
+          retention-days: 30
 
       - name: Upload Allure Results
         if: always()
