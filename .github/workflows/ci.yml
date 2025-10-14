@@ -13,9 +13,9 @@ permissions:
   id-token: write
 
 jobs:
-  test:
+  ci:
+    name: CI - Test & Report
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,6 +43,7 @@ jobs:
           echo "ENV=Production" > target/allure-results/environment.properties
           echo "BROWSER=Chrome" >> target/allure-results/environment.properties
           echo "BASE_URL=https://tnc-six.vercel.app" >> target/allure-results/environment.properties
+
       - name: Prepare Allure Executor Info
         run: |
           echo '{
@@ -54,12 +55,14 @@ jobs:
             "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/"
           }' > target/allure-results/executor.json
+
       - name: Restore Allure History
         uses: actions/download-artifact@v4
         with:
           name: allure-history
           path: target/allure-results/history
         continue-on-error: true
+
       - name: Generate Allure Report
         if: always()
         run: mvn allure:report
@@ -70,6 +73,7 @@ jobs:
           mkdir -p history
           cp -r target/site/allure-maven-plugin/history/* history/ || true
         continue-on-error: true
+
       - name: Upload Allure History
         uses: actions/upload-artifact@v4
         if: always()
@@ -77,6 +81,7 @@ jobs:
           name: allure-history
           path: history
           retention-days: 30
+
       - name: Upload Allure Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -108,3 +113,22 @@ jobs:
           echo "### Test Results 📊" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
+
+  cd:
+    name: CD - Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
+          prod: true
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

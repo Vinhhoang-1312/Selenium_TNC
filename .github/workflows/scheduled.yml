@@ -1,12 +1,14 @@
 name: Scheduled Tests - 2:00AM Daily
 
 on:
-  workflow_dispatch: {}
   schedule:
-    - cron: '0 19 * * *'   # 2:00 sáng VN (19:00 UTC hôm trước)
+    # Chạy mỗi ngày lúc 2h sáng giờ Việt Nam (UTC+7)
+    # Cron sử dụng UTC nên 2h sáng VN = 19h tối hôm trước theo UTC
+    - cron: '0 19 * * *'
     - cron: '50 2 * * *'   # 9:50 sáng VN (2:50 UTC)
-    - cron: '45 7 * * *'   # 2:45 chiều VN (7:45 UTC)
+    - cron: '50 7 * * *'   # 2:50 chiều VN (7:50 UTC)
     - cron: '0 9 * * *'    # 4:00 chiều VN (9:00 UTC)
+  workflow_dispatch: {}
 
 permissions:
   contents: write
