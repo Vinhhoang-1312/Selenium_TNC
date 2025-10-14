@@ -2,10 +2,11 @@ name: Scheduled Tests - 2:00AM Daily
 
 on:
   schedule:
-    - cron: '0 19 * * *'   # 2:00 sáng VN
-    - cron: '50 2 * * *'   # 9:50 sáng VN
-    - cron: '0 8 * * *'    # 3:00 chiều VN
-    - cron: '0 9 * * *'    # 4:00 chiều VN
+    # Chạy mỗi ngày nhiều khung giờ khác nhau (theo UTC)
+    - cron: '0 19 * * *'   # 2:00 sáng VN (19:00 UTC hôm trước)
+    - cron: '50 2 * * *'   # 9:50 sáng VN (2:50 UTC)
+    - cron: '0 8 * * *'    # 3:00 chiều VN (8:00 UTC)
+    - cron: '0 9 * * *'    # 4:00 chiều VN (9:00 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -15,7 +16,9 @@ permissions:
 
 jobs:
   scheduled-tests:
+    name: Scheduled - Run Tests & Allure Report
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,29 +41,30 @@ jobs:
         run: mvn clean test -DsuiteXmlFile=testng.xml
         continue-on-error: true
 
+      # 🧩 Restore history from previous scheduled report
       - name: Restore Allure History from GitHub Pages
         run: |
           git clone --depth=1 --single-branch --branch allure-pages-scheduled https://github.com/${{ github.repository }}.git gh-pages-scheduled || true
           if [ -d gh-pages-scheduled/history ]; then
             mkdir -p target/allure-results/history
             cp -a gh-pages-scheduled/history/. target/allure-results/history/ || true
-            echo "Copied history from gh-pages-scheduled/history to target/allure-results/history"
+            echo "✅ Copied history from gh-pages-scheduled/history to target/allure-results/history"
           else
-            echo "No previous history found for scheduled runs"
+            echo "⚠️ No previous history found for scheduled runs"
           fi
 
       - name: Generate Allure Report
         if: always()
         run: mvn allure:report
 
-      # 🔥 NEW: Preserve History for Trend
+      # 🔥 Preserve updated history for trend
       - name: Preserve Allure History
         if: always()
         run: |
           mkdir -p target/allure-results/history
           if [ -d target/site/allure-maven-plugin/history ]; then
             cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
-            echo "Copied updated history for next run"
+            echo "✅ Updated Allure history preserved for next run"
           fi
 
       - name: Upload Allure Results
@@ -94,3 +98,25 @@ jobs:
           echo "### 🕐 Scheduled Test Run - $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Automated test run completed. Check Allure report for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 View Allure Report: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-scheduled/" >> $GITHUB_STEP_SUMMARY
+
+
+  cd:
+    name: CD - Deploy to Vercel (After Scheduled Tests)
+    runs-on: ubuntu-latest
+    needs: scheduled-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
+          vercel-args: --prod
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
