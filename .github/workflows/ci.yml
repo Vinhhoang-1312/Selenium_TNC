@@ -108,7 +108,7 @@ jobs:
       - name: Test Summary
         if: always()
         run: |
-          echo "### Test Results 📊" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
 
@@ -130,3 +130,4 @@ jobs:
           vercel-args: --prod
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
