@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch: {}
+  schedule:
+    - cron: '0 19 * * *'   # 2:00 sáng VN (19:00 UTC hôm trước)
+    - cron: '50 2 * * *'   # 9:50 sáng VN (2:50 UTC)
 
 permissions:
   contents: write
