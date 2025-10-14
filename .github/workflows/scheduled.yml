@@ -4,7 +4,10 @@ on:
   schedule:
     # Chạy mỗi ngày lúc 2h sáng giờ Việt Nam (UTC+7)
     # Cron sử dụng UTC nên 2h sáng VN = 19h tối hôm trước theo UTC
-    - cron: '0 19 * * *'
+    - cron: '0 19 * * *'   # 2:00 sáng VN (19:00 UTC hôm trước)
+    - cron: '50 2 * * *'   # 9:50 sáng VN (2:50 UTC)
+    - cron: '0 8 * * *'    # 3:00 chiều VN (8:00 UTC)
+    - cron: '0 9 * * *'    # 4:00 chiều VN (9:00 UTC)
   workflow_dispatch: {}
 
 permissions:
