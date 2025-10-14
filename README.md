@@ -1,6 +1,5 @@
-# 🏪 TNC Store Automation Testing Framework
 
-# 🏪 TNC Store Automation Testing Framework
+# 🏪 TNC Store Automation Testing Framework - CI/CD
 
 ## Overview
 
