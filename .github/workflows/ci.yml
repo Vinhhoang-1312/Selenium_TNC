@@ -20,6 +20,13 @@ jobs:
       test-result: ${{ steps.test-step.outcome }}
 
     steps:
+      - name: Download Allure History Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history
+          path: target/allure-results/history
+        continue-on-error: true
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -41,7 +48,7 @@ jobs:
         run: |
           echo "Fetching history from allure-pages-ci branch..."
           git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || echo "No existing allure-pages-ci branch found"
-          
+
           if [ -d "gh-pages-ci/history" ]; then
             echo "History found, copying to allure-results..."
             mkdir -p target/allure-results/history
@@ -52,7 +59,7 @@ jobs:
             echo "⚠️ No history found - this will be the first run"
             mkdir -p target/allure-results/history
           fi
-          
+
           rm -rf gh-pages-ci
 
       - name: Prepare Allure Environment Info
@@ -145,6 +152,14 @@ jobs:
           mvn allure:report
           echo "✅ Report generated at target/site/allure-maven-plugin"
 
+      - name: Upload Allure History Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-history
+          path: target/site/allure-maven-plugin/history
+          retention-days: 30
+
       - name: Verify Allure Report Generated
         if: always()
         run: |
@@ -154,7 +169,7 @@ jobs:
             echo "Report generation may have failed."
             exit 1
           fi
-          
+
           REPORT_SIZE=$(du -sh target/site/allure-maven-plugin 2>/dev/null | cut -f1)
           echo "✅ Allure report generated successfully"
           echo "Report size: $REPORT_SIZE"
@@ -184,7 +199,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-ci
-          keep_files: true   # Đã đổi từ false thành true để giữ lại history
+          keep_files: true # Đã đổi từ false thành true để giữ lại history
           enable_jekyll: false
           allow_empty_commit: true
 
@@ -202,7 +217,7 @@ jobs:
           echo "- [📈 View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
           echo "- [📦 Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ steps.test-step.outcome }}" == "success" ]; then
             echo "✅ **Status:** All smoke tests passed" >> $GITHUB_STEP_SUMMARY
           else
@@ -242,7 +257,7 @@ jobs:
       - name: Deploy Allure Report to Netlify
         uses: nwtgck/actions-netlify@v2.1
         with:
-          publish-dir: './allure-report'
+          publish-dir: "./allure-report"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Allure Report - Build #${{ github.run_number }}"
