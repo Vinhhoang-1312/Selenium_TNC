@@ -3,13 +3,12 @@ package tests;
 import core.BaseTest;
 import io.qameta.allure.*;
 import listeners.BaseListener;
-import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import pages.UserProfilePage;
-import utils.TestDataProviders;
 import utils.Reporter;
+import utils.TestDataProviders;
 
 @Listeners({BaseListener.class})
 @Epic("User Management")
@@ -42,7 +41,7 @@ public class UserProfileTests extends BaseTest {
         Reporter.LogToReport("Step 4: Refresh and verify phone");
         getDriver().navigate().refresh();
         String actualPhone = profilePage.getPhone();
-        Assert.assertEquals(actualPhone, newPhone, "Phone number should be updated successfully");
+        getSoftAssert().assertEquals(actualPhone, newPhone, "Phone number should be updated successfully");
 
         logger.info("Phone updated successfully to: {}", newPhone);
     }
@@ -74,7 +73,7 @@ public class UserProfileTests extends BaseTest {
         getDriver().navigate().refresh();
 
         String actualValue = profilePage.getFullname();
-        Assert.assertEquals(actualValue, newValue, "Fullname should be updated successfully");
+        getSoftAssert().assertEquals(actualValue, newValue, "Fullname should be updated successfully");
         logger.info("Fullname updated successfully to: {}", newValue);
     }
 
@@ -104,7 +103,7 @@ public class UserProfileTests extends BaseTest {
         Reporter.LogToReport("Step 4: Refresh and verify address");
         getDriver().navigate().refresh();
         String actualAddress = profilePage.getAddress();
-        Assert.assertEquals(actualAddress, newAddress, "Address should be updated successfully");
+        getSoftAssert().assertEquals(actualAddress, newAddress, "Address should be updated successfully");
 
         logger.info("Address updated successfully to: {}", newAddress);
     }
@@ -129,7 +128,7 @@ public class UserProfileTests extends BaseTest {
         profilePage.navigateToProfile();
 
         Reporter.LogToReport("Step 3: Verify profile page loaded");
-        Assert.assertTrue(profilePage.isProfilePageLoaded(),
+        getSoftAssert().assertTrue(profilePage.isProfilePageLoaded(),
             "Profile page should load successfully");
 
         logger.info("Profile page loaded successfully");

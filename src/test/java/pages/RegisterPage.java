@@ -74,4 +74,44 @@ public class RegisterPage extends BasePage {
             throw new RuntimeException("Cannot perform registration", e);
         }
     }
+
+    public String getSuccessMessage() {
+        try {
+            return getTextIfPresent(successMessage);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getErrorMessage() {
+        try {
+            return getTextIfPresent(errorMessage);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getEmailErrorMessage() {
+        try {
+            return getTextIfPresent(emailErrorMessage);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getPasswordErrorMessage() {
+        try {
+            return getTextIfPresent(passwordErrorMessage);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getNameErrorMessage() {
+        try {
+            return getTextIfPresent(nameErrorMessage);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

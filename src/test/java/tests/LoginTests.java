@@ -34,7 +34,7 @@ public class LoginTests extends BaseTest {
             loginPage.performLogin(email, password);
 
             Reporter.LogToReport("Step 2: Verify login succeeded");
-            Assert.assertTrue(loginPage.isLoginSuccessful(), "Login should be successful with valid credentials");
+            getSoftAssert().assertTrue(loginPage.isLoginSuccessful(), "Login should be successful with valid credentials");
 
             logger.info("Login test completed successfully with user: {}", email);
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class LoginTests extends BaseTest {
 
             Reporter.LogToReport("Step 2: Verify login failed");
             boolean loginFailed = !loginPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail for invalid email");
+            getSoftAssert().assertTrue(loginFailed, "Login should fail for invalid email");
 
             logger.info("Login correctly failed with invalid email");
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class LoginTests extends BaseTest {
 
             Reporter.LogToReport("Step 2: Verify login failed");
             boolean loginFailed = !loginPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail for non-existent account");
+            getSoftAssert().assertTrue(loginFailed, "Login should fail for non-existent account");
 
             logger.info("Login correctly failed with non-existent account");
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class LoginTests extends BaseTest {
 
             Reporter.LogToReport("Step 2: Verify login failed");
             boolean loginFailed = !loginPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail with empty email");
+            getSoftAssert().assertTrue(loginFailed, "Login should fail with empty email");
 
             logger.info("Login correctly failed with empty email");
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class LoginTests extends BaseTest {
 
             Reporter.LogToReport("Step 2: Verify login failed");
             boolean loginFailed = !loginPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail with empty password");
+            getSoftAssert().assertTrue(loginFailed, "Login should fail with empty password");
 
             logger.info("Login correctly failed with empty password");
         } catch (Exception e) {
@@ -168,7 +168,7 @@ public class LoginTests extends BaseTest {
 
             Reporter.LogToReport("Step 2: Verify login failed");
             boolean loginFailed = !loginPage.isLoginSuccessful();
-            Assert.assertTrue(loginFailed, "Login should fail with both fields empty");
+            getSoftAssert().assertTrue(loginFailed, "Login should fail with both fields empty");
 
             logger.info("Login correctly failed with both fields empty");
         } catch (Exception e) {
