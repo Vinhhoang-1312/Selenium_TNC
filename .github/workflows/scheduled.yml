@@ -61,7 +61,7 @@ jobs:
           cat > target/allure-results/environment.properties << EOF
           Environment=Production
           Browser=Chrome Headless
-          Base.URL=https://tnc-six.vercel.app
+          Base.URL=https://tnc-allure-report.netlify.app
           Java.Version=21
           OS=${{ runner.os }}
           Runner=GitHub Actions (Scheduled)

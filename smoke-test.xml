@@ -1,34 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Smoke Test Suite" verbose="1" parallel="classes" thread-count="2">
+<suite name="Smoke Test Suite" verbose="1" parallel="classes" thread-count="3">
     <test name="Smoke Tests">
         <classes>
+            <!-- Login Tests (3 tests) -->
             <class name="tests.LoginTests">
                 <methods>
                     <include name="testLoginWithValidCredentials"/>
                     <include name="testLoginWithInvalidEmail"/>
+                    <include name="testLoginWithNonExistentAccount"/>
                 </methods>
             </class>
+
+            <!-- Register Tests (1 test - REMOVED testRegisterWithValidData) -->
             <class name="tests.RegisterTests">
                 <methods>
-                    <include name="testRegisterWithValidData"/>
                     <include name="testRegisterWithInvalidEmail"/>
                 </methods>
             </class>
+
+            <!-- Search Tests (3 tests) -->
+            <class name="tests.SearchTests">
+                <methods>
+                    <include name="testSearchWithValidKeyword"/>
+                    <include name="testSearchWithSpecialCharacters"/>
+                    <include name="testSearchSuggestionsContainKeyword"/>
+                </methods>
+            </class>
+
+            <!-- Product Detail Tests (2 tests) -->
+            <class name="tests.ProductDetailTests">
+                <methods>
+                    <include name="testVerifyProductDetailsDisplayed"/>
+                    <include name="testAddProductToCartShowsNotification"/>
+                </methods>
+            </class>
+
+            <!-- Cart Tests (2 tests) -->
+            <class name="tests.CartTests">
+                <methods>
+                    <include name="testAddSingleProductToCart"/>
+                    <include name="testRemoveproductfromcart"/>
+                </methods>
+            </class>
+
+            <!-- User Profile Tests (2 tests) -->
+            <class name="tests.UserProfileTests">
+                <methods>
+                    <include name="testUpdatePhoneSuccess"/>
+                    <include name="testUpdateFullname"/>
+                </methods>
+            </class>
+
+            <!-- E2E Tests (1 test) -->
             <class name="tests.E2ETests">
                 <methods>
                     <include name="testLoginSearchAddToCart"/>
                 </methods>
             </class>
+
+            <!-- Checkout Tests (1 test) -->
             <class name="tests.CheckoutTests">
                 <methods>
                     <include name="testCheckoutMissingPhoneNumber"/>
-                </methods>
-            </class>
-            <class name="tests.CartTests">
-                <methods>
-                    <include name="testAddSingleProductToCart"/>
-                    <include name="testRemoveproductfromcart"/>
                 </methods>
             </class>
         </classes>

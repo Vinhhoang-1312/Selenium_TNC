@@ -219,5 +219,5 @@ jobs:
           echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📊 View Reports" >> $GITHUB_STEP_SUMMARY
-          echo "- [📈 Netlify Report (Latest)](https://[your-site].netlify.app)" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 Netlify Report (Latest)](https://tnc-allure-report.netlify.app)" >> $GITHUB_STEP_SUMMARY
           echo "- [📈 GitHub Pages Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
