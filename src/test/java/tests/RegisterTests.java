@@ -44,6 +44,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister(name, email, password);
 
         Reporter.LogToReport("Step 3: Verify registration completed");
+        String successMsg = registerPage.getSuccessMessage();
+        getSoftAssert().assertTrue(successMsg != null && !successMsg.isEmpty(), "Registration should show success message");
         logger.info("Register test completed with email: {}", email);
     }
 
@@ -62,6 +64,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister("Test User", "invalidemail", "Test123456");
 
         Reporter.LogToReport("Step 3: Verify registration failed");
+        String emailError = registerPage.getEmailErrorMessage();
+        getSoftAssert().assertTrue(emailError != null && !emailError.isEmpty(), "Should show email format error message");
         logger.info("Register with invalid email completed");
     }
 
@@ -81,6 +85,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister(user.name, user.email, "123");
 
         Reporter.LogToReport("Step 3: Verify registration failed due to weak password");
+        String pwdError = registerPage.getPasswordErrorMessage();
+        getSoftAssert().assertTrue(pwdError != null && !pwdError.isEmpty(), "Should show password strength error message");
         logger.info("Register with weak password completed");
     }
 }
