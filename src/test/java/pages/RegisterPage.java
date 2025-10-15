@@ -75,15 +75,4 @@ public class RegisterPage extends BasePage {
         }
     }
 
-    public By getSuccessMessage() {
-        return successMessage;
-    }
-
-    public By getEmailErrorMessage() {
-        return emailErrorMessage;
-    }
-
-    public By getPasswordErrorMessage() {
-        return passwordErrorMessage;
-    }
 }

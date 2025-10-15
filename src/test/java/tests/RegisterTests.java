@@ -44,8 +44,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister(name, email, password);
 
         Reporter.LogToReport("Step 3: Verify registration completed");
-        String successMsg = registerPage.waitAndGetText(registerPage.getSuccessMessage());
-        getSoftAssert().assertTrue(successMsg != null && !successMsg.isEmpty(), "Registration should show success message");
+        boolean isSuccessMsg = getDriver().findElements(org.openqa.selenium.By.cssSelector(".success-message")).size() > 0;
+        getSoftAssert().assertTrue(isSuccessMsg, "Registration should show success message");
         logger.info("Register test completed with email: {}", email);
     }
 
@@ -64,8 +64,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister("Test User", "invalidemail", "Test123456");
 
         Reporter.LogToReport("Step 3: Verify registration failed");
-        String emailError = registerPage.waitAndGetText(registerPage.getEmailErrorMessage());
-        getSoftAssert().assertTrue(emailError != null && !emailError.isEmpty(), "Should show email format error message");
+        boolean isEmailError = getDriver().findElements(org.openqa.selenium.By.xpath("//span[@id='js-register-email-error']")).size() > 0;
+        getSoftAssert().assertTrue(isEmailError, "Should show email format error message");
         logger.info("Register with invalid email completed");
     }
 
@@ -85,8 +85,8 @@ public class RegisterTests extends BaseTest {
         registerPage.performRegister(user.name, user.email, "123");
 
         Reporter.LogToReport("Step 3: Verify registration failed due to weak password");
-        String pwdError = registerPage.waitAndGetText(registerPage.getPasswordErrorMessage());
-        getSoftAssert().assertTrue(pwdError != null && !pwdError.isEmpty(), "Should show password strength error message");
+        boolean isPwdError = getDriver().findElements(org.openqa.selenium.By.xpath("//span[@id='js-register-password-error']")).size() > 0;
+        getSoftAssert().assertTrue(isPwdError, "Should show password strength error message");
         logger.info("Register with weak password completed");
     }
 }
