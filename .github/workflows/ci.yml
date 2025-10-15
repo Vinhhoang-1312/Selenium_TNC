@@ -151,7 +151,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-ci
-          keep_files: false
+          keep_files: true   # Đã đổi từ false thành true để giữ lại history
           enable_jekyll: false
           allow_empty_commit: true
 
