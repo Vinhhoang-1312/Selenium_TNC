@@ -3,7 +3,7 @@
 
 [build]
   # Directory to publish (root for static sites)
-  publish = "."
+  publish = "allure-report"
 
   # Build command (if you have a build process)
   # command = "npm run build"
@@ -59,4 +59,3 @@
 
 [context.branch-deploy]
   environment = { NODE_ENV = "development" }
-
