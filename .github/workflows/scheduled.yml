@@ -37,33 +37,96 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
+      - name: Download Allure History from GitHub Pages
+        run: |
+          echo "Fetching history from allure-pages-scheduled branch..."
+          git clone --depth=1 --single-branch --branch allure-pages-scheduled https://github.com/${{ github.repository }}.git gh-pages-scheduled || echo "No existing allure-pages-scheduled branch found"
+          
+          if [ -d "gh-pages-scheduled/history" ]; then
+            echo "History found, copying to allure-results..."
+            mkdir -p target/allure-results/history
+            cp -r gh-pages-scheduled/history/* target/allure-results/history/ 2>/dev/null || true
+            echo "✅ History restored successfully"
+            ls -la target/allure-results/history/ || true
+          else
+            echo "⚠️ No history found - this will be the first scheduled run"
+            mkdir -p target/allure-results/history
+          fi
+          
+          rm -rf gh-pages-scheduled
+
+      - name: Prepare Allure Environment Info
+        run: |
+          mkdir -p target/allure-results
+          cat > target/allure-results/environment.properties << EOF
+          Environment=Production
+          Browser=Chrome Headless
+          Base.URL=https://tnc-six.vercel.app
+          Java.Version=21
+          OS=${{ runner.os }}
+          Runner=GitHub Actions (Scheduled)
+          Workflow=${{ github.workflow }}
+          Branch=${{ github.ref_name }}
+          Commit=${{ github.sha }}
+          Schedule.Time=$(date +'%Y-%m-%d %H:%M:%S UTC')
+          Trigger=Scheduled Daily Test
+          EOF
+          echo "✅ Environment info prepared"
+
+      - name: Prepare Allure Executor Info
+        run: |
+          cat > target/allure-results/executor.json << EOF
+          {
+            "name": "GitHub Actions (Scheduled)",
+            "type": "github",
+            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildName": "Scheduled Build #${{ github.run_number }}",
+            "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/scheduled",
+            "reportName": "Allure Report - Scheduled"
+          }
+          EOF
+          echo "✅ Executor info prepared"
+
+      - name: Prepare Allure Categories
+        run: |
+          cat > target/allure-results/categories.json << 'EOF'
+          [
+            {
+              "name": "Product defects",
+              "matchedStatuses": ["failed"],
+              "messageRegex": ".*AssertionError.*"
+            },
+            {
+              "name": "Test defects",
+              "matchedStatuses": ["broken"],
+              "messageRegex": ".*Exception.*"
+            },
+            {
+              "name": "Timeout issues",
+              "matchedStatuses": ["broken"],
+              "messageRegex": ".*TimeoutException.*"
+            },
+            {
+              "name": "Ignored tests",
+              "matchedStatuses": ["skipped"]
+            }
+          ]
+          EOF
+          echo "✅ Categories configured"
+
       - name: Run Full Test Suite
+        id: test-step
         run: mvn clean test -DsuiteXmlFile=testng.xml
         continue-on-error: true
 
-      - name: Restore Allure History (for Trend)
-        run: |
-          git clone --depth=1 --single-branch --branch allure-pages-scheduled https://github.com/${{ github.repository }}.git gh-pages-scheduled || true
-          if [ -d gh-pages-scheduled/history ]; then
-            mkdir -p target/allure-results/history
-            cp -a gh-pages-scheduled/history/. target/allure-results/history/ || true
-            echo "Restored previous history from allure-pages-scheduled"
-          else
-            echo "No previous scheduled history found"
-          fi
-
       - name: Generate Allure Report
         if: always()
-        run: mvn allure:report
-
-      - name: Preserve Updated Allure History
-        if: always()
         run: |
-          mkdir -p target/allure-results/history
-          if [ -d target/site/allure-maven-plugin/history ]; then
-            cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
-            echo "Preserved updated history for next scheduled run"
-          fi
+          echo "Generating Allure report with history..."
+          mvn allure:report
+          echo "✅ Report generated at target/site/allure-maven-plugin"
 
       - name: Upload Allure Results
         if: always()
@@ -71,7 +134,7 @@ jobs:
         with:
           name: allure-results-scheduled-${{ github.run_number }}
           path: target/allure-results
-          retention-days: 7
+          retention-days: 14
 
       - name: Upload Allure Report
         if: always()
@@ -79,7 +142,7 @@ jobs:
         with:
           name: allure-report-scheduled-${{ github.run_number }}
           path: target/site/allure-maven-plugin
-          retention-days: 7
+          retention-days: 14
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -88,31 +151,35 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-scheduled
+          destination_dir: scheduled
+          keep_files: false
+          enable_jekyll: false
           allow_empty_commit: true
 
-      - name: Scheduled Test Summary
+      - name: Generate Test Summary
         if: always()
         run: |
-          echo "### Scheduled Test Run - $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "# 📊 Scheduled Test Results - Build #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-scheduled/)" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow:** ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Run Time:** $(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/scheduled)" >> $GITHUB_STEP_SUMMARY
+          echo "- [📦 Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.test-step.outcome }}" == "success" ]; then
+            echo "✅ **Status:** All tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Status:** Some tests failed - check the Allure report for details" >> $GITHUB_STEP_SUMMARY
+          fi
 
-  cd:
-    name: CD - Deploy to Vercel (After Scheduled Tests)
-    runs-on: ubuntu-latest
-    needs: scheduled-tests
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      - name: Send Notification on Failure
+        if: failure()
+        run: |
+          echo "🚨 Scheduled test failed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Please investigate the failed tests in the Allure report." >> $GITHUB_STEP_SUMMARY

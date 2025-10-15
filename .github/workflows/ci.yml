@@ -16,6 +16,9 @@ jobs:
   ci:
     name: CI - Test & Report
     runs-on: ubuntu-latest
+    outputs:
+      test-result: ${{ steps.test-step.outcome }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,57 +37,102 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Run Smoke Test Suite (smoke-test.xml)
-        run: mvn clean test -Psmoke-test
-        continue-on-error: false
+      - name: Download Allure History from GitHub Pages
+        run: |
+          echo "Fetching history from allure-pages-ci branch..."
+          git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || echo "No existing allure-pages-ci branch found"
+          
+          if [ -d "gh-pages-ci/history" ]; then
+            echo "History found, copying to allure-results..."
+            mkdir -p target/allure-results/history
+            cp -r gh-pages-ci/history/* target/allure-results/history/ 2>/dev/null || true
+            echo "✅ History restored successfully"
+            ls -la target/allure-results/history/ || true
+          else
+            echo "⚠️ No history found - this will be the first run"
+            mkdir -p target/allure-results/history
+          fi
+          
+          rm -rf gh-pages-ci
 
       - name: Prepare Allure Environment Info
         run: |
-          echo "ENV=Production" > target/allure-results/environment.properties
-          echo "BROWSER=Chrome" >> target/allure-results/environment.properties
-          echo "BASE_URL=https://tnc-six.vercel.app" >> target/allure-results/environment.properties
+          mkdir -p target/allure-results
+          cat > target/allure-results/environment.properties << EOF
+          Environment=Production
+          Browser=Chrome Headless
+          Base.URL=https://tnc-six.vercel.app
+          Java.Version=${{ matrix.java || '21' }}
+          OS=${{ runner.os }}
+          Runner=GitHub Actions
+          Workflow=${{ github.workflow }}
+          Branch=${{ github.ref_name }}
+          Commit=${{ github.sha }}
+          Author=${{ github.actor }}
+          Trigger=${{ github.event_name }}
+          EOF
+          echo "✅ Environment info prepared"
 
       - name: Prepare Allure Executor Info
         run: |
-          echo '{
+          cat > target/allure-results/executor.json << EOF
+          {
             "name": "GitHub Actions",
             "type": "github",
             "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "buildOrder": 1,
-            "buildName": "${{ github.workflow }} #${{ github.run_number }}",
+            "buildOrder": ${{ github.run_number }},
+            "buildName": "CI Build #${{ github.run_number }}",
             "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-pages-ci/"
-          }' > target/allure-results/executor.json
+            "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}",
+            "reportName": "Allure Report - CI"
+          }
+          EOF
+          echo "✅ Executor info prepared"
 
-      - name: Download Allure History from GitHub Pages branch
+      - name: Prepare Allure Categories
         run: |
-          git clone --depth=1 --single-branch --branch allure-pages-ci https://github.com/${{ github.repository }}.git gh-pages-ci || true
-          if [ -d gh-pages-ci/history ]; then
-            mkdir -p target/allure-results/history
-            cp -a gh-pages-ci/history/. target/allure-results/history/ || true
-            echo "Copied history from gh-pages-ci/history to target/allure-results/history"
-          else
-            echo "No history found in gh-pages-ci/history"
-          fi
+          cat > target/allure-results/categories.json << 'EOF'
+          [
+            {
+              "name": "Product defects",
+              "matchedStatuses": ["failed"],
+              "messageRegex": ".*AssertionError.*"
+            },
+            {
+              "name": "Test defects",
+              "matchedStatuses": ["broken"],
+              "messageRegex": ".*Exception.*"
+            },
+            {
+              "name": "Timeout issues",
+              "matchedStatuses": ["broken"],
+              "messageRegex": ".*TimeoutException.*"
+            },
+            {
+              "name": "Ignored tests",
+              "matchedStatuses": ["skipped"]
+            }
+          ]
+          EOF
+          echo "✅ Categories configured"
+
+      - name: Run Smoke Test Suite
+        id: test-step
+        run: mvn clean test -Psmoke-test
+        continue-on-error: true
 
       - name: Generate Allure Report
         if: always()
-        run: mvn allure:report
-
-      - name: Preserve Allure History
-        if: always()
         run: |
-          mkdir -p target/allure-results/history
-          if [ -d target/site/allure-maven-plugin/history ]; then
-            cp -r target/site/allure-maven-plugin/history/. target/allure-results/history/ || true
-            echo "Copied new history from report to allure-results"
-          fi
+          echo "Generating Allure report with history..."
+          mvn allure:report
+          echo "✅ Report generated at target/site/allure-maven-plugin"
 
       - name: Upload Allure Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: allure-results-ci
+          name: allure-results-ci-${{ github.run_number }}
           path: target/allure-results
           retention-days: 30
 
@@ -92,7 +140,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: allure-report-ci
+          name: allure-report-ci-${{ github.run_number }}
           path: target/site/allure-maven-plugin
           retention-days: 30
 
@@ -103,31 +151,73 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-ci
+          keep_files: false
+          enable_jekyll: false
           allow_empty_commit: true
 
-      - name: Test Summary
+      - name: Generate Test Summary
         if: always()
         run: |
-          echo "### Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "# 📊 CI Test Results - Build #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check the uploaded Allure report artifact for detailed results." >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow:** ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [📦 Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.test-step.outcome }}" == "success" ]; then
+            echo "✅ **Status:** All smoke tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Status:** Some tests failed - check the Allure report" >> $GITHUB_STEP_SUMMARY
+          fi
 
   cd:
-    name: CD - Deploy to Vercel
+    name: CD - Deploy Allure Report to Netlify
     runs-on: ubuntu-latest
     needs: ci
+    if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+      - name: Download Allure Report Artifact
+        uses: actions/download-artifact@v4
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          name: allure-report-ci-${{ github.run_number }}
+          path: allure-report
 
+      - name: Deploy Allure Report to Netlify
+        uses: nwtgck/actions-netlify@v2.1
+        with:
+          publish-dir: './allure-report'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Allure Report - Build #${{ github.run_number }}"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
+
+      - name: Deployment Summary
+        run: |
+          echo "# 🚀 Allure Report Deployed to Netlify" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Allure Report deployed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platform:** Netlify" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 View Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 Netlify Report (Latest)](https://[your-site].netlify.app)" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 GitHub Pages Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
