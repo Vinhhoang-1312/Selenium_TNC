@@ -74,4 +74,16 @@ public class RegisterPage extends BasePage {
             throw new RuntimeException("Cannot perform registration", e);
         }
     }
+
+    public By getSuccessMessage() {
+        return successMessage;
+    }
+
+    public By getEmailErrorMessage() {
+        return emailErrorMessage;
+    }
+
+    public By getPasswordErrorMessage() {
+        return passwordErrorMessage;
+    }
 }
