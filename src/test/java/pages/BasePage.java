@@ -117,4 +117,16 @@ public abstract class BasePage {
             // No loading spinner found or timeout, page is stable
         }
     }
+
+    protected String getTextIfPresent(By locator) {
+        try {
+            WebElement element = driver.findElement(locator);
+            if (element.isDisplayed()) {
+                return element.getText();
+            }
+            return null;
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return null;
+        }
+    }
 }
