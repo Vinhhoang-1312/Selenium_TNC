@@ -189,6 +189,16 @@ jobs:
           enable_jekyll: false
           allow_empty_commit: true
 
+      - name: Deploy Allure Report to Netlify
+        uses: nwtgck/actions-netlify@v2.1
+        with:
+          publish-dir: target/site/allure-maven-plugin
+          production-branch: main
+          github_token: ''
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
       - name: Generate Test Summary
         if: always()
         run: |

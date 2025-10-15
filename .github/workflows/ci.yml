@@ -233,7 +233,7 @@ jobs:
             echo "Cannot deploy to Netlify. Check CI job for report generation issues."
             exit 1
           fi
-          
+
           REPORT_SIZE=$(du -sh allure-report 2>/dev/null | cut -f1)
           echo "✅ Report verified successfully"
           echo "Report size: $REPORT_SIZE"
