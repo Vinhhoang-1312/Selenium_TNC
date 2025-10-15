@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Smoke Test Suite" verbose="1" parallel="classes" thread-count="3">
+    <groups>
+        <define name="authentication"/>
+        <define name="smoke"/>
+        <define name="login"/>
+        <define name="negative"/>
+    </groups>
     <test name="Smoke Tests">
         <classes>
             <!-- Login Tests (3 tests) -->
