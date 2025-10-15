@@ -61,7 +61,7 @@ jobs:
           cat > target/allure-results/environment.properties << EOF
           Environment=Production
           Browser=Chrome Headless
-          Base.URL=https://tnc-six.vercel.app
+          Base.URL=https://tnc-allure-report.netlify.app
           Java.Version=${{ matrix.java || '21' }}
           OS=${{ runner.os }}
           Runner=GitHub Actions
@@ -220,4 +220,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📊 View Reports" >> $GITHUB_STEP_SUMMARY
           echo "- [📈 Netlify Report (Latest)](https://tnc-allure-report.netlify.app)" >> $GITHUB_STEP_SUMMARY
-          echo "- [📈 GitHub Pages Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [📈 GitHub Pages Report (History)](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
