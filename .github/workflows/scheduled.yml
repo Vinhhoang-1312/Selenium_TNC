@@ -81,7 +81,7 @@ jobs:
             "type": "github",
             "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             "buildOrder": ${{ github.run_number }},
-            "buildName": "Scheduled Build #${{ github.run_number }}",
+            "buildName": "Scheduled Build #${{ github.run_number }} - $(date +'%Y-%m-%d_%H-%M-%S')",
             "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             "reportUrl": "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/scheduled",
             "reportName": "Allure Report - Scheduled"
@@ -152,7 +152,7 @@ jobs:
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-scheduled
           destination_dir: scheduled
-          keep_files: false
+          keep_files: true   # Đã sửa từ false thành true để giữ lại history cho Trend
           enable_jekyll: false
           allow_empty_commit: true
 
