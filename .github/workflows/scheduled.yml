@@ -152,7 +152,7 @@ jobs:
           publish_dir: target/site/allure-maven-plugin
           publish_branch: allure-pages-scheduled
           destination_dir: scheduled
-          keep_files: false
+          keep_files: true   # Đã sửa từ false thành true để giữ lại history cho Trend
           enable_jekyll: false
           allow_empty_commit: true
 
