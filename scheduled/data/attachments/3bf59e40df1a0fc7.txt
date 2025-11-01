@@ -1,0 +1,2 @@
+The following asserts failed:
+	Registration should show success message expected [true] but found [false]
