@@ -1,0 +1,2 @@
+The following asserts failed:
+	Should show password strength error message expected [true] but found [false]
