@@ -1,1 +1,1 @@
-{"total":1,"items":[{"uid":"95a123bf72969719504fe4423e77ce93","name":"TNC Store Test Suite","statistic":{"failed":2,"broken":5,"skipped":16,"passed":19,"unknown":0,"total":42}}]}
+{"total":1,"items":[{"uid":"95a123bf72969719504fe4423e77ce93","name":"TNC Store Test Suite","statistic":{"failed":1,"broken":3,"skipped":16,"passed":20,"unknown":0,"total":40}}]}
